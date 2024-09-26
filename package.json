@@ -1,0 +1,16 @@
+{
+  "name": "pptxtopro6",
+  "version": "1.0.0",
+  "description": "Simple application to convert PowerPoint presentations to Propresenter6 presentations",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "office-text-extractor": "^3.0.3",
+    "xmldom": "^0.6.0"
+  }
+}
