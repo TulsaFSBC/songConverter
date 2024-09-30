@@ -78,7 +78,7 @@ app.http('fileIsModified', {
             let b64Slide = Buffer.from(slide).toString('base64');
             b64Slides.push(b64Slide);
         })
-
+        //commnet
         var b64RTFSlides = [];
         textSlides.forEach(slide =>{
             let rtfLinesArray = [];
