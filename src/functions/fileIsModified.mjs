@@ -3,6 +3,36 @@ import { getTextExtractor } from "office-text-extractor";
 import * as fs from 'fs';
 import { writeFile } from 'node:fs/promises'
 import { Readable } from 'node:stream'
+import Format from '../../node_modules/rtf/lib/format.js'
+import Colors from '../../node_modules/rtf/lib/colors.js'
+import Fonts from '../../node_modules/rtf/lib/fonts.js'
+import RTF from '../../node_modules/rtf/lib/rtf.js'
+import { v4 as uuidv4} from 'uuid';
+
+function rtfText(plainText) {
+    let rtfContent = new RTF();
+    let textFormat = new Format();
+    textFormat.fontSize = 100;
+    textFormat.color = Colors.WHITE;
+    textFormat.font = Fonts.TIMES_NEW_ROMAN
+    if(plainText.length > 0){
+        rtfContent.writeText(plainText, textFormat);
+        let outputRTF;
+        rtfContent.createDocument(
+            function(err,output){
+                outputRTF = output
+            }
+        )
+        return outputRTF
+    } else {
+        console.error("plainText property is empty. Please set before running this function.")
+        return null
+    }  
+}
+
+function b64(text){
+    return Buffer.from(text).toString('base64');
+}
 
 app.http('fileIsModified', {
     methods: ['GET','POST'],
@@ -13,8 +43,7 @@ app.http('fileIsModified', {
         const requestBody = await request.text();
         const requestData = JSON.parse(requestBody)
         context.log("Received request: " + requestBody)
-        
-        context.log("Retrieving Access token...")
+        /*context.log("Retrieving Access token...")
         await fetch(`https://login.microsoftonline.com/${process.env.tenant_id}/oauth2/token`, {
             method: "POST",
             headers: {
@@ -55,62 +84,44 @@ app.http('fileIsModified', {
         context.log("Downloading file...");
         const response = await fetch(downloadUrl)
             .catch((error) => context.error(error));
-        context.log("File downloaded successfully.");
         const stream = Readable.fromWeb(response.body);
         await writeFile('powerpoint.pptx', stream);
-        context.log("File saved successfully.");
+        context.log("File downloaded successfully.");*/
         
         context.log("Starting file conversion...")
-
-        const rtfHeader = `{\\rtf1\\prortf1\\ansi\\ansicpg1252\\uc1\\htmautsp\\deff2` +
-        `{\\fonttbl{\\f0\\fcharset0 Times New Roman;}{\\f2\\fcharset0 Georgia;}{\\f3\\fcharset0 Segoe UI;}}` +
-        `{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red250\\green235\\blue215;}` +
-        `\\loch\\hich\\dbch\\pard\\slleading0\\plain\\ltrpar\\itap0` +
-        `{\\lang1033\\fs32\\outl0\\strokewidth-60\\strokec1\\f2\\cf1 \\cf1\\qc`;
-        const rtfFooter = '\\li0\\sa0\\sb0\\fi0\\qc}}';
-
+        const presentationHeader = fs.readFileSync('./pro6Templates/presentationHeader.txt').toString(),
+              presentationFooter = fs.readFileSync('./pro6Templates/presentationFooter.txt').toString(),
+              slideTemplate = fs.readFileSync('./pro6Templates/presentationSlide.txt').toString();
 
         const text = await extractor.extractText({ input: "./powerpoint.pptx", type: 'file' })
         const textSlides = text.split("---");
-
-        var b64Slides = [];
+        
+        var pro6SlidesArray = []
         textSlides.forEach(slide => {
-            let b64Slide = Buffer.from(slide).toString('base64');
-            b64Slides.push(b64Slide);
-        })
-        //commnet
-        var b64RTFSlides = [];
-        textSlides.forEach(slide =>{
-            let rtfLinesArray = [];
-            let lines = slide.split("\n")
-            lines.forEach(line =>{
-                const unicodeText = line.split('').map(char => {
-                    let code = char.charCodeAt(0);
-                    return `\\u${code}?`;
-                }).join('');
-                rtfLinesArray.push(`{\\fs180\\outl0\\strokewidth-60\\strokec1\\f3{\\cf3\\ltrch ${unicodeText}}\\li0\\sa0\\sb0\\fi0\\qc\\par}`)
+            let b64PlainText = b64(slide);
+            let slideLines = slide.split("\n");
+            let rtfSlideLinesArray = [];
+            slideLines.forEach(line =>{
+                if (line != ""){
+                    let rtfLine = ("{\\fs200\\outl0\\strokewidth-20\\strokec1\\f0 {\\cf3\\ltrch " + line + "}\\li0\\sa0\\sb0\\fi0\\qc\\par}")
+                    console.log("line: " + line)
+                    console.log("rtf line: " + rtfLine)
+                    rtfSlideLinesArray.push(rtfLine)
+                }
             })
-            let rtfLines = rtfLinesArray.join('');
-            let rtfContent = rtfHeader + rtfLines + rtfFooter;
-            let b64RTFContent = Buffer.from(rtfContent).toString('base64');
-            b64RTFSlides.push(b64RTFContent);
-        })
+            let rtfSlideLines = rtfSlideLinesArray.join("\\n")
+            let rtfSlide = ("{\\rtf1\\prortf1\\ansi\\ansicpg1252\\uc1\\htmautsp\\deff2{\\fonttbl{\\f0\\fcharset0 Times New Roman;}}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red250\\green235\\blue215;}\\loch\\hich\\dbch\\pard\\slleading0\\plain\\ltrpar\\itap0{\\lang1033\\fs100\\outl0\\strokewidth-20\\strokec1\\f2\\cf1 \\cf1\\qc \n" + rtfSlideLines + "\n } \n }");
+            //console.log(rtfSlide)
+            let b64RTFText = b64(rtfSlide)
+            let pro6SlideString = slideTemplate;
+            pro6SlideString = pro6SlideString.replace("$PLAIN_TEXT", b64PlainText); //plugs in actual content into slide template
+            pro6SlideString = pro6SlideString.replace("$RTF_TEXT", b64RTFText);
+            pro6SlideString = pro6SlideString.replace("$SLIDE_UUID", uuidv4());
+            pro6SlideString = pro6SlideString.replace("$TEXTBOX_UUID", uuidv4());
+            pro6SlidesArray.push(pro6SlideString)
+        })        
 
-        const slideHeader = fs.readFileSync('./pro6Templates/presentationHeader.txt').toString();
-        const slideFooter = fs.readFileSync('./pro6Templates/presentationFooter.txt').toString();
-        const slideTemplate = fs.readFileSync('./pro6Templates/presentationSlide.txt').toString();
-        var pro6Slides = [];
-        var i = 0;
-
-        textSlides.forEach ( slide => {
-            let plainTextReplaced = slideTemplate.replace('<NSString rvXMLIvarName="PlainText"></NSString>', '<NSString rvXMLIvarName="PlainText">' + b64Slides[i] + '</NSString>')
-            let RTFReplaced = plainTextReplaced.replace('<NSString rvXMLIvarName="RTFData"></NSString>', '<NSString rvXMLIvarName="RTFData">' + b64RTFSlides[i] + '</NSString>')
-            pro6Slides.push(RTFReplaced)
-            i++;
-        })
-
-        const slides = pro6Slides.join('');
-        const presentationString = slideHeader + slides + slideFooter;
+        const presentationString = presentationHeader + pro6SlidesArray.join() + presentationFooter;
 
         fs.writeFile('./pro6.pro6', presentationString, err => {
             if (err) {
@@ -119,6 +130,6 @@ app.http('fileIsModified', {
                 context.log("pro6 File created successfully.")
             }
         });
-        return { body: `Hello,` };
+        return { body: `This worked!` };
     }
 });

@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@azure/functions": "^4.0.0",
-    "office-text-extractor": "^3.0.3"
+    "office-text-extractor": "^3.0.3",
+    "rtf": "^0.0.4",
+    "uuid": "^10.0.0"
   },
   "main": "src/functions/fileIsModified.mjs"
 }
