@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@azure/functions": "^4.0.0",
-    "office-text-extractor": "^3.0.3",
+    "@markell12/textract": "^2.5.1",
     "rtf": "^0.0.4",
     "uuid": "^10.0.0"
   },
