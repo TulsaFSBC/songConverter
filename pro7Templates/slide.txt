@@ -1,6 +1,6 @@
 cues {
   uuid {
-    string: "$UUID"
+    string: "$SLIDE_UUID"
   }
   completion_target_uuid {
     string: "00000000-0000-0000-0000-000000000000"

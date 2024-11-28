@@ -14,9 +14,9 @@ application_info {
   }
 }
 uuid {
-  string: "e88099bf-e4be-461b-8ef4-312aaf016d3f"
+  string: "876496a4-9d7f-4ca8-8bee-2670ca2fca25"
 }
-name: "Test"
+name: "testinggg"
 last_date_used {
   seconds: 1730532183
 }
@@ -29,37 +29,37 @@ background {
   }
 }
 selected_arrangement {
-  string: "9871b0f2-ed9a-4537-b7b7-4c5d874374e2"
+  string: "a8eabc3a-f8c7-4576-a895-161b73d93de9"
 }
 cue_groups {
   group {
     uuid {
-      string: "d88d3db8-8138-4f6f-a6a9-b2450591ed00"
+      string: "a87720ff-ce3a-4f1e-9e51-f87f2a981a8d"
     }
     name: "Group"
   }
   cue_identifiers {
-    string: "bca3c0b4-5d2d-4b25-ab19-3060658f95a8"
+    string: "a3488dac-8391-47ea-873a-7307590d29d8"
   }
 }
 cue_groups {
   group {
     uuid {
-      string: "b19dccaa-fdeb-4525-9872-6d9d4771b904"
+      string: "c92cd9ab-7e6e-46c2-a875-ccf7cb36ee74"
     }
     name: "Group"
     application_group_identifier {
-      string: "947c839d-6c64-406a-b080-919a413d36b4"
+      string: "e383638c-5b43-409e-93af-f5aa1314f805"
     }
     application_group_name: "Group"
   }
   cue_identifiers {
-    string: "499efb93-2067-4c8d-bc13-46a800a11e37"
+    string: "670f4462-96e5-43b8-8b53-c3dc3cfe4145"
   }
 }
 cues {
   uuid {
-    string: "bca3c0b4-5d2d-4b25-ab19-3060658f95a8"
+    string: "a3488dac-8391-47ea-873a-7307590d29d8"
   }
   completion_target_uuid {
     string: "00000000-0000-0000-0000-000000000000"
@@ -72,7 +72,7 @@ cues {
   }
   actions {
     uuid {
-      string: "de4bf40c-602b-4f55-baa2-82f84522116f"
+      string: "88815cc6-5a32-445b-866a-66ea529d30b4"
     }
     isEnabled: true
     type: ACTION_TYPE_PRESENTATION_SLIDE
@@ -82,7 +82,7 @@ cues {
           elements {
             element {
               uuid {
-                string: "d4ef075c-885f-4ae5-bf21-9328338c73f0"
+                string: "92079fc0-62fe-46b9-892d-e2778bbf07ab"
               }
               bounds {
                 origin {
@@ -221,7 +221,7 @@ cues {
                   }
                   opacity: 0.75
                 }
-                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Hi! This is an edited song!\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 And it has text too!}"
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line one\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line two\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line three\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line four}"
                 vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
                 scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
                 margins {
@@ -252,7 +252,7 @@ cues {
             height: 1080
           }
           uuid {
-            string: "ff08fae9-b1e8-4283-9f45-7ae421cd6066"
+            string: "aeb7d8a5-85d2-4b63-abd5-90fdccfc6078"
           }
         }
         notes {
@@ -289,7 +289,7 @@ cues {
 }
 cues {
   uuid {
-    string: "499efb93-2067-4c8d-bc13-46a800a11e37"
+    string: "670f4462-96e5-43b8-8b53-c3dc3cfe4145"
   }
   completion_target_uuid {
     string: "00000000-0000-0000-0000-000000000000"
@@ -302,7 +302,7 @@ cues {
   }
   actions {
     uuid {
-      string: "fddd879e-5106-4c84-b3f5-7f415c100b9c"
+      string: "2a03efd4-48ff-4f61-9f91-aafc57bfac2a"
     }
     isEnabled: true
     type: ACTION_TYPE_PRESENTATION_SLIDE
@@ -312,7 +312,7 @@ cues {
           elements {
             element {
               uuid {
-                string: "86443fc6-59e1-43c5-98f8-b0910d006302"
+                string: "077a3979-cb09-4ad8-a9e1-ad638b0e296f"
               }
               bounds {
                 origin {
@@ -430,16 +430,16 @@ cues {
                   }
                   custom_attributes {
                     range {
-                      end: 24
+                      end: 27
                     }
                     original_font_size: 90
                   }
                   custom_attributes {
                     range {
-                      start: 25
-                      end: 43
+                      start: 28
+                      end: 48
                     }
-                    original_font_size: 90
+                  original_font_size: 90
                   }
                   custom_attributes {
                     range {
@@ -465,7 +465,7 @@ cues {
                   }
                   opacity: 0.75
                 }
-                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 хаха! \\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Its another slide!\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 It even has\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Four lines!}"
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line one\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line two\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line three\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line four\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line five\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line 6\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line 7\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line 8}"
                 vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
                 scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
                 margins {
@@ -496,7 +496,7 @@ cues {
             height: 1080
           }
           uuid {
-            string: "d746557f-f02f-42fd-89c4-08bc983794c3"
+            string: "8f512616-f25b-4936-8ce1-e593a21eedbf"
           }
         }
         notes {

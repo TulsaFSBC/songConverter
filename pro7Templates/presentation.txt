@@ -38,24 +38,7 @@ cue_groups {
     }
     name: "Group"
   }
-  cue_identifiers {
-    string: "$UUID"
-  }
-}
-cue_groups {
-  group {
-    uuid {
-      string: "$UUID"
-    }
-    name: "Group"
-    application_group_identifier {
-      string: "$UUID"
-    }
-    application_group_name: "Group"
-  }
-  cue_identifiers {
-    string: "$UUID"
-  }
+  $SLIDE_IDENTIFIERS
 }
 $SLIDES
 ccli {

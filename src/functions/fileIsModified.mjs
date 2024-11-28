@@ -3,39 +3,18 @@ import * as textract from '@markell12/textract'
 import * as fs from 'fs';
 import { writeFile } from 'node:fs/promises'
 import { Readable } from 'node:stream'
-import Format from '../../node_modules/rtf/lib/format.js'
-import Colors from '../../node_modules/rtf/lib/colors.js'
-import Fonts from '../../node_modules/rtf/lib/fonts.js'
-import RTF from '../../node_modules/rtf/lib/rtf.js'
 import { v4 as uuidv4} from 'uuid';
-import { json } from "express";
 import * as child from 'child_process'
 
 //todo
 //remove rtf module
-//check for alternative ways to extract text from pptx as current way sometimes add new line character in unwanted places
-//uncomment chunk required for pulling from office
-
-function rtfText(plainText) {
-    let rtfContent = new RTF();
-    let textFormat = new Format();
-    textFormat.fontSize = 100;
-    textFormat.color = Colors.WHITE;
-    textFormat.font = Fonts.TIMES_NEW_ROMAN
-    if(plainText.length > 0){
-        rtfContent.writeText(plainText, textFormat);
-        let outputRTF;
-        rtfContent.createDocument(
-            function(err,output){
-                outputRTF = output
-            }
-        )
-        return outputRTF
-    } else {
-        console.error("plainText property is empty. Please set before running this function.")
-        return null
-    }  
-}
+//create correct presentation string
+//upload to SP
+//delete temp files after function executes: powerpoint.pptx, presentationString.txt, .pro file.
+//Logging to a persistent source
+//error handling
+//config
+//code cleanup
 
 function b64(text){
     return Buffer.from(text).toString('base64');
@@ -87,7 +66,6 @@ app.http('fileIsModified', {
             .catch((error) => context.error(error));
 
         const jsonFileInfo = JSON.parse(fileInfoResponse);
-        //context.log(jsonFileInfo)
         const downloadUrl = jsonFileInfo["@microsoft.graph.downloadUrl"];
         context.log("Downloading file...");
         const response = await fetch(downloadUrl)
@@ -101,10 +79,11 @@ app.http('fileIsModified', {
               pro6PresentationFooter = fs.readFileSync('./pro6Templates/presentationFooter.txt').toString(),
               pro6SlideTemplate = fs.readFileSync('./pro6Templates/presentationSlide.txt').toString();
 
-        const pro7PresentationTemplate = fs.readFileSync('./pro7Templates/presentationTemplate.txt').toString(),
-              pro7SlideTemplate = fs.readFileSync('./pro7Templates/slideTemplate.txt').toString(),
-              pro7SlideTextTemplate = fs.readFileSync('./pro7Templates/slideTextTemplate.txt').toString(),
-              pro7TextLineTemplate = fs.readFileSync('./pro7Templates/textLineTemplate.txt').toString()
+        const pro7PresentationTemplate = fs.readFileSync('./pro7Templates/presentation.txt').toString(),
+              pro7SlideTemplate = fs.readFileSync('./pro7Templates/slide.txt').toString(),
+              pro7SlideTextTemplate = fs.readFileSync('./pro7Templates/slideText.txt').toString(),
+              pro7TextLineTemplate = fs.readFileSync('./pro7Templates/textLinee.txt').toString(),
+              pro7SlideIdentifierTemplate = fs.readFileSync('./pro7Templates/slideIdentifier.txt').toString()
 
         let config = {
             "preserveLineBreaks":true,
@@ -165,32 +144,44 @@ app.http('fileIsModified', {
                 }
             });
         } else if (presentationVersion == 7){
+            var pro7SlidesArray = [],
+                slideIdentifierGuids = [],
+                slideIdentifiers = [];
             outputFilePath = `${(jsonFileInfo.name).replace(".pptx", ".pro")}`
-            var pro7SlidesArray = [];
+            
             textSlides.forEach(slide => {
                 if(slide != ""){
+                    let slideId = uuidv4()
                     let slideLines = slide.split("\n");
                     let rtfSlideLinesArray = [];
                     slideLines.forEach(line =>{
                         if (line != ""){
                             let rtfLine = pro7TextLineTemplate.replace("$TEXT", line)
-                            //rtfLine = rtfLine.replaceAll("\\\\", "\\")
                             rtfSlideLinesArray.push(rtfLine)
                         }
                     })
                     slideLines[slideLines.length - 1].replace(/\\par\\pard/gm, "")
-                    let rtfSlideLines = rtfSlideLinesArray.join(/*"\\n*/"");
+                    let rtfSlideLines = rtfSlideLinesArray.join("");
                     console.log(rtfSlideLines)                    
                     let rtfSlide = pro7SlideTextTemplate.replace("$TEXT_LINES", rtfSlideLines);
+                    rtfSlide = rtfSlide.replace("$SLIDE_UUID", slideId)
                     let pro7SlideString = pro7SlideTemplate.replace("$RTF_DATA", rtfSlide);
                     pro7SlideString = pro7SlideString.replace(/\$UUID/gm, function(){
                         return uuidv4()
                     });
                     pro7SlidesArray.push(pro7SlideString)
+                    slideIdentifierGuids.push(slideId);
                 }
             })        
 
             var presentationString = pro7PresentationTemplate.replace("$PRESENTATION_NAME", "testinggg");
+
+            pro7SlidesArray.forEach(function (value, i) {
+                let slideIdentifier = pro7SlideIdentifierTemplate.replace("$SLIDE_UUID", slideIdentifierGuids[i])
+                slideIdentifiers.push(slideIdentifier);
+            })
+            let slideIdentifiersString = slideIdentifiers.join("");
+            presentationString = presentationString.replace("$SLIDE_IDENTIFIERS"), slideIdentifiersString
             presentationString = presentationString.replace("$SLIDES", pro7SlidesArray.join("\n"));
             presentationString = presentationString.replace(/\$UUID/gm, function(){
                         return uuidv4()
