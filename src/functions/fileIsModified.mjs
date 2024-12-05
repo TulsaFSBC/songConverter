@@ -7,6 +7,7 @@ import { v4 as uuidv4} from 'uuid';
 import * as child from 'child_process'
 
 //todo
+//slide creation cleanup
 //remove rtf module
 //create correct presentation string
 //upload to SP
