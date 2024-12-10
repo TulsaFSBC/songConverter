@@ -14,7 +14,7 @@ application_info {
   }
 }
 uuid {
-  string: "876496a4-9d7f-4ca8-8bee-2670ca2fca25"
+  string: "221d43c2-75ea-4d36-bcdc-37658948d542"
 }
 name: "testinggg"
 last_date_used {
@@ -29,37 +29,71 @@ background {
   }
 }
 selected_arrangement {
-  string: "a8eabc3a-f8c7-4576-a895-161b73d93de9"
+  string: "db49b855-b20e-4527-a365-cfa5580fe4b4"
 }
 cue_groups {
   group {
     uuid {
-      string: "a87720ff-ce3a-4f1e-9e51-f87f2a981a8d"
+      string: "4819fa2f-1fe3-4eac-9a1f-24d55e75465d"
     }
     name: "Group"
   }
-  cue_identifiers {
-    string: "a3488dac-8391-47ea-873a-7307590d29d8"
-  }
-}
-cue_groups {
-  group {
-    uuid {
-      string: "c92cd9ab-7e6e-46c2-a875-ccf7cb36ee74"
+    cue_identifiers {
+        string: "876afd4c-fb4e-4882-86c3-1bdd635fac1e"
     }
-    name: "Group"
-    application_group_identifier {
-      string: "e383638c-5b43-409e-93af-f5aa1314f805"
+    cue_identifiers {
+        string: "a9af18d3-2a5b-4b67-8df9-72a9e6ca3e08"
     }
-    application_group_name: "Group"
-  }
-  cue_identifiers {
-    string: "670f4462-96e5-43b8-8b53-c3dc3cfe4145"
-  }
+    cue_identifiers {
+        string: "fa7f04e5-9d6b-4a18-9d84-b358268bf5f0"
+    }
+    cue_identifiers {
+        string: "3f1ffe0c-1eb5-459b-b4b2-0fd03ee5d1ca"
+    }
+    cue_identifiers {
+        string: "3ebeab1b-e7b1-4fee-85fe-42d397c57ea9"
+    }
+    cue_identifiers {
+        string: "191ac1d2-56c3-4297-906a-17d0e9ce0761"
+    }
+    cue_identifiers {
+        string: "4af33856-158a-4baf-a388-46a3634e1d45"
+    }
+    cue_identifiers {
+        string: "6da18430-2064-4d92-bc8b-8171ce7a709b"
+    }
+    cue_identifiers {
+        string: "abfedca9-408c-4321-8c49-89511fd485a9"
+    }
+    cue_identifiers {
+        string: "22834f5d-5064-4ef3-a79a-d8167b47fd37"
+    }
+    cue_identifiers {
+        string: "5bc149ee-71fc-4919-9771-1cec6666ce25"
+    }
+    cue_identifiers {
+        string: "b73814a9-19b3-4ee6-8811-1f3d70cc1b2c"
+    }
+    cue_identifiers {
+        string: "aff9a385-2f52-4ca0-9a59-3eb551492f95"
+    }
+    cue_identifiers {
+        string: "26f5ec0b-0599-4108-8eaa-3ba9d54e93f2"
+    }
+    cue_identifiers {
+        string: "0e29c0ff-3f60-4af7-ad63-415182358897"
+    }
+    cue_identifiers {
+        string: "d258d762-c0fe-4e5a-9d24-87c13b199e42"
+    }
+    cue_identifiers {
+        string: "a6b10c9e-6834-473c-ab9c-f75ee53380d2"
+    }
+
 }
 cues {
   uuid {
-    string: "a3488dac-8391-47ea-873a-7307590d29d8"
+    string: "876afd4c-fb4e-4882-86c3-1bdd635fac1e"
   }
   completion_target_uuid {
     string: "00000000-0000-0000-0000-000000000000"
@@ -72,7 +106,7 @@ cues {
   }
   actions {
     uuid {
-      string: "88815cc6-5a32-445b-866a-66ea529d30b4"
+      string: "5074e991-6578-47e4-bf5a-a3a8ee952966"
     }
     isEnabled: true
     type: ACTION_TYPE_PRESENTATION_SLIDE
@@ -82,237 +116,7 @@ cues {
           elements {
             element {
               uuid {
-                string: "92079fc0-62fe-46b9-892d-e2778bbf07ab"
-              }
-              bounds {
-                origin {
-                }
-                size {
-                  width: 1920
-                  height: 1080
-                }
-              }
-              opacity: 1
-              path {
-                closed: true
-                points {
-                  point {
-                  }
-                  q0 {
-                  }
-                  q1 {
-                  }
-                }
-                points {
-                  point {
-                    x: 1
-                  }
-                  q0 {
-                    x: 1
-                  }
-                  q1 {
-                    x: 1
-                  }
-                }
-                points {
-                  point {
-                    x: 1
-                    y: 1
-                  }
-                  q0 {
-                    x: 1
-                    y: 1
-                  }
-                  q1 {
-                    x: 1
-                    y: 1
-                  }
-                }
-                points {
-                  point {
-                    y: 1
-                  }
-                  q0 {
-                    y: 1
-                  }
-                  q1 {
-                    y: 1
-                  }
-                }
-                shape {
-                  type: TYPE_RECTANGLE
-                }
-              }
-              fill {
-                color {
-                  red: 0.117647059
-                  green: 0.564705908
-                  blue: 1
-                  alpha: 1
-                }
-              }
-              stroke {
-                width: 3
-                color {
-                  red: 1
-                  green: 1
-                  blue: 1
-                  alpha: 1
-                }
-              }
-              shadow {
-                angle: 315
-                offset: 5
-                radius: 5
-                color {
-                  alpha: 1
-                }
-                opacity: 0.75
-              }
-              feather {
-                radius: 0.05
-              }
-              text {
-                attributes {
-                  font {
-                    name: "TimesNewRomanPSMT"
-                    size: 90
-                    family: "TimesNewRomanPSMT"
-                    face: "Regular"
-                  }
-                  text_solid_fill {
-                    red: 1
-                    green: 1
-                    blue: 1
-                    alpha: 1
-                  }
-                  paragraph_style {
-                    alignment: ALIGNMENT_CENTER
-                    line_height_multiple: 1
-                    text_list {
-                    }
-                  }
-                  stroke_color {
-                    red: 1
-                    green: 1
-                    blue: 1
-                    alpha: 1
-                  }
-                  custom_attributes {
-                    range {
-                      end: 27
-                    }
-                    original_font_size: 90
-                  }
-                  custom_attributes {
-                    range {
-                      start: 28
-                      end: 48
-                    }
-                    original_font_size: 90
-                  }
-                }
-                shadow {
-                  angle: 315
-                  offset: 5
-                  radius: 5
-                  color {
-                    alpha: 1
-                  }
-                  opacity: 0.75
-                }
-                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line one\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line two\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line three\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line four}"
-                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
-                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
-                margins {
-                }
-                is_superscript_standardized: true
-                transformDelimiter: "  \342\200\242  "
-                chord_pro {
-                  color {
-                    alpha: 1
-                  }
-                }
-              }
-              text_line_mask {
-              }
-            }
-            info: 3
-            text_scroller {
-              scroll_rate: 0.5
-              should_repeat: true
-              repeat_distance: 0.052083333333333336
-            }
-          }
-          background_color {
-            alpha: 1
-          }
-          size {
-            width: 1920
-            height: 1080
-          }
-          uuid {
-            string: "aeb7d8a5-85d2-4b63-abd5-90fdccfc6078"
-          }
-        }
-        notes {
-          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
-          attributes {
-            font {
-              name: "ArialMT"
-              size: 50
-              family: "Arial"
-              face: "Regular"
-            }
-            text_solid_fill {
-              alpha: 1
-            }
-            paragraph_style {
-              line_height_multiple: 1
-              text_list {
-              }
-            }
-            stroke_color {
-              red: 1
-              green: 1
-              blue: 1
-              alpha: 1
-            }
-          }
-        }
-        chord_chart {
-        }
-      }
-    }
-  }
-  isEnabled: true
-}
-cues {
-  uuid {
-    string: "670f4462-96e5-43b8-8b53-c3dc3cfe4145"
-  }
-  completion_target_uuid {
-    string: "00000000-0000-0000-0000-000000000000"
-  }
-  completion_action_type: COMPLETION_ACTION_TYPE_LAST
-  completion_action_uuid {
-    string: "00000000-0000-0000-0000-000000000000"
-  }
-  trigger_time {
-  }
-  actions {
-    uuid {
-      string: "2a03efd4-48ff-4f61-9f91-aafc57bfac2a"
-    }
-    isEnabled: true
-    type: ACTION_TYPE_PRESENTATION_SLIDE
-    slide {
-      presentation {
-        base_slide {
-          elements {
-            element {
-              uuid {
-                string: "077a3979-cb09-4ad8-a9e1-ad638b0e296f"
+                string: "2f4790bc-f914-4c5c-b39a-9013a4c16c7b"
               }
               bounds {
                 origin {
@@ -465,7 +269,7 @@ cues {
                   }
                   opacity: 0.75
                 }
-                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line one\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line two\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line three\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line four\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line five\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line 6\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line 7\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Line 8}"
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Господь есть мой свет, }"
                 vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
                 scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
                 margins {
@@ -496,7 +300,3911 @@ cues {
             height: 1080
           }
           uuid {
-            string: "8f512616-f25b-4936-8ce1-e593a21eedbf"
+            string: "20ea5640-a38f-43a4-920e-736665834802"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "a9af18d3-2a5b-4b67-8df9-72a9e6ca3e08"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "67efcfdc-426d-4ffd-ab75-2831cd4fce51"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "433c2a35-2a9a-4eeb-b98d-436405f29627"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Он мой свет, Спаситель мой, }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "ceef46a7-cd83-4ce1-a7f5-406c458ca41e"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "fa7f04e5-9d6b-4a18-9d84-b358268bf5f0"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "97281480-4f8c-4653-8242-af085df92641"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "cc9aa474-e67b-4468-84a0-d88e11c7228c"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 я не страшусь. }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "9a5f280e-c924-4fae-91d5-75654d542def"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "3f1ffe0c-1eb5-459b-b4b2-0fd03ee5d1ca"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "3229ca1b-7ea5-41d4-a4c9-e2f59e60c765"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "d6d99d85-dc52-4dff-9c6b-814e57e1774c"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Господь мой есть крепость }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "4561d03a-6536-4f24-89c1-ce6d803797e3"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "3ebeab1b-e7b1-4fee-85fe-42d397c57ea9"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "23ff7b10-7a48-469b-8dd6-f1b42a3ef783"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "f902c258-8f17-4f81-ad1d-b40ac55a8a62"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 для жизни моей, }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "f8419640-05b6-4c45-9307-916061f0e041"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "191ac1d2-56c3-4297-906a-17d0e9ce0761"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "0b55ecf7-fab4-4bbf-b165-b807966651fd"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "1f72902a-1808-4db5-b68a-6f1b80164a18"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 кого убоюся я? }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "aec7fb2f-a86d-400c-8dba-0cd5999aa2f2"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "4af33856-158a-4baf-a388-46a3634e1d45"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "4acce73d-b0d7-497c-ab98-a2ffa8a4e211"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "ea7b0466-cf77-4a68-a226-5c519f870896"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Войско ли нечестивых близко, }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "c5e1c8d9-55fe-477c-b8bf-05768ce6c77a"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "6da18430-2064-4d92-bc8b-8171ce7a709b"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "5575f53f-7264-4866-a8d9-6d98e6feb771"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "f87c202a-6c15-475e-a628-0cab0c5822bc"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 и я не страшусь.}"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "b645ce4e-58dc-459a-84a3-ea429a7fa9a8"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "abfedca9-408c-4321-8c49-89511fd485a9"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "624ed698-5796-4b25-8b81-4a1e531d048d"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "9b6b6584-aae3-4ad2-8228-776b457ebf43"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Грозит ли враг войною, }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "906f7324-7bf8-4ba3-a89e-8be578a9538d"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "22834f5d-5064-4ef3-a79a-d8167b47fd37"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "0f47c071-fb3b-4ad9-98e2-f1a985efb1ad"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "7c3262ba-2ec2-4d2f-8e4a-efd6c0e80779"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 на Бога надеюсь я. }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "211bff28-8d03-4fea-8799-302b778eeab4"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "5bc149ee-71fc-4919-9771-1cec6666ce25"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "9e5f05ec-36cf-464b-a276-cf43ee439da5"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "7e13abf7-9be9-4a95-a5c5-f077191cb76f"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Я одного лишь жду от Творца, }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "4d799455-8502-4397-8994-b9608e028c4e"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "b73814a9-19b3-4ee6-8811-1f3d70cc1b2c"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "83a297d6-f59f-4f97-af9b-7ad98d89600b"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "ea834249-902e-47c0-9e72-c095a22914d8"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 одного я жду: }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "7ab98206-ad42-413f-99c2-a914abe7058a"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "aff9a385-2f52-4ca0-9a59-3eb551492f95"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "0bc2d946-5651-4978-afed-1a1aad364d44"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "5bb74036-9dbb-4056-95f1-8852e479336f"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Чтоб в доме Божьем }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "a1b6d59a-8aef-4ab1-8297-9c58dedca94a"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "26f5ec0b-0599-4108-8eaa-3ba9d54e93f2"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "97b2a302-2abc-4492-bd6f-0db3a5856e3b"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "b1f8840d-5edb-462b-92f9-2e9569ee48c7"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 я мог пребывать }"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "4b13e575-e61c-4922-97ed-4d33698f6603"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "0e29c0ff-3f60-4af7-ad63-415182358897"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "f9a5d232-6767-4c2d-8d43-015ba69ac529"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "3e6b1a5e-cda6-4a1a-b434-e75382b01ebc"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 навсегда,}"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "70acf5f2-c6a7-4b65-b80c-977a7dd34efc"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "d258d762-c0fe-4e5a-9d24-87c13b199e42"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "b6dec293-0b1e-4ec1-80c7-b081d50f2588"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "76dcd813-8dba-42a1-bd9f-87d85dd0ae17"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Аминь.}"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "5e443671-d891-49bf-9eef-e318c2521fff"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "a6b10c9e-6834-473c-ab9c-f75ee53380d2"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "b87f1b03-74dc-4bd5-9a0a-a72bfe0837f7"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "b4615857-ec71-4a51-8d19-2961823e8032"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 * * *}"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "f8158453-acf2-4557-9826-232e252e6fb9"
           }
         }
         notes {

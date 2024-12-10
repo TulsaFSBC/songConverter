@@ -38,7 +38,7 @@ cue_groups {
     }
     name: "Group"
   }
-  $SLIDE_IDENTIFIERS
+$SLIDE_IDENTIFIERS
 }
 $SLIDES
 ccli {

@@ -83,7 +83,7 @@ app.http('fileIsModified', {
         const pro7PresentationTemplate = fs.readFileSync('./pro7Templates/presentation.txt').toString(),
               pro7SlideTemplate = fs.readFileSync('./pro7Templates/slide.txt').toString(),
               pro7SlideTextTemplate = fs.readFileSync('./pro7Templates/slideText.txt').toString(),
-              pro7TextLineTemplate = fs.readFileSync('./pro7Templates/textLinee.txt').toString(),
+              pro7TextLineTemplate = fs.readFileSync('./pro7Templates/textLine.txt').toString(),
               pro7SlideIdentifierTemplate = fs.readFileSync('./pro7Templates/slideIdentifier.txt').toString()
 
         let config = {
@@ -95,7 +95,7 @@ app.http('fileIsModified', {
         async function extractTextFromPptx() {
             try {
                 pptxText = await new Promise((resolve, reject) => {
-                    textract.fromFileWithPath("./powerpoint1.pptx", config, (error, text) => {
+                    textract.fromFileWithPath("./powerpoint.pptx", config, (error, text) => {
                         if (error) {
                             reject(error);
                         } else {
@@ -152,7 +152,7 @@ app.http('fileIsModified', {
             
             textSlides.forEach(slide => {
                 if(slide != ""){
-                    let slideId = uuidv4()
+                    let slideId = uuidv4();
                     let slideLines = slide.split("\n");
                     let rtfSlideLinesArray = [];
                     slideLines.forEach(line =>{
@@ -161,15 +161,14 @@ app.http('fileIsModified', {
                             rtfSlideLinesArray.push(rtfLine)
                         }
                     })
-                    slideLines[slideLines.length - 1].replace(/\\par\\pard/gm, "")
-                    let rtfSlideLines = rtfSlideLinesArray.join("");
-                    console.log(rtfSlideLines)                    
+                    let rtfSlideLines = rtfSlideLinesArray.join("");                    
                     let rtfSlide = pro7SlideTextTemplate.replace("$TEXT_LINES", rtfSlideLines);
-                    rtfSlide = rtfSlide.replace("$SLIDE_UUID", slideId)
                     let pro7SlideString = pro7SlideTemplate.replace("$RTF_DATA", rtfSlide);
+                    pro7SlideString = pro7SlideString.replace("\\\\par\\\\pard}", "}")
                     pro7SlideString = pro7SlideString.replace(/\$UUID/gm, function(){
                         return uuidv4()
                     });
+                    pro7SlideString = pro7SlideString.replace("$SLIDE_UUID", slideId)
                     pro7SlidesArray.push(pro7SlideString)
                     slideIdentifierGuids.push(slideId);
                 }
@@ -182,33 +181,18 @@ app.http('fileIsModified', {
                 slideIdentifiers.push(slideIdentifier);
             })
             let slideIdentifiersString = slideIdentifiers.join("");
-            presentationString = presentationString.replace("$SLIDE_IDENTIFIERS"), slideIdentifiersString
+            presentationString = presentationString.replace("$SLIDE_IDENTIFIERS", slideIdentifiersString)
             presentationString = presentationString.replace("$SLIDES", pro7SlidesArray.join("\n"));
             presentationString = presentationString.replace(/\$UUID/gm, function(){
                         return uuidv4()
                     });
-            //presentationString = presentationString.replaceAll("\\", "\\\\")
-            fs.writeFileSync(`./presentationString1.txt`, presentationString, err => {
+            fs.writeFileSync("./presentationString.txt", presentationString, err => {
                 if (err) {
                     console.error(err);
                 } else {
-                    context.log("pro File created successfully.")
+                    context.log("Presentation data parsed into format successfully.")
                 }
             });
-            
-
-            /*await child.exec(`".\\protoc\\bin\\protoc.exe" --encode="rv.data.Presentation" --proto_path ".\\proto" ".\\proto\\propresenter.proto" < "${presentationString}" > ".\\${outputFile}"`, (err, stdout, stderr) => {
-                if (err) {
-                  // node couldn't execute the command
-                  return;
-                }
-              
-                // the *entire* stdout and stderr (buffered)
-                console.log("I've been here!")
-                console.log(`stdout: ${stdout}`);
-                console.log(`stderr: ${stderr}`);
-
-              }); */
               
                 const outputFile = fs.createWriteStream(`./${outputFilePath}`);
                 const inputFile = fs.createReadStream("./presentationString.txt")
@@ -217,31 +201,33 @@ app.http('fileIsModified', {
                 '--proto_path=./proto',
                 './proto/propresenter.proto'
                 ]);
+                try{
+                    inputFile.pipe(protoc.stdin);
+                    protoc.stdout.pipe(outputFile);
 
-                // Pipe input and output
-                inputFile.pipe(protoc.stdin);
-                protoc.stdout.pipe(outputFile);
+                    protoc.on('close', (code) => {
+                        console.log(`Process exited with code: ${code}`);
+                    });
 
-                protoc.on('close', (code) => {
-                    console.log(`Process exited with code: ${code}`);
-                });
-
-                protoc.stderr.on('data', (data) => {
-                    console.error(`stderr: ${data}`);
-                });
-
+                    protoc.stderr.on('data', (data) => {
+                        console.error(`stderr: ${data}`);
+                    });
+                    console.log(".pro file created successfully.")
+                }
+                catch(err){
+                    console.log(err)
+                }               
         }
-        
-/*
-        context.log("Uploading file to SharePoint...")
+        context.log("Uploading file to SharePoint...")       
         const destinationFolder = ((jsonFileInfo.parentReference.path).split("root:/")[0]) + "root:/proPresenter Files"
-        var fileName = outputFile;
-        var destinationPath;
+        var fileName = outputFilePath;
+        var destinationPath = destinationFolder + "/" + outputFilePath;
+        console.log(destinationPath)
         context.log("Destination path: " + destinationPath)
         var isNameUnique = false;
         var i = 1;
         while (!isNameUnique) {
-            destinationPath = destinationFolder //+ fileName;
+            destinationPath = destinationFolder + fileName;
             await fetch(`https://graph.microsoft.com/v1.0/${destinationPath}`,{ // check if file exists
                 method: "GET",
                 headers:{
@@ -255,6 +241,23 @@ app.http('fileIsModified', {
                     if(result == '{"error":{"code":"itemNotFound","message":"The resource could not be found."}}'){
                         context.log("File name is unique. Uploading the file...")
                         isNameUnique = true;
+
+                        const file = fs.createWriteStream(`./${outputFilePath}`);
+
+                        const requestOptions = {
+                        method: "PUT",
+                        headers: {
+                            "Content-Type": "text/plain",
+                            "Authorization": `Bearer ${accessToken}`
+                        },
+                        body: file,
+                        redirect: "follow"
+                        };
+
+                        fetch("https://graph.microsoft.com/v1.0/drives/b!4UHkXyJCHU-eOG0diOb45t0ezJHvmUFHgfS4Dq_i6-rCrjwkY5MaQYaarmbje6No/items/01STCM33YWJBC2LLXEIZBIN346XOQGEGDL:/test.pro6:/content", requestOptions)
+                        .then((response) => response.text())
+                        .then((result) => console.log(result))
+                        .catch((error) => console.error(error));
                     }else{
                         context.log("File name is not unique.")
                         if(i == 1){
@@ -265,14 +268,12 @@ app.http('fileIsModified', {
                             } else if (presentationVersion == 7){
                                 fileName = fileName.replace(/ (.*?).pro/, ` (${i}).pro`)
                             }
-                            
                         }
                         i++;
                     }
                 })
                 .catch((error) => context.error(error));
         }
-        */
         return { body: `This worked!` };
     }
 });
