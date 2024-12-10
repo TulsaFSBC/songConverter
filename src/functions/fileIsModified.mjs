@@ -7,12 +7,7 @@ import { v4 as uuidv4} from 'uuid';
 import * as child from 'child_process'
 
 //todo
-//slide creation cleanup
-//remove rtf module
-//create correct presentation string
-//upload to SP
 //delete temp files after function executes: powerpoint.pptx, presentationString.txt, .pro file.
-//Logging to a persistent source
 //error handling
 //config
 //code cleanup
@@ -46,7 +41,7 @@ app.http('fileIsModified', {
         })
             .then((response) => response.text())
             .then((result) => {
-                console.log("Retrieved token successfully.");
+                context.log("Retrieved token successfully.");
                 const jsonTokenData = JSON.parse(result);
                 accessToken = jsonTokenData.access_token;
             })
@@ -61,7 +56,7 @@ app.http('fileIsModified', {
         })
             .then((response) => response.text())
             .then((result) => {
-                console.log("File information retrieved successfully.")
+                context.log("File information retrieved successfully.")
                 fileInfoResponse = result;
             })
             .catch((error) => context.error(error));
@@ -237,7 +232,6 @@ app.http('fileIsModified', {
             })
                 .then((response) => response.text())
                 .then((result) => {
-                    console.log(result)
                     if(result == '{"error":{"code":"itemNotFound","message":"The resource could not be found."}}'){
                         context.log("File name is unique. Uploading the file...")
                         isNameUnique = true;
@@ -254,10 +248,20 @@ app.http('fileIsModified', {
                         redirect: "follow"
                         };
 
-                        fetch("https://graph.microsoft.com/v1.0/drives/b!4UHkXyJCHU-eOG0diOb45t0ezJHvmUFHgfS4Dq_i6-rCrjwkY5MaQYaarmbje6No/items/01STCM33YWJBC2LLXEIZBIN346XOQGEGDL:/test.pro6:/content", requestOptions)
+                        fetch("https://graph.microsoft.com/v1.0/drives/b!4UHkXyJCHU-eOG0diOb45t0ezJHvmUFHgfS4Dq_i6-rCrjwkY5MaQYaarmbje6No/items/01STCM33YWJBC2LLXEIZBIN346XOQGEGDL:/testing.pro6:/content", requestOptions)
                         .then((response) => response.text())
-                        .then((result) => console.log(result))
-                        .catch((error) => console.error(error));
+                        .then((result) => {
+                            context.log(result)
+                            context.log("File uploaded successfully.")
+                            context.log("Deleting temporary files")
+
+                            fs.unlink("./presentationString.txt");
+                            fs.unlink("./powerpoint.pptx");
+                            fs.unlink(`./${outputFilePath}`);
+                            context.log("Temporary Files deleted")
+
+                        })
+                        .catch((error) => context.error(error));
                     }else{
                         context.log("File name is not unique.")
                         if(i == 1){
