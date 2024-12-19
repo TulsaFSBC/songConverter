@@ -10,7 +10,6 @@
   "dependencies": {
     "@azure/functions": "^4.6.0",
     "@markell12/textract": "^2.5.1",
-    "env-var": "^7.5.0",
     "rtf": "^0.0.4",
     "uuid": "^10.0.0"
   },
