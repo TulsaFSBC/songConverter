@@ -11,10 +11,12 @@ import env from 'env-var';
 //todo
 //error handling
 //code cleanup
-//convert all API calls to promise-based
 //error checking on all API calls
 //sharepoint replacing file instead of creating new one
-//variable cleanup
+    //rewrite it to list all files instead of checking if a file exists in sharepoint
+        //compare the name once you have a list
+            //change until valid if invalid
+            //upload if valid  
 
 function b64(text){
     return Buffer.from(text).toString('base64');
@@ -42,11 +44,17 @@ async function extractTextFromPptx(filePath) {
     return pptxText;
 }
 
+async function apiCall(url, requestOptions){
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    return data;
+}
+
 app.http('fileIsModified', {
     methods: ['GET','POST'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
-        
+        let runtimeFiles = [];
         const config = {
             tenantId: env.get("TENANT_ID").required().asString(),
             clientId: env.get("CLIENT_ID").required().asString(),
@@ -54,12 +62,12 @@ app.http('fileIsModified', {
             proPresenterVersion: env.get("PROPRESENTER_VERSION").required().default(7).asIntPositive()
         }
 
-        var accessToken, fileInfoResponse;
         const requestBody = await request.text();
         const requestData = JSON.parse(requestBody)
         context.log("Received request: " + requestBody)
         context.log("Retrieving Access token...")
-        await fetch(`https://login.microsoftonline.com/${config.tenantId}/oauth2/token`, {
+
+        const accessTokenData = await apiCall(`https://login.microsoftonline.com/${config.tenantId}/oauth2/token`,{
             method: "POST",
             headers: {
                 "content-type": "application/x-www-form-urlencoded"
@@ -70,37 +78,24 @@ app.http('fileIsModified', {
                 "client_secret": config.clientSecret,
                 "resource": "https://graph.microsoft.com"
             }),
-            redirect: "follow"
-        })
-            .then((response) => response.text())
-            .then((result) => {
-                context.log("Retrieved token successfully.");
-                const jsonTokenData = JSON.parse(result);
-                accessToken = jsonTokenData.access_token;
-            })
-            .catch((error) => context.error(error));
-        
+            redirect: "follow"}
+        )
+        const accessToken = accessTokenData["access_token"]
+
         context.log("Retrieving file information...")
-        await fetch(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${requestData.driveItemId}`,{
+        const jsonFileInfo = await apiCall(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${requestData.driveItemId}`, {
             method: "GET",
             headers:{
                 "Authorization": `Bearer ${accessToken}`
             }
-        })
-            .then((response) => response.text())
-            .then((result) => {
-                context.log("File information retrieved successfully.")
-                fileInfoResponse = result;
-            })
-            .catch((error) => context.error(error));
-
-        const jsonFileInfo = JSON.parse(fileInfoResponse);
+        }) 
         const downloadUrl = jsonFileInfo["@microsoft.graph.downloadUrl"];
         context.log("Downloading file...");
         const response = await fetch(downloadUrl)
             .catch((error) => context.error(error));
         const stream = Readable.fromWeb(response.body);
-        await writeFile('powerpoint.pptx', stream);
+        writeFile('powerpoint.pptx', stream);
+        runtimeFiles.push("powerpoint.pptx")
         context.log("File downloaded successfully.");
         
         context.log("Starting file conversion...")
@@ -115,7 +110,6 @@ app.http('fileIsModified', {
                 presentationFooter: fs.readFileSync('./pro6Templates/presentationFooter.txt').toString(),
                 slide: fs.readFileSync('./pro6Templates/presentationSlide.txt').toString()
             }
-
             outputFilePath = `${(jsonFileInfo.name).replace(".pptx", ".pro6")}`
             var pro6SlidesArray = []
             textSlides.forEach(slide => {
@@ -147,8 +141,10 @@ app.http('fileIsModified', {
                     console.error(err);
                 } else {
                     context.log("pro6 File created successfully.")
+                    runtimeFiles.push(`./${outputFilePath}`)
                 }
             });
+            
         } else if (config.proPresenterVersion == 7){
 
             const presentationTemplates = {
@@ -200,32 +196,30 @@ app.http('fileIsModified', {
             presentationString = presentationString.replace(/\$UUID/gm, function(){
                         return uuidv4()
                     });
-            fs.writeFileSync("./presentationString.txt", presentationString, err => {
-                if (err) {
-                    console.error(err);
-                } else {
-                    context.log("Presentation data parsed into format successfully.")
-                }
+            fs.writeFileSync("./presentationData.txt", presentationString, err => {
+                console.error(err);
             });
+            context.log("Presentation data parsed into format successfully.")
+            runtimeFiles.push("./presentationData.txt")
               
-                // Define the command and arguments
-                const command = path.resolve('./protoc/bin/protoc.exe'); // Adjust the path if necessary
-                const args = [
-                '--encode', 'rv.data.Presentation',
-                './proto/presentation.proto',
-                '--proto_path', './proto/'
-                ];
+            const command = path.resolve('./protoc/bin/protoc.exe');
+            const args = [
+            '--encode', 'rv.data.Presentation',
+            './proto/presentation.proto',
+            '--proto_path', './proto/'
+            ];
 
-                // Run the command
-                const result = child.spawnSync(command, args, {
-                input: fs.readFileSync('./presentationString.txt'), // Input redirection
-                stdio: ['pipe', 'pipe', 'pipe'], // Configures stdin, stdout, and stderr
-                });
-                if (result.error) {
-                    context.error('Error executing command:', result.error);
-                    process.exit(1);
-                }
-                fs.writeFileSync(`./${outputFilePath}`, result.stdout);            
+            const result = child.spawnSync(command, args, {
+            input: fs.readFileSync('./presentationData.txt'),
+            stdio: ['pipe', 'pipe', 'pipe'],
+            });
+            if (result.error) {
+                context.error('Error executing command:', result.error);
+                process.exit(1);
+            }
+            fs.writeFileSync(`./${outputFilePath}`, result.stdout);
+            context.log("File created successfully")
+            runtimeFiles.push(`./${outputFilePath}`)            
         }
         context.log("Uploading file to SharePoint...")       
         const destinationFolder = ((jsonFileInfo.parentReference.path).split("root:/")[0]) + "root:/proPresenter Files"
@@ -237,61 +231,47 @@ app.http('fileIsModified', {
         var i = 1;
         while (!isNameUnique) {
             destinationPath = destinationFolder + fileName;
-            await fetch(`https://graph.microsoft.com/v1.0/${destinationPath}`,{ // check if file exists
+            const sharepointFileInfo = await apiCall(`https://graph.microsoft.com/v1.0/${destinationPath}`,{ // check if file exists
                 method: "GET",
                 headers:{
                     "Authorization": `Bearer ${accessToken}`,
                     "Accept": "application/json"
                 }
             })
-                .then((response) => response.text())
-                .then((result) => {
-                    context.log(result)
-                    if(result == '{"error":{"code":"itemNotFound","message":"The resource could not be found."}}'){
-                        context.log("File name is unique. Uploading the file...")
-                        isNameUnique = true;
 
-                        const file = fs.readFileSync(`./${outputFilePath}`);
+            if(sharepointFileInfo.error.code === "itemNotFound"){
+                context.log("File name is unique. Uploading the file...")
+                isNameUnique = true;
 
-                        const requestOptions = {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "text/plain",
-                            "Authorization": `Bearer ${accessToken}`
-                        },
-                        body: file,
-                        redirect: "follow"
-                        };
-
-                        fetch(`https://graph.microsoft.com/v1.0/drives/b!4UHkXyJCHU-eOG0diOb45t0ezJHvmUFHgfS4Dq_i6-rCrjwkY5MaQYaarmbje6No/items/01STCM33YWJBC2LLXEIZBIN346XOQGEGDL:/${outputFilePath}:/content`, requestOptions)
-                        .then((response) => response.text())
-                        .then((result) => {
-                            context.log(result)
-                            context.log("File uploaded successfully.")
-                            context.log("Deleting temporary files")
-
-                            fs.unlinkSync("./presentationString.txt");
-                            fs.unlinkSync("./powerpoint.pptx");
-                            fs.unlinkSync(`./${outputFilePath}`);
-                            context.log("Temporary Files deleted")
-
-                        })
-                        .catch((error) => context.error(error));
-                    }else{
-                        context.log("File name is not unique.")
-                        if(i == 1){
-                            fileName += fileName + `( ${i})`
-                        }else{
-                            if(config.proPresenterVersion == 6){
-                                fileName = fileName.replace(/ (.*?).pro6/, ` (${i}).pro6`)
-                            } else if (config.proPresenterVersion == 7){
-                                fileName = fileName.replace(/ (.*?).pro/, ` (${i}).pro`)
-                            }
-                        }
-                        i++;
-                    }
+                await apiCall(`https://graph.microsoft.com/v1.0/drives/b!4UHkXyJCHU-eOG0diOb45t0ezJHvmUFHgfS4Dq_i6-rCrjwkY5MaQYaarmbje6No/items/01STCM33YWJBC2LLXEIZBIN346XOQGEGDL:/${outputFilePath}:/content`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "text/plain",
+                        "Authorization": `Bearer ${accessToken}`
+                    },
+                    body: fs.readFileSync(`./${outputFilePath}`),
+                    redirect: "follow"
                 })
-                .catch((error) => context.error(error));
+
+                context.log("File uploaded successfully.")
+                context.log("Deleting temporary files")
+                runtimeFiles.forEach(file => {
+                    fs.unlinkSync(file)
+                })
+                context.log("Temporary Files deleted")
+            }else{
+                context.log("File name is not unique.")
+                if(i == 1){
+                    fileName += fileName + `( ${i})`
+                }else{
+                    if(config.proPresenterVersion == 6){
+                        fileName = fileName.replace(/ (.*?).pro6/, ` (${i}).pro6`)
+                    } else if (config.proPresenterVersion == 7){
+                        fileName = fileName.replace(/ (.*?).pro/, ` (${i}).pro`)
+                    }
+                }
+                i++;
+            }
         }
         return { body: `This worked!` };
     }
