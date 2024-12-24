@@ -88,10 +88,10 @@ app.http('fileIsModified', {
         context.log("Downloading file...");
         var textSlides, outputFilePath
 
-        child.execFileSync('curl', ['--output', 'powerpoint.pptx', downloadUrl]); //i hate async.
+        child.execFileSync('curl', ['--output', '/tmp/powerpoint.pptx', downloadUrl]); //i hate async.
 
-        runtimeFiles.push("./powerpoint.pptx")
-        let pptxText = await extractTextFromPptx("./powerpoint.pptx");
+        runtimeFiles.push("/tmp/powerpoint.pptx")
+        let pptxText = await extractTextFromPptx("/tmp/powerpoint.pptx");
             textSlides = pptxText.split("\n\n");
         if(config.proPresenterVersion == 6){
             const presentationTemplates = {
