@@ -227,6 +227,16 @@ app.http('fileIsModified', {
         var destinationPath = destinationFolder + "/" + outputFilePath;
         console.log(destinationPath)
         context.log("Destination path: " + destinationPath)
+
+        const sharepointFiles = await apiCall(`https://graph.microsoft.com/v1.0/${destinationPath}/children`, {
+            method: "GET",
+            headers:{
+                "Authorization": `Bearer ${accessToken}`,
+                "Accept": "application/json"
+            }
+        })
+        console.log(sharepointFiles)
+
         var isNameUnique = false;
         var i = 1;
         while (!isNameUnique) {
