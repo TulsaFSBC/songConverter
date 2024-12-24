@@ -14,7 +14,7 @@ env:
   NODE_VERSION: '20.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
 
 jobs:
-  build-and-deploy:
+  build:
     runs-on: windows-latest
     steps:
       - name: 'Checkout GitHub Action'
@@ -34,6 +34,23 @@ jobs:
           npm run test --if-present
           popd
 
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: node-app
+          path: .
+
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    
+    
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: node-app
+      
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
@@ -41,4 +58,4 @@ jobs:
           app-name: 'SongConverter'
           slot-name: 'Production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_988B1B7EFBBD49B98BB8CAC181ED9A12 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_43AAB73751C14984A31A2DC0388157D6 }}
