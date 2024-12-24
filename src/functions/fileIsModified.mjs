@@ -49,7 +49,6 @@ app.http('fileIsModified', {
     methods: ['GET','POST'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
-        let runtimeFiles = [];
         const config = {
             tenantId: env.get("TENANT_ID").required().asString(),
             clientId: env.get("CLIENT_ID").required().asString(),
@@ -88,10 +87,9 @@ app.http('fileIsModified', {
         context.log("Downloading file...");
         var textSlides, outputFilePath
 
-        child.execFileSync('curl', ['--output', './tmp/powerpoint.pptx', downloadUrl]); //i hate async.
+        child.execFileSync('curl', ['--output', 'D:/local/temp/powerpoint.pptx', downloadUrl]); //i hate async.
 
-        runtimeFiles.push("./tmp/powerpoint.pptx")
-        let pptxText = await extractTextFromPptx("./tmp/powerpoint.pptx");
+        let pptxText = await extractTextFromPptx("D:/local/temp/powerpoint.pptx");
             textSlides = pptxText.split("\n\n");
         if(config.proPresenterVersion == 6){
             const presentationTemplates = {
@@ -125,12 +123,11 @@ app.http('fileIsModified', {
             })        
 
             const presentationString = presentationTemplates.presentationHeader + pro6SlidesArray.join() + presentationTemplates.presentationFooter;
-            fs.writeFileSync(`./${outputFilePath}`, presentationString, err => {
+            fs.writeFileSync(`D:/local/temp/${outputFilePath}`, presentationString, err => {
                 if (err) {
                     console.error(err);
                 } else {
                     context.log("pro6 File created successfully.")
-                    runtimeFiles.push(`./${outputFilePath}`)
                 }
             });
             
@@ -185,11 +182,10 @@ app.http('fileIsModified', {
             presentationString = presentationString.replace(/\$UUID/gm, function(){
                         return uuidv4()
                     });
-            fs.writeFileSync("./presentationData.txt", presentationString, err => {
+            fs.writeFileSync("D:/local/temp/presentationData.txt", presentationString, err => {
                 console.error(err);
             });
             context.log("Presentation data parsed into format successfully.")
-            runtimeFiles.push("./presentationData.txt")
               
             const command = path.resolve('./protoc/bin/protoc.exe');
             const args = [
@@ -199,16 +195,15 @@ app.http('fileIsModified', {
             ];
 
             const result = child.spawnSync(command, args, {
-            input: fs.readFileSync('./presentationData.txt'),
+            input: fs.readFileSync('D:/local/temp/presentationData.txt'),
             stdio: ['pipe', 'pipe', 'pipe'],
             });
             if (result.error) {
                 context.error('Error executing command:', result.error);
                 process.exit(1);
             }
-            fs.writeFileSync(`./${outputFilePath}`, result.stdout);
-            context.log("File created successfully")
-            runtimeFiles.push(`./${outputFilePath}`)            
+            fs.writeFileSync(`D:/local/temp/${outputFilePath}`, result.stdout);
+            context.log("File created successfully")          
         }
         context.log("Uploading file to SharePoint...")       
         const destinationFolder = ((jsonFileInfo.parentReference.path).split("root:/")[0]) + "root:/proPresenter Files"
@@ -228,15 +223,12 @@ app.http('fileIsModified', {
                 "Content-Type": "text/plain",
                 "Authorization": `Bearer ${accessToken}`
             },
-            body: fs.readFileSync(`./${outputFilePath}`),
+            body: fs.readFileSync(`D:/local/temp/${outputFilePath}`),
             redirect: "follow"
         })
 
         context.log("File uploaded successfully.")
         context.log("Deleting temporary files")
-        runtimeFiles.forEach(file => {
-            fs.unlinkSync(file)
-        })
         context.log("Temporary Files deleted")
         return { body: `This worked!` };
     }
