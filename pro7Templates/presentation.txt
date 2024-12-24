@@ -1,0 +1,48 @@
+application_info {
+  platform: PLATFORM_WINDOWS
+  platform_version {
+    major_version: 10
+    patch_version: 4294967295
+    build: "22631"
+  }
+  application: APPLICATION_PROPRESENTER
+  application_version {
+    major_version: 7
+    minor_version: 16
+    patch_version: 3
+    build: "118489862"
+  }
+}
+uuid {
+  string: "$UUID"
+}
+name: "$PRESENTATION_NAME"
+last_date_used {
+  seconds: 1730532183
+}
+last_modified_date {
+  seconds: 1730532183
+}
+background {
+  color {
+    alpha: 1
+  }
+}
+selected_arrangement {
+  string: "$UUID"
+}
+cue_groups {
+  group {
+    uuid {
+      string: "$UUID"
+    }
+    name: "Group"
+  }
+$SLIDE_IDENTIFIERS
+}
+$SLIDES
+ccli {
+}
+timeline {
+  duration: 300
+}

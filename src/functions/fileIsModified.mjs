@@ -1,161 +1,269 @@
 import { app } from "@azure/functions";
 import * as textract from '@markell12/textract'
 import * as fs from 'fs';
-import { writeFile } from 'node:fs/promises'
-import { Readable } from 'node:stream'
-import Format from '../../node_modules/rtf/lib/format.js'
-import Colors from '../../node_modules/rtf/lib/colors.js'
-import Fonts from '../../node_modules/rtf/lib/fonts.js'
-import RTF from '../../node_modules/rtf/lib/rtf.js'
 import { v4 as uuidv4} from 'uuid';
+import * as child from 'child_process'
+import path from 'path';
+import env from 'env-var';
+import { pipeline } from 'stream';
+import { promisify } from 'util';
 
 //todo
-//remove rtf module
-//check for alternative ways to extract text from pptx as current way sometimes add new line character in unwanted places
-//uncomment chunk required for pulling from office
-
-function rtfText(plainText) {
-    let rtfContent = new RTF();
-    let textFormat = new Format();
-    textFormat.fontSize = 100;
-    textFormat.color = Colors.WHITE;
-    textFormat.font = Fonts.TIMES_NEW_ROMAN
-    if(plainText.length > 0){
-        rtfContent.writeText(plainText, textFormat);
-        let outputRTF;
-        rtfContent.createDocument(
-            function(err,output){
-                outputRTF = output
-            }
-        )
-        return outputRTF
-    } else {
-        console.error("plainText property is empty. Please set before running this function.")
-        return null
-    }  
-}
+//error handling
+//code cleanup
+//error checking on all API calls 
 
 function b64(text){
     return Buffer.from(text).toString('base64');
+}
+
+async function extractTextFromPptx(filePath) {
+    let pptxText;
+    try {
+        pptxText = await new Promise((resolve, reject) => {
+            textract.fromFileWithPath(filePath, {
+                "preserveLineBreaks":true,
+                "preserveOnlyMultipleLineBreaks":false,
+                "tesseract.lang":"rus"
+            }, (error, text) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(text);
+                }
+            });
+        });
+    } catch (error) {
+        console.error("Error extracting text:", error);
+    }
+    return pptxText;
+}
+
+async function apiCall(url, requestOptions){
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    return data;
+}
+
+const streamPipeline = promisify(pipeline); // Define the streamPipeline utility
+
+async function downloadFile(url, path) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+  }
+
+  // Use streamPipeline to handle the readable stream and write to the file
+  await streamPipeline(response.body, fs.createWriteStream(path));
 }
 
 app.http('fileIsModified', {
     methods: ['GET','POST'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
-        var accessToken, fileInfoResponse;
+        let runtimeFiles = [];
+        const config = {
+            tenantId: env.get("TENANT_ID").required().asString(),
+            clientId: env.get("CLIENT_ID").required().asString(),
+            clientSecret: env.get("CLIENT_SECRET").required().asString(),
+            proPresenterVersion: env.get("PROPRESENTER_VERSION").required().default(7).asIntPositive()
+        }
+
         const requestBody = await request.text();
         const requestData = JSON.parse(requestBody)
         context.log("Received request: " + requestBody)
         context.log("Retrieving Access token...")
-        await fetch(`https://login.microsoftonline.com/${process.env.tenant_id}/oauth2/token`, {
+
+        const accessTokenData = await apiCall(`https://login.microsoftonline.com/${config.tenantId}/oauth2/token`,{
             method: "POST",
             headers: {
                 "content-type": "application/x-www-form-urlencoded"
             },
             body: new URLSearchParams({
                 "grant_type": "client_credentials",
-                "client_id": process.env.client_id,
-                "client_secret": process.env.client_secret,
+                "client_id": config.clientId,
+                "client_secret": config.clientSecret,
                 "resource": "https://graph.microsoft.com"
             }),
-            redirect: "follow"
-        })
-            .then((response) => response.text())
-            .then((result) => {
-                console.log("Retrieved token successfully.");
-                const jsonTokenData = JSON.parse(result);
-                accessToken = jsonTokenData.access_token;
-            })
-            .catch((error) => context.error(error));
-        
+            redirect: "follow"}
+        )
+        const accessToken = accessTokenData["access_token"]
+
         context.log("Retrieving file information...")
-        await fetch(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${requestData.driveItemId}`,{
+        const jsonFileInfo = await apiCall(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${requestData.driveItemId}`, {
             method: "GET",
             headers:{
                 "Authorization": `Bearer ${accessToken}`
             }
-        })
-            .then((response) => response.text())
-            .then((result) => {
-                console.log("File information retrieved successfully.")
-                fileInfoResponse = result;
-            })
-            .catch((error) => context.error(error));
-
-        const jsonFileInfo = JSON.parse(fileInfoResponse);
+        }) 
         const downloadUrl = jsonFileInfo["@microsoft.graph.downloadUrl"];
         context.log("Downloading file...");
-        const response = await fetch(downloadUrl)
-            .catch((error) => context.error(error));
-        const stream = Readable.fromWeb(response.body);
-        await writeFile('powerpoint.pptx', stream);
+        
+        try {
+            await downloadFile(downloadUrl, "./powerpoint.pptx");
+            console.log('File downloaded successfully.');
+        
+            // Other code here
+            console.log('Executing further actions.');
+        } catch (error) {
+            console.error('Error downloading file:', error);
+        }
+
+        runtimeFiles.push("powerpoint.pptx")
         context.log("File downloaded successfully.");
         
         context.log("Starting file conversion...")
-        const presentationHeader = fs.readFileSync('./pro6Templates/presentationHeader.txt').toString(),
-              presentationFooter = fs.readFileSync('./pro6Templates/presentationFooter.txt').toString(),
-              slideTemplate = fs.readFileSync('./pro6Templates/presentationSlide.txt').toString();
-        let config = {
-            "preserveLineBreaks":true,
-            "preserveOnlyMultipleLineBreaks":false,
-            "tesseract.lang":"rus"
-        }
-        let pptxText = "";
-        async function extractTextFromPptx() {
-            try {
-                pptxText = await new Promise((resolve, reject) => {
-                    textract.fromFileWithPath("./powerpoint.pptx", config, (error, text) => {
-                        if (error) {
-                            reject(error);
-                        } else {
-                            resolve(text);
-                        }
-                    });
-                });
-                return pptxText; // Return the extracted text if needed
-            } catch (error) {
-                console.error("Error extracting text:", error);
-            }
-        }
-        await extractTextFromPptx();
-        context.log(pptxText)
-        const textSlides = pptxText.split("\n\n");
         
-        var pro6SlidesArray = []
-        textSlides.forEach(slide => {
-            if(slide != ""){
-                let b64PlainText = b64(slide);
-                let slideLines = slide.split("\n");
-                let rtfSlideLinesArray = [];
-                slideLines.forEach(line =>{
-                    if (line != ""){
-                        let rtfLine = ("{\\fs200\\outl0\\strokewidth-20\\strokec1\\f0 {\\cf3\\ltrch " + line + "}\\li0\\sa0\\sb0\\fi0\\qc\\par}")
-                        rtfSlideLinesArray.push(rtfLine)
-                    }
-                })
-                let rtfSlideLines = rtfSlideLinesArray.join("\\n")
-                let rtfSlide = ("{\\rtf1\\prortf1\\ansi\\ansicpg1252\\uc1\\htmautsp\\deff2{\\fonttbl{\\f0\\fcharset0 Times New Roman;}}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red250\\green235\\blue215;}\\loch\\hich\\dbch\\pard\\slleading0\\plain\\ltrpar\\itap0{\\lang1033\\fs100\\outl0\\strokewidth-20\\strokec1\\f2\\cf1 \\cf1\\qc \n" + rtfSlideLines + "\n } \n }");
-                let b64RTFText = b64(rtfSlide)
-                let pro6SlideString = slideTemplate;
-                pro6SlideString = pro6SlideString.replace("$PLAIN_TEXT", b64PlainText); //plugs in actual content into slide template
-                pro6SlideString = pro6SlideString.replace("$RTF_TEXT", b64RTFText);
-                pro6SlideString = pro6SlideString.replace("$SLIDE_UUID", uuidv4());
-                pro6SlideString = pro6SlideString.replace("$TEXTBOX_UUID", uuidv4());
-                pro6SlidesArray.push(pro6SlideString)
+        let pptxText = await extractTextFromPptx("./powerpoint.pptx");
+        console.log(typeof pptxText)
+        const textSlides = pptxText.split("\n\n");
+        var outputFilePath;
+        if(config.proPresenterVersion == 6){
+            const presentationTemplates = {
+                presentationHeader: fs.readFileSync('./pro6Templates/presentationHeader.txt').toString(),
+                presentationFooter: fs.readFileSync('./pro6Templates/presentationFooter.txt').toString(),
+                slide: fs.readFileSync('./pro6Templates/presentationSlide.txt').toString()
             }
-        })        
+            outputFilePath = `${(jsonFileInfo.name).replace(".pptx", ".pro6")}`
+            var pro6SlidesArray = []
+            textSlides.forEach(slide => {
+                if(slide != ""){
+                    let b64PlainText = b64(slide);
+                    let slideLines = slide.split("\n");
+                    let rtfSlideLinesArray = [];
+                    slideLines.forEach(line =>{
+                        if (line != ""){
+                            let rtfLine = ("{\\fs200\\outl0\\strokewidth-20\\strokec1\\f0 {\\cf3\\ltrch " + line + "}\\li0\\sa0\\sb0\\fi0\\qc\\par}")
+                            rtfSlideLinesArray.push(rtfLine)
+                        }
+                    })
+                    let rtfSlideLines = rtfSlideLinesArray.join("\\n")
+                    let rtfSlide = ("{\\rtf1\\prortf1\\ansi\\ansicpg1252\\uc1\\htmautsp\\deff2{\\fonttbl{\\f0\\fcharset0 Times New Roman;}}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red250\\green235\\blue215;}\\loch\\hich\\dbch\\pard\\slleading0\\plain\\ltrpar\\itap0{\\lang1033\\fs100\\outl0\\strokewidth-20\\strokec1\\f2\\cf1 \\cf1\\qc \n" + rtfSlideLines + "\n } \n }");
+                    let b64RTFText = b64(rtfSlide)
+                    let pro6SlideString = presentationTemplates.slide;
+                    pro6SlideString = pro6SlideString.replace("$PLAIN_TEXT", b64PlainText); //plugs in actual content into slide template
+                    pro6SlideString = pro6SlideString.replace("$RTF_TEXT", b64RTFText);
+                    pro6SlideString = pro6SlideString.replace("$SLIDE_UUID", uuidv4());
+                    pro6SlideString = pro6SlideString.replace("$TEXTBOX_UUID", uuidv4());
+                    pro6SlidesArray.push(pro6SlideString)
+                }
+            })        
 
-        const presentationString = presentationHeader + pro6SlidesArray.join() + presentationFooter;
+            const presentationString = presentationTemplates.presentationHeader + pro6SlidesArray.join() + presentationTemplates.presentationFooter;
+            fs.writeFileSync(`./${outputFilePath}`, presentationString, err => {
+                if (err) {
+                    console.error(err);
+                } else {
+                    context.log("pro6 File created successfully.")
+                    runtimeFiles.push(`./${outputFilePath}`)
+                }
+            });
+            
+        } else if (config.proPresenterVersion == 7){
 
-        fs.writeFile('./pro6.pro6', presentationString, err => {
-            if (err) {
+            const presentationTemplates = {
+                presentation: fs.readFileSync('./pro7Templates/presentation.txt').toString(),
+                slide: fs.readFileSync('./pro7Templates/slide.txt').toString(),
+                slideText: fs.readFileSync('./pro7Templates/slideText.txt').toString(),
+                textLine: fs.readFileSync('./pro7Templates/textLine.txt').toString(),
+                slideIdentifier: fs.readFileSync('./pro7Templates/slideIdentifier.txt').toString()
+            }
+
+            var pro7SlidesArray = [],
+                slideIdentifierGuids = [],
+                slideIdentifiers = [];
+            outputFilePath = `${(jsonFileInfo.name).replace(".pptx", ".pro")}`
+            
+            textSlides.forEach(slide => {
+                if(slide != ""){
+                    let slideId = uuidv4();
+                    let slideLines = slide.split("\n");
+                    let rtfSlideLinesArray = [];
+                    slideLines.forEach(line =>{
+                        if (line != ""){
+                            let rtfLine = presentationTemplates.textLine.replace("$TEXT", line)
+                            rtfSlideLinesArray.push(rtfLine)
+                        }
+                    })
+                    let rtfSlideLines = rtfSlideLinesArray.join("");                    
+                    let rtfSlide = presentationTemplates.slideText.replace("$TEXT_LINES", rtfSlideLines);
+                    let pro7SlideString = presentationTemplates.slide.replace("$RTF_DATA", rtfSlide);
+                    pro7SlideString = pro7SlideString.replace("\\\\par\\\\pard}", "}")
+                    pro7SlideString = pro7SlideString.replace(/\$UUID/gm, function(){
+                        return uuidv4()
+                    });
+                    pro7SlideString = pro7SlideString.replace("$SLIDE_UUID", slideId)
+                    pro7SlidesArray.push(pro7SlideString)
+                    slideIdentifierGuids.push(slideId);
+                }
+            })        
+
+            var presentationString = presentationTemplates.presentation.replace("$PRESENTATION_NAME", "testinggg");
+
+            pro7SlidesArray.forEach(function (value, i) {
+                let slideIdentifier = presentationTemplates.slideIdentifier.replace("$SLIDE_UUID", slideIdentifierGuids[i])
+                slideIdentifiers.push(slideIdentifier);
+            })
+            let slideIdentifiersString = slideIdentifiers.join("");
+            presentationString = presentationString.replace("$SLIDE_IDENTIFIERS", slideIdentifiersString)
+            presentationString = presentationString.replace("$SLIDES", pro7SlidesArray.join("\n"));
+            presentationString = presentationString.replace(/\$UUID/gm, function(){
+                        return uuidv4()
+                    });
+            fs.writeFileSync("./presentationData.txt", presentationString, err => {
                 console.error(err);
-            } else {
-                context.log("pro6 File created successfully.")
-            }
-        });
+            });
+            context.log("Presentation data parsed into format successfully.")
+            runtimeFiles.push("./presentationData.txt")
+              
+            const command = path.resolve('./protoc/bin/protoc.exe');
+            const args = [
+            '--encode', 'rv.data.Presentation',
+            './proto/presentation.proto',
+            '--proto_path', './proto/'
+            ];
 
+            const result = child.spawnSync(command, args, {
+            input: fs.readFileSync('./presentationData.txt'),
+            stdio: ['pipe', 'pipe', 'pipe'],
+            });
+            if (result.error) {
+                context.error('Error executing command:', result.error);
+                process.exit(1);
+            }
+            fs.writeFileSync(`./${outputFilePath}`, result.stdout);
+            context.log("File created successfully")
+            runtimeFiles.push(`./${outputFilePath}`)            
+        }
+        context.log("Uploading file to SharePoint...")       
+        const destinationFolder = ((jsonFileInfo.parentReference.path).split("root:/")[0]) + "root:/proPresenter Files"
+        context.log("Destination path: " + destinationFolder)
+
+        const folderInfo = await apiCall(`https://graph.microsoft.com/v1.0/${destinationFolder}`, {
+            method: "GET",
+            headers:{
+                "Authorization": `Bearer ${accessToken}`,
+                "Accept": "application/json"
+            }
+        })
+
+        await apiCall(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${folderInfo.id}:/${outputFilePath}:/content`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "text/plain",
+                "Authorization": `Bearer ${accessToken}`
+            },
+            body: fs.readFileSync(`./${outputFilePath}`),
+            redirect: "follow"
+        })
+
+        context.log("File uploaded successfully.")
+        context.log("Deleting temporary files")
+        runtimeFiles.forEach(file => {
+            fs.unlinkSync(file)
+        })
+        context.log("Temporary Files deleted")
         return { body: `This worked!` };
     }
 });

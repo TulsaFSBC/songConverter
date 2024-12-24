@@ -1,0 +1,3 @@
+    cue_identifiers {
+        string: "$SLIDE_UUID"
+    }
