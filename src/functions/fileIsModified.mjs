@@ -5,12 +5,18 @@ import { writeFile } from 'node:fs/promises'
 import { Readable } from 'node:stream'
 import { v4 as uuidv4} from 'uuid';
 import * as child from 'child_process'
+import path from 'path';
 
 //todo
-//delete temp files after function executes: powerpoint.pptx, presentationString.txt, .pro file.
 //error handling
 //config
 //code cleanup
+//convert all API calls to promise-based
+//error checking on all API calls
+//sharepoint replacing file instead of creating new one
+//template file loading optimization
+//env var verification
+//variable cleanup
 
 function b64(text){
     return Buffer.from(text).toString('base64');
@@ -189,29 +195,24 @@ app.http('fileIsModified', {
                 }
             });
               
-                const outputFile = fs.createWriteStream(`./${outputFilePath}`);
-                const inputFile = fs.createReadStream("./presentationString.txt")
-                const protoc = child.spawn('.\\protoc\\bin\\protoc.exe', [
-                '--encode=rv.data.Presentation',
-                '--proto_path=./proto',
-                './proto/propresenter.proto'
-                ]);
-                try{
-                    inputFile.pipe(protoc.stdin);
-                    protoc.stdout.pipe(outputFile);
+                // Define the command and arguments
+                const command = path.resolve('./protoc/bin/protoc.exe'); // Adjust the path if necessary
+                const args = [
+                '--encode', 'rv.data.Presentation',
+                './proto/presentation.proto',
+                '--proto_path', './proto/'
+                ];
 
-                    protoc.on('close', (code) => {
-                        console.log(`Process exited with code: ${code}`);
-                    });
-
-                    protoc.stderr.on('data', (data) => {
-                        console.error(`stderr: ${data}`);
-                    });
-                    console.log(".pro file created successfully.")
+                // Run the command
+                const result = child.spawnSync(command, args, {
+                input: fs.readFileSync('./presentationString.txt'), // Input redirection
+                stdio: ['pipe', 'pipe', 'pipe'], // Configures stdin, stdout, and stderr
+                });
+                if (result.error) {
+                    context.error('Error executing command:', result.error);
+                    process.exit(1);
                 }
-                catch(err){
-                    console.log(err)
-                }               
+                fs.writeFileSync(`./${outputFilePath}`, result.stdout);            
         }
         context.log("Uploading file to SharePoint...")       
         const destinationFolder = ((jsonFileInfo.parentReference.path).split("root:/")[0]) + "root:/proPresenter Files"
@@ -232,11 +233,12 @@ app.http('fileIsModified', {
             })
                 .then((response) => response.text())
                 .then((result) => {
+                    context.log(result)
                     if(result == '{"error":{"code":"itemNotFound","message":"The resource could not be found."}}'){
                         context.log("File name is unique. Uploading the file...")
                         isNameUnique = true;
 
-                        const file = fs.createWriteStream(`./${outputFilePath}`);
+                        const file = fs.readFileSync(`./${outputFilePath}`);
 
                         const requestOptions = {
                         method: "PUT",
@@ -248,16 +250,16 @@ app.http('fileIsModified', {
                         redirect: "follow"
                         };
 
-                        fetch("https://graph.microsoft.com/v1.0/drives/b!4UHkXyJCHU-eOG0diOb45t0ezJHvmUFHgfS4Dq_i6-rCrjwkY5MaQYaarmbje6No/items/01STCM33YWJBC2LLXEIZBIN346XOQGEGDL:/testing.pro6:/content", requestOptions)
+                        fetch(`https://graph.microsoft.com/v1.0/drives/b!4UHkXyJCHU-eOG0diOb45t0ezJHvmUFHgfS4Dq_i6-rCrjwkY5MaQYaarmbje6No/items/01STCM33YWJBC2LLXEIZBIN346XOQGEGDL:/${outputFilePath}:/content`, requestOptions)
                         .then((response) => response.text())
                         .then((result) => {
                             context.log(result)
                             context.log("File uploaded successfully.")
                             context.log("Deleting temporary files")
 
-                            fs.unlink("./presentationString.txt");
-                            fs.unlink("./powerpoint.pptx");
-                            fs.unlink(`./${outputFilePath}`);
+                            fs.unlinkSync("./presentationString.txt");
+                            fs.unlinkSync("./powerpoint.pptx");
+                            fs.unlinkSync(`./${outputFilePath}`);
                             context.log("Temporary Files deleted")
 
                         })
