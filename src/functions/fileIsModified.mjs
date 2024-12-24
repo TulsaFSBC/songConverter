@@ -6,6 +6,7 @@ import { Readable } from 'node:stream'
 import { v4 as uuidv4} from 'uuid';
 import * as child from 'child_process'
 import path from 'path';
+import env from 'env-var';
 
 //todo
 //error handling
@@ -14,8 +15,6 @@ import path from 'path';
 //convert all API calls to promise-based
 //error checking on all API calls
 //sharepoint replacing file instead of creating new one
-//template file loading optimization
-//env var verification
 //variable cleanup
 
 function b64(text){
@@ -26,21 +25,27 @@ app.http('fileIsModified', {
     methods: ['GET','POST'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
-        const presentationVersion = 7;
+        const config = {
+            tenantId: env.get("TENANT_ID").required().asString(),
+            clientId: env.get("CLIENT_ID").required().asString(),
+            clientSecret: env.get("CLIENT_SECRET").required().asString(),
+            proPresenterVersion: env.get("PROPRESENTER_VERSION").required().default(7).asIntPositive()
+        }
+
         var accessToken, fileInfoResponse;
         const requestBody = await request.text();
         const requestData = JSON.parse(requestBody)
         context.log("Received request: " + requestBody)
         context.log("Retrieving Access token...")
-        await fetch(`https://login.microsoftonline.com/${process.env.tenant_id}/oauth2/token`, {
+        await fetch(`https://login.microsoftonline.com/${config.tenantId}/oauth2/token`, {
             method: "POST",
             headers: {
                 "content-type": "application/x-www-form-urlencoded"
             },
             body: new URLSearchParams({
                 "grant_type": "client_credentials",
-                "client_id": process.env.client_id,
-                "client_secret": process.env.client_secret,
+                "client_id": config.clientId,
+                "client_secret": config.clientSecret,
                 "resource": "https://graph.microsoft.com"
             }),
             redirect: "follow"
@@ -77,23 +82,14 @@ app.http('fileIsModified', {
         context.log("File downloaded successfully.");
         
         context.log("Starting file conversion...")
-        const pro6PresentationHeader = fs.readFileSync('./pro6Templates/presentationHeader.txt').toString(),
-              pro6PresentationFooter = fs.readFileSync('./pro6Templates/presentationFooter.txt').toString(),
-              pro6SlideTemplate = fs.readFileSync('./pro6Templates/presentationSlide.txt').toString();
-
-        const pro7PresentationTemplate = fs.readFileSync('./pro7Templates/presentation.txt').toString(),
-              pro7SlideTemplate = fs.readFileSync('./pro7Templates/slide.txt').toString(),
-              pro7SlideTextTemplate = fs.readFileSync('./pro7Templates/slideText.txt').toString(),
-              pro7TextLineTemplate = fs.readFileSync('./pro7Templates/textLine.txt').toString(),
-              pro7SlideIdentifierTemplate = fs.readFileSync('./pro7Templates/slideIdentifier.txt').toString()
-
-        let config = {
-            "preserveLineBreaks":true,
-            "preserveOnlyMultipleLineBreaks":false,
-            "tesseract.lang":"rus"
-        }
+        
         let pptxText = "";
         async function extractTextFromPptx() {
+            let config = {
+                "preserveLineBreaks":true,
+                "preserveOnlyMultipleLineBreaks":false,
+                "tesseract.lang":"rus"
+            }
             try {
                 pptxText = await new Promise((resolve, reject) => {
                     textract.fromFileWithPath("./powerpoint.pptx", config, (error, text) => {
@@ -111,7 +107,13 @@ app.http('fileIsModified', {
         await extractTextFromPptx();
         const textSlides = pptxText.split("\n\n");
         var outputFilePath
-        if(presentationVersion == 6){
+        if(config.proPresenterVersion == 6){
+            const presentationTemplates = {
+                presentationHeader: fs.readFileSync('./pro6Templates/presentationHeader.txt').toString(),
+                presentationFooter: fs.readFileSync('./pro6Templates/presentationFooter.txt').toString(),
+                slide: fs.readFileSync('./pro6Templates/presentationSlide.txt').toString()
+            }
+
             outputFilePath = `${(jsonFileInfo.name).replace(".pptx", ".pro6")}`
             var pro6SlidesArray = []
             textSlides.forEach(slide => {
@@ -128,7 +130,7 @@ app.http('fileIsModified', {
                     let rtfSlideLines = rtfSlideLinesArray.join("\\n")
                     let rtfSlide = ("{\\rtf1\\prortf1\\ansi\\ansicpg1252\\uc1\\htmautsp\\deff2{\\fonttbl{\\f0\\fcharset0 Times New Roman;}}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red250\\green235\\blue215;}\\loch\\hich\\dbch\\pard\\slleading0\\plain\\ltrpar\\itap0{\\lang1033\\fs100\\outl0\\strokewidth-20\\strokec1\\f2\\cf1 \\cf1\\qc \n" + rtfSlideLines + "\n } \n }");
                     let b64RTFText = b64(rtfSlide)
-                    let pro6SlideString = pro6SlideTemplate;
+                    let pro6SlideString = presentationTemplates.slide;
                     pro6SlideString = pro6SlideString.replace("$PLAIN_TEXT", b64PlainText); //plugs in actual content into slide template
                     pro6SlideString = pro6SlideString.replace("$RTF_TEXT", b64RTFText);
                     pro6SlideString = pro6SlideString.replace("$SLIDE_UUID", uuidv4());
@@ -137,7 +139,7 @@ app.http('fileIsModified', {
                 }
             })        
 
-            const presentationString = pro6PresentationHeader + pro6SlidesArray.join() + pro6PresentationFooter;
+            const presentationString = presentationTemplates.presentationHeader + pro6SlidesArray.join() + presentationTemplates.presentationFooter;
             fs.writeFileSync(`./${outputFilePath}`, presentationString, err => {
                 if (err) {
                     console.error(err);
@@ -145,7 +147,16 @@ app.http('fileIsModified', {
                     context.log("pro6 File created successfully.")
                 }
             });
-        } else if (presentationVersion == 7){
+        } else if (config.proPresenterVersion == 7){
+
+            const presentationTemplates = {
+                presentation: fs.readFileSync('./pro7Templates/presentation.txt').toString(),
+                slide: fs.readFileSync('./pro7Templates/slide.txt').toString(),
+                slideText: fs.readFileSync('./pro7Templates/slideText.txt').toString(),
+                textLine: fs.readFileSync('./pro7Templates/textLine.txt').toString(),
+                slideIdentifier: fs.readFileSync('./pro7Templates/slideIdentifier.txt').toString()
+            }
+
             var pro7SlidesArray = [],
                 slideIdentifierGuids = [],
                 slideIdentifiers = [];
@@ -158,13 +169,13 @@ app.http('fileIsModified', {
                     let rtfSlideLinesArray = [];
                     slideLines.forEach(line =>{
                         if (line != ""){
-                            let rtfLine = pro7TextLineTemplate.replace("$TEXT", line)
+                            let rtfLine = presentationTemplates.textLine.replace("$TEXT", line)
                             rtfSlideLinesArray.push(rtfLine)
                         }
                     })
                     let rtfSlideLines = rtfSlideLinesArray.join("");                    
-                    let rtfSlide = pro7SlideTextTemplate.replace("$TEXT_LINES", rtfSlideLines);
-                    let pro7SlideString = pro7SlideTemplate.replace("$RTF_DATA", rtfSlide);
+                    let rtfSlide = presentationTemplates.slideText.replace("$TEXT_LINES", rtfSlideLines);
+                    let pro7SlideString = presentationTemplates.slide.replace("$RTF_DATA", rtfSlide);
                     pro7SlideString = pro7SlideString.replace("\\\\par\\\\pard}", "}")
                     pro7SlideString = pro7SlideString.replace(/\$UUID/gm, function(){
                         return uuidv4()
@@ -175,10 +186,10 @@ app.http('fileIsModified', {
                 }
             })        
 
-            var presentationString = pro7PresentationTemplate.replace("$PRESENTATION_NAME", "testinggg");
+            var presentationString = presentationTemplates.presentation.replace("$PRESENTATION_NAME", "testinggg");
 
             pro7SlidesArray.forEach(function (value, i) {
-                let slideIdentifier = pro7SlideIdentifierTemplate.replace("$SLIDE_UUID", slideIdentifierGuids[i])
+                let slideIdentifier = presentationTemplates.slideIdentifier.replace("$SLIDE_UUID", slideIdentifierGuids[i])
                 slideIdentifiers.push(slideIdentifier);
             })
             let slideIdentifiersString = slideIdentifiers.join("");
@@ -269,9 +280,9 @@ app.http('fileIsModified', {
                         if(i == 1){
                             fileName += fileName + `( ${i})`
                         }else{
-                            if(presentationVersion == 6){
+                            if(config.proPresenterVersion == 6){
                                 fileName = fileName.replace(/ (.*?).pro6/, ` (${i}).pro6`)
-                            } else if (presentationVersion == 7){
+                            } else if (config.proPresenterVersion == 7){
                                 fileName = fileName.replace(/ (.*?).pro/, ` (${i}).pro`)
                             }
                         }
