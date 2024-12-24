@@ -10,7 +10,6 @@ import env from 'env-var';
 
 //todo
 //error handling
-//config
 //code cleanup
 //convert all API calls to promise-based
 //error checking on all API calls
@@ -21,10 +20,33 @@ function b64(text){
     return Buffer.from(text).toString('base64');
 }
 
+async function extractTextFromPptx(filePath) {
+    let pptxText;
+    try {
+        pptxText = await new Promise((resolve, reject) => {
+            textract.fromFileWithPath(filePath, {
+                "preserveLineBreaks":true,
+                "preserveOnlyMultipleLineBreaks":false,
+                "tesseract.lang":"rus"
+            }, (error, text) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(text);
+                }
+            });
+        });
+    } catch (error) {
+        console.error("Error extracting text:", error);
+    }
+    return pptxText;
+}
+
 app.http('fileIsModified', {
     methods: ['GET','POST'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
+        
         const config = {
             tenantId: env.get("TENANT_ID").required().asString(),
             clientId: env.get("CLIENT_ID").required().asString(),
@@ -83,28 +105,8 @@ app.http('fileIsModified', {
         
         context.log("Starting file conversion...")
         
-        let pptxText = "";
-        async function extractTextFromPptx() {
-            let config = {
-                "preserveLineBreaks":true,
-                "preserveOnlyMultipleLineBreaks":false,
-                "tesseract.lang":"rus"
-            }
-            try {
-                pptxText = await new Promise((resolve, reject) => {
-                    textract.fromFileWithPath("./powerpoint.pptx", config, (error, text) => {
-                        if (error) {
-                            reject(error);
-                        } else {
-                            resolve(text);
-                        }
-                    });
-                });
-            } catch (error) {
-                console.error("Error extracting text:", error);
-            }
-        }
-        await extractTextFromPptx();
+        let pptxText = await extractTextFromPptx("./powerpoint.pptx");
+
         const textSlides = pptxText.split("\n\n");
         var outputFilePath
         if(config.proPresenterVersion == 6){
