@@ -1,22 +1,17 @@
 import { app } from "@azure/functions";
 import * as textract from '@markell12/textract'
 import * as fs from 'fs';
-import { writeFile } from 'node:fs/promises'
-import { Readable } from 'node:stream'
 import { v4 as uuidv4} from 'uuid';
 import * as child from 'child_process'
 import path from 'path';
 import env from 'env-var';
+import { pipeline } from 'stream';
+import { promisify } from 'util';
 
 //todo
 //error handling
 //code cleanup
-//error checking on all API calls
-//sharepoint replacing file instead of creating new one
-    //rewrite it to list all files instead of checking if a file exists in sharepoint
-        //compare the name once you have a list
-            //change until valid if invalid
-            //upload if valid  
+//error checking on all API calls 
 
 function b64(text){
     return Buffer.from(text).toString('base64');
@@ -48,6 +43,19 @@ async function apiCall(url, requestOptions){
     const response = await fetch(url, requestOptions);
     const data = await response.json();
     return data;
+}
+
+const streamPipeline = promisify(pipeline); // Define the streamPipeline utility
+
+async function downloadFile(url, path) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
+  }
+
+  // Use streamPipeline to handle the readable stream and write to the file
+  await streamPipeline(response.body, fs.createWriteStream(path));
 }
 
 app.http('fileIsModified', {
@@ -91,19 +99,26 @@ app.http('fileIsModified', {
         }) 
         const downloadUrl = jsonFileInfo["@microsoft.graph.downloadUrl"];
         context.log("Downloading file...");
-        const response = await fetch(downloadUrl)
-            .catch((error) => context.error(error));
-        const stream = Readable.fromWeb(response.body);
-        writeFile('powerpoint.pptx', stream);
+        
+        try {
+            await downloadFile(downloadUrl, "./powerpoint.pptx");
+            console.log('File downloaded successfully.');
+        
+            // Other code here
+            console.log('Executing further actions.');
+        } catch (error) {
+            console.error('Error downloading file:', error);
+        }
+
         runtimeFiles.push("powerpoint.pptx")
         context.log("File downloaded successfully.");
         
         context.log("Starting file conversion...")
         
         let pptxText = await extractTextFromPptx("./powerpoint.pptx");
-
+        console.log(typeof pptxText)
         const textSlides = pptxText.split("\n\n");
-        var outputFilePath
+        var outputFilePath;
         if(config.proPresenterVersion == 6){
             const presentationTemplates = {
                 presentationHeader: fs.readFileSync('./pro6Templates/presentationHeader.txt').toString(),
@@ -223,66 +238,32 @@ app.http('fileIsModified', {
         }
         context.log("Uploading file to SharePoint...")       
         const destinationFolder = ((jsonFileInfo.parentReference.path).split("root:/")[0]) + "root:/proPresenter Files"
-        var fileName = outputFilePath;
-        var destinationPath = destinationFolder + "/" + outputFilePath;
-        console.log(destinationPath)
-        context.log("Destination path: " + destinationPath)
+        context.log("Destination path: " + destinationFolder)
 
-        const sharepointFiles = await apiCall(`https://graph.microsoft.com/v1.0/${destinationPath}/children`, {
+        const folderInfo = await apiCall(`https://graph.microsoft.com/v1.0/${destinationFolder}`, {
             method: "GET",
             headers:{
                 "Authorization": `Bearer ${accessToken}`,
                 "Accept": "application/json"
             }
         })
-        console.log(sharepointFiles)
 
-        var isNameUnique = false;
-        var i = 1;
-        while (!isNameUnique) {
-            destinationPath = destinationFolder + fileName;
-            const sharepointFileInfo = await apiCall(`https://graph.microsoft.com/v1.0/${destinationPath}`,{ // check if file exists
-                method: "GET",
-                headers:{
-                    "Authorization": `Bearer ${accessToken}`,
-                    "Accept": "application/json"
-                }
-            })
+        await apiCall(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${folderInfo.id}:/${outputFilePath}:/content`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "text/plain",
+                "Authorization": `Bearer ${accessToken}`
+            },
+            body: fs.readFileSync(`./${outputFilePath}`),
+            redirect: "follow"
+        })
 
-            if(sharepointFileInfo.error.code === "itemNotFound"){
-                context.log("File name is unique. Uploading the file...")
-                isNameUnique = true;
-
-                await apiCall(`https://graph.microsoft.com/v1.0/drives/b!4UHkXyJCHU-eOG0diOb45t0ezJHvmUFHgfS4Dq_i6-rCrjwkY5MaQYaarmbje6No/items/01STCM33YWJBC2LLXEIZBIN346XOQGEGDL:/${outputFilePath}:/content`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "text/plain",
-                        "Authorization": `Bearer ${accessToken}`
-                    },
-                    body: fs.readFileSync(`./${outputFilePath}`),
-                    redirect: "follow"
-                })
-
-                context.log("File uploaded successfully.")
-                context.log("Deleting temporary files")
-                runtimeFiles.forEach(file => {
-                    fs.unlinkSync(file)
-                })
-                context.log("Temporary Files deleted")
-            }else{
-                context.log("File name is not unique.")
-                if(i == 1){
-                    fileName += fileName + `( ${i})`
-                }else{
-                    if(config.proPresenterVersion == 6){
-                        fileName = fileName.replace(/ (.*?).pro6/, ` (${i}).pro6`)
-                    } else if (config.proPresenterVersion == 7){
-                        fileName = fileName.replace(/ (.*?).pro/, ` (${i}).pro`)
-                    }
-                }
-                i++;
-            }
-        }
+        context.log("File uploaded successfully.")
+        context.log("Deleting temporary files")
+        runtimeFiles.forEach(file => {
+            fs.unlinkSync(file)
+        })
+        context.log("Temporary Files deleted")
         return { body: `This worked!` };
     }
 });
