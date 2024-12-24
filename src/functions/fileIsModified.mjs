@@ -5,8 +5,7 @@ import { v4 as uuidv4} from 'uuid';
 import * as child from 'child_process'
 import path from 'path';
 import env from 'env-var';
-import { pipeline } from 'stream';
-import { promisify } from 'util';
+import download from 'download-to-file'
 
 //todo
 //error handling
@@ -45,18 +44,6 @@ async function apiCall(url, requestOptions){
     return data;
 }
 
-const streamPipeline = promisify(pipeline); // Define the streamPipeline utility
-
-async function downloadFile(url, path) {
-  const response = await fetch(url);
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch ${url}: ${response.statusText}`);
-  }
-
-  // Use streamPipeline to handle the readable stream and write to the file
-  await streamPipeline(response.body, fs.createWriteStream(path));
-}
 
 app.http('fileIsModified', {
     methods: ['GET','POST'],
@@ -99,26 +86,13 @@ app.http('fileIsModified', {
         }) 
         const downloadUrl = jsonFileInfo["@microsoft.graph.downloadUrl"];
         context.log("Downloading file...");
-        
-        try {
-            await downloadFile(downloadUrl, "./powerpoint.pptx");
-            console.log('File downloaded successfully.');
-        
-            // Other code here
-            console.log('Executing further actions.');
-        } catch (error) {
-            console.error('Error downloading file:', error);
-        }
+        var textSlides, outputFilePath
 
-        runtimeFiles.push("powerpoint.pptx")
-        context.log("File downloaded successfully.");
-        
-        context.log("Starting file conversion...")
-        
+        child.execFileSync('curl', ['--output', 'powerpoint.pptx', downloadUrl]); //i hate async.
+
+        runtimeFiles.push("./powerpoint.pptx")
         let pptxText = await extractTextFromPptx("./powerpoint.pptx");
-        console.log(typeof pptxText)
-        const textSlides = pptxText.split("\n\n");
-        var outputFilePath;
+            textSlides = pptxText.split("\n\n");
         if(config.proPresenterVersion == 6){
             const presentationTemplates = {
                 presentationHeader: fs.readFileSync('./pro6Templates/presentationHeader.txt').toString(),
