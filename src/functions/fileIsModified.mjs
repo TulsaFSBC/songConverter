@@ -77,9 +77,9 @@ app.http('fileIsModified', {
         } else{
             context.log("File downloaded successfully.")
         }
-
+        context.log("Getting buffer..")
         const fileBuffer = await response.arrayBuffer();
-
+        context.log("Extracting text from file...")
         let pptxText = await new Promise((resolve, reject) => {
             textract.fromBufferWithMime("application/vnd.openxmlformats-officedocument.presentationml.presentation", Buffer.from(fileBuffer), {
                 "preserveLineBreaks":true,
