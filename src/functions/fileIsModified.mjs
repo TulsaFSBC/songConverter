@@ -102,7 +102,7 @@ app.http('fileIsModified', {
 
         const fileBuffer = await response.arrayBuffer();
 
-        let pptxText = await extractTextFromPptx(fileBuffer);
+        let pptxText = await extractTextFromPptx(Buffer.from(fileBuffer));
         if(pptxText != undefined){
             context.log("Text extracted from file successfully.")
         }else{

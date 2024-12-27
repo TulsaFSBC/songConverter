@@ -14,7 +14,7 @@ application_info {
   }
 }
 uuid {
-  string: "6feabefc-e499-428b-9d51-c6e62450929f"
+  string: "fbe618f7-0806-4169-87ff-417c31b17e9f"
 }
 name: "testinggg"
 last_date_used {
@@ -29,29 +29,29 @@ background {
   }
 }
 selected_arrangement {
-  string: "a84ca78e-cd50-42d4-add8-9f697268a77a"
+  string: "dce4c45e-3306-466c-a83d-4b65adee2a23"
 }
 cue_groups {
   group {
     uuid {
-      string: "2d48df5f-49bb-4141-aeb6-09703580d162"
+      string: "c96e5d3b-6e90-4e72-a1f4-6f6531328d99"
     }
     name: "Group"
   }
     cue_identifiers {
-        string: "cbca1221-05ed-46d5-a213-10281d5f8742"
+        string: "ddb10a40-b4fe-494d-9dd7-7d0af76d3ca8"
     }
     cue_identifiers {
-        string: "07c57feb-0a73-4500-a78e-3da3fee83312"
+        string: "f29f6a99-43ef-4e90-bc8a-c9cfccb648b2"
     }
     cue_identifiers {
-        string: "935193a3-6783-46d9-8c75-9e5d73cf084b"
+        string: "ec87f189-33e7-4332-b4d4-371d2327fd7a"
     }
 
 }
 cues {
   uuid {
-    string: "cbca1221-05ed-46d5-a213-10281d5f8742"
+    string: "ddb10a40-b4fe-494d-9dd7-7d0af76d3ca8"
   }
   completion_target_uuid {
     string: "00000000-0000-0000-0000-000000000000"
@@ -64,7 +64,7 @@ cues {
   }
   actions {
     uuid {
-      string: "4e91c7f7-4248-4642-8591-57ceaf767c2b"
+      string: "d4d28184-12c1-4e63-bf4f-118053695ff4"
     }
     isEnabled: true
     type: ACTION_TYPE_PRESENTATION_SLIDE
@@ -74,7 +74,7 @@ cues {
           elements {
             element {
               uuid {
-                string: "583354b7-1614-44fc-b85a-b7173392b269"
+                string: "38b492d1-ff0c-4246-bfd5-1a3ab8b16fda"
               }
               bounds {
                 origin {
@@ -258,7 +258,7 @@ cues {
             height: 1080
           }
           uuid {
-            string: "76bf1d6b-eaaa-408e-b53e-801285580541"
+            string: "c41f2b84-6fcc-4780-a0e1-0dc050bf5e87"
           }
         }
         notes {
@@ -295,7 +295,7 @@ cues {
 }
 cues {
   uuid {
-    string: "07c57feb-0a73-4500-a78e-3da3fee83312"
+    string: "f29f6a99-43ef-4e90-bc8a-c9cfccb648b2"
   }
   completion_target_uuid {
     string: "00000000-0000-0000-0000-000000000000"
@@ -308,7 +308,7 @@ cues {
   }
   actions {
     uuid {
-      string: "30f0265b-2d3b-47cf-8b79-e0a261254eb3"
+      string: "8f435fdf-5cb4-43e5-aa6d-f742fd69ac17"
     }
     isEnabled: true
     type: ACTION_TYPE_PRESENTATION_SLIDE
@@ -318,7 +318,7 @@ cues {
           elements {
             element {
               uuid {
-                string: "d53cbcbe-246e-40b1-822b-84547ca2d552"
+                string: "d963381a-9ff2-497c-826b-c1fcf6da636c"
               }
               bounds {
                 origin {
@@ -502,7 +502,7 @@ cues {
             height: 1080
           }
           uuid {
-            string: "4a0522b9-0b7a-43e6-b93d-f3fb777ba1d3"
+            string: "1792d17f-6053-48e7-8616-d2ad35054a2a"
           }
         }
         notes {
@@ -539,7 +539,7 @@ cues {
 }
 cues {
   uuid {
-    string: "935193a3-6783-46d9-8c75-9e5d73cf084b"
+    string: "ec87f189-33e7-4332-b4d4-371d2327fd7a"
   }
   completion_target_uuid {
     string: "00000000-0000-0000-0000-000000000000"
@@ -552,7 +552,7 @@ cues {
   }
   actions {
     uuid {
-      string: "265e5342-3e87-462f-8d66-bdb2671fffcf"
+      string: "34f0905e-4678-4e84-9317-2efae75d9ac9"
     }
     isEnabled: true
     type: ACTION_TYPE_PRESENTATION_SLIDE
@@ -562,7 +562,7 @@ cues {
           elements {
             element {
               uuid {
-                string: "39ecc0ce-d77a-43c0-85d7-ea8952e25487"
+                string: "ea04167a-1ea4-46b6-9147-abd6bcc95893"
               }
               bounds {
                 origin {
@@ -746,7 +746,7 @@ cues {
             height: 1080
           }
           uuid {
-            string: "65d759ca-1fac-4aea-96b8-56684190de1f"
+            string: "fbac2a11-cebc-423c-8df3-3f9a7d752c88"
           }
         }
         notes {
