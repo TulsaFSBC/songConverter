@@ -83,7 +83,7 @@ app.http('fileIsModified', {
         context.log(`File buffer size: ${fileBuffer.length}`);
 
         context.log("Extracting text from file...")
-        let pptxText = await new Promise((resolve, reject) => {
+        //let pptxText = await new Promise((resolve, reject) => {
             textract.fromBufferWithMime("application/vnd.openxmlformats-officedocument.presentationml.presentation", Buffer.from(fileBuffer), {
                 "preserveLineBreaks":true,
                 "preserveOnlyMultipleLineBreaks":false
@@ -95,7 +95,7 @@ app.http('fileIsModified', {
                     resolve(text);
                 }
             });
-        });
+        //});
         if(pptxText != undefined){
             context.log("Text extracted from file successfully.")
         }else{

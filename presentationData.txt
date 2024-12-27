@@ -1,0 +1,788 @@
+application_info {
+  platform: PLATFORM_WINDOWS
+  platform_version {
+    major_version: 10
+    patch_version: 4294967295
+    build: "22631"
+  }
+  application: APPLICATION_PROPRESENTER
+  application_version {
+    major_version: 7
+    minor_version: 16
+    patch_version: 3
+    build: "118489862"
+  }
+}
+uuid {
+  string: "bbc178bf-273f-421e-8765-d345ec944a5b"
+}
+name: "testinggg"
+last_date_used {
+  seconds: 1730532183
+}
+last_modified_date {
+  seconds: 1730532183
+}
+background {
+  color {
+    alpha: 1
+  }
+}
+selected_arrangement {
+  string: "fd1a597c-2275-47c9-af49-9f6f2335c769"
+}
+cue_groups {
+  group {
+    uuid {
+      string: "c2d133d1-5268-40ac-92be-69af37e598e0"
+    }
+    name: "Group"
+  }
+    cue_identifiers {
+        string: "d621a362-f460-4285-b957-777d0af1e18c"
+    }
+    cue_identifiers {
+        string: "29a9ed2a-69ed-4fde-aaa4-fd2e892a26ad"
+    }
+    cue_identifiers {
+        string: "1b9d37e8-3f7f-4043-b5d1-ed5cf9523fbe"
+    }
+
+}
+cues {
+  uuid {
+    string: "d621a362-f460-4285-b957-777d0af1e18c"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "60d9d134-d8c7-4221-abcc-6fc9728cdfb8"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "4d91da27-c855-4925-87cb-eac2abe6953d"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Господь есть мой свет,\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Он мой свет, Спаситель мой,\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Я не страшусь.\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Господь мой есть крепость\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Для жизни моей,\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Кого убоюся я?}"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "77056466-c3c0-49c6-a5b6-adff365a6661"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "29a9ed2a-69ed-4fde-aaa4-fd2e892a26ad"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "39aceca7-bfc6-4e74-be13-f556c19cb69c"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "209080da-dce0-4531-9160-f702c9d584e2"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Войско ли нечестивых близко,\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 И я не страшусь.\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Грозит ли враг войною,\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 На Бога надеюсь я.\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Я одного лишь жду от Творца,\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Одного я жду:}"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "ad464529-e3e1-46e7-816b-634f9ada9b50"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+cues {
+  uuid {
+    string: "1b9d37e8-3f7f-4043-b5d1-ed5cf9523fbe"
+  }
+  completion_target_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  completion_action_type: COMPLETION_ACTION_TYPE_LAST
+  completion_action_uuid {
+    string: "00000000-0000-0000-0000-000000000000"
+  }
+  trigger_time {
+  }
+  actions {
+    uuid {
+      string: "92efe9ca-7451-4bd8-8be9-5c076de3f219"
+    }
+    isEnabled: true
+    type: ACTION_TYPE_PRESENTATION_SLIDE
+    slide {
+      presentation {
+        base_slide {
+          elements {
+            element {
+              uuid {
+                string: "5eba18cf-d656-4b98-ab76-00a6a11c1390"
+              }
+              bounds {
+                origin {
+                }
+                size {
+                  width: 1920
+                  height: 1080
+                }
+              }
+              opacity: 1
+              path {
+                closed: true
+                points {
+                  point {
+                  }
+                  q0 {
+                  }
+                  q1 {
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                  }
+                  q0 {
+                    x: 1
+                  }
+                  q1 {
+                    x: 1
+                  }
+                }
+                points {
+                  point {
+                    x: 1
+                    y: 1
+                  }
+                  q0 {
+                    x: 1
+                    y: 1
+                  }
+                  q1 {
+                    x: 1
+                    y: 1
+                  }
+                }
+                points {
+                  point {
+                    y: 1
+                  }
+                  q0 {
+                    y: 1
+                  }
+                  q1 {
+                    y: 1
+                  }
+                }
+                shape {
+                  type: TYPE_RECTANGLE
+                }
+              }
+              fill {
+                color {
+                  red: 0.117647059
+                  green: 0.564705908
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              stroke {
+                width: 3
+                color {
+                  red: 1
+                  green: 1
+                  blue: 1
+                  alpha: 1
+                }
+              }
+              shadow {
+                angle: 315
+                offset: 5
+                radius: 5
+                color {
+                  alpha: 1
+                }
+                opacity: 0.75
+              }
+              feather {
+                radius: 0.05
+              }
+              text {
+                attributes {
+                  font {
+                    name: "TimesNewRomanPSMT"
+                    size: 90
+                    family: "TimesNewRomanPSMT"
+                    face: "Regular"
+                  }
+                  text_solid_fill {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  paragraph_style {
+                    alignment: ALIGNMENT_CENTER
+                    line_height_multiple: 1
+                    text_list {
+                    }
+                  }
+                  stroke_color {
+                    red: 1
+                    green: 1
+                    blue: 1
+                    alpha: 1
+                  }
+                  custom_attributes {
+                    range {
+                      end: 27
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 28
+                      end: 48
+                    }
+                  original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 44
+                      end: 55
+                    }
+                    original_font_size: 90
+                  }
+                  custom_attributes {
+                    range {
+                      start: 56
+                      end: 67
+                    }
+                    original_font_size: 90
+                  }
+                }
+                shadow {
+                  angle: 315
+                  offset: 5
+                  radius: 5
+                  color {
+                    alpha: 1
+                  }
+                  opacity: 0.75
+                }
+                rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil TimesNewRomanPSMT;}{\\colortbl;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw38400\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Чтоб в доме Божьем\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Я мог пербывать\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Навсегда,\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 Аминь\\par\\pard\\li0\\fi0\\ri0\\qc\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs180\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec1\\nosupersub\\ulc0\\highlight2\\cb2 ***}"
+                vertical_alignment: VERTICAL_ALIGNMENT_MIDDLE
+                scale_behavior: SCALE_BEHAVIOR_SCALE_FONT_DOWN
+                margins {
+                }
+                is_superscript_standardized: true
+                transformDelimiter: "  \342\200\242  "
+                chord_pro {
+                  color {
+                    alpha: 1
+                  }
+                }
+              }
+              text_line_mask {
+              }
+            }
+            info: 3
+            text_scroller {
+              scroll_rate: 0.5
+              should_repeat: true
+              repeat_distance: 0.052083333333333336
+            }
+          }
+          background_color {
+            alpha: 1
+          }
+          size {
+            width: 1920
+            height: 1080
+          }
+          uuid {
+            string: "af1de581-3c81-458d-b4b7-a0534b0d3259"
+          }
+        }
+        notes {
+          rtf_data: "{\\rtf0\\ansi\\ansicpg1252{\\fonttbl\\f0\\fnil ArialMT;}{\\colortbl;\\red0\\green0\\blue0;\\red255\\green255\\blue255;\\red255\\green255\\blue255;}{\\*\\expandedcolortbl;\\csgenericrgb\\c0\\c0\\c0\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c100000;\\csgenericrgb\\c100000\\c100000\\c100000\\c0;}{\\*\\listtable}{\\*\\listoverridetable}\\uc1\\paperw12240\\margl0\\margr0\\margt0\\margb0\\pard\\li0\\fi0\\ri0\\ql\\sb0\\sa0\\sl240\\slmult1\\slleading0\\f0\\b0\\i0\\ul0\\strike0\\fs100\\expnd0\\expndtw0\\cf1\\strokewidth0\\strokec2\\nosupersub\\ulc0\\highlight3\\cb3}"
+          attributes {
+            font {
+              name: "ArialMT"
+              size: 50
+              family: "Arial"
+              face: "Regular"
+            }
+            text_solid_fill {
+              alpha: 1
+            }
+            paragraph_style {
+              line_height_multiple: 1
+              text_list {
+              }
+            }
+            stroke_color {
+              red: 1
+              green: 1
+              blue: 1
+              alpha: 1
+            }
+          }
+        }
+        chord_chart {
+        }
+      }
+    }
+  }
+  isEnabled: true
+}
+ccli {
+}
+timeline {
+  duration: 300
+}
