@@ -5,7 +5,7 @@ import { v4 as uuidv4} from 'uuid';
 import * as child from 'child_process'
 import path from 'path';
 import env from 'env-var';
-import download from 'download-to-file'
+import fetch from 'node-fetch';
 
 //todo
 //error handling
@@ -16,11 +16,11 @@ function b64(text){
     return Buffer.from(text).toString('base64');
 }
 
-async function extractTextFromPptx(filePath) {
+async function extractTextFromPptx(buffer) {
     let pptxText;
     try {
         pptxText = await new Promise((resolve, reject) => {
-            textract.fromFileWithPath(filePath, {
+            textract.fromBufferWithMime("application/vnd.openxmlformats-officedocument.presentationml.presentation", buffer, {
                 "preserveLineBreaks":true,
                 "preserveOnlyMultipleLineBreaks":false,
                 "tesseract.lang":"rus"
@@ -87,10 +87,28 @@ app.http('fileIsModified', {
         context.log("Downloading file...");
         var textSlides, outputFilePath
 
-        child.execFileSync('curl', ['--output', 'D:/local/temp/powerpoint.pptx', downloadUrl]); //i hate async.
+        const response = await fetch(downloadUrl, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${accessToken}`
+            }
+        });
 
-        let pptxText = await extractTextFromPptx("D:/local/temp/powerpoint.pptx");
-            textSlides = pptxText.split("\n\n");
+        if (!response.ok) {
+            throw new Error(`Failed to download file: ${response.statusText}`);
+        } else{
+            context.log("File downloaded successfully.")
+        }
+
+        const fileBuffer = await response.arrayBuffer();
+
+        let pptxText = await extractTextFromPptx(fileBuffer);
+        if(pptxText != undefined){
+            context.log("Text extracted from file successfully.")
+        }else{
+            context.error("Error extracting text from file.")
+        }
+        textSlides = pptxText.split("\n\n");
         if(config.proPresenterVersion == 6){
             const presentationTemplates = {
                 presentationHeader: fs.readFileSync('./pro6Templates/presentationHeader.txt').toString(),
@@ -123,7 +141,7 @@ app.http('fileIsModified', {
             })        
 
             const presentationString = presentationTemplates.presentationHeader + pro6SlidesArray.join() + presentationTemplates.presentationFooter;
-            fs.writeFileSync(`D:/local/temp/${outputFilePath}`, presentationString, err => {
+            fs.writeFileSync(`./${outputFilePath}`, presentationString, err => {
                 if (err) {
                     console.error(err);
                 } else {
@@ -182,7 +200,7 @@ app.http('fileIsModified', {
             presentationString = presentationString.replace(/\$UUID/gm, function(){
                         return uuidv4()
                     });
-            fs.writeFileSync("D:/local/temp/presentationData.txt", presentationString, err => {
+            fs.writeFileSync("./presentationData.txt", presentationString, err => {
                 console.error(err);
             });
             context.log("Presentation data parsed into format successfully.")
@@ -195,14 +213,14 @@ app.http('fileIsModified', {
             ];
 
             const result = child.spawnSync(command, args, {
-            input: fs.readFileSync('D:/local/temp/presentationData.txt'),
+            input: fs.readFileSync('./presentationData.txt'),
             stdio: ['pipe', 'pipe', 'pipe'],
             });
             if (result.error) {
                 context.error('Error executing command:', result.error);
                 process.exit(1);
             }
-            fs.writeFileSync(`D:/local/temp/${outputFilePath}`, result.stdout);
+            fs.writeFileSync(`./${outputFilePath}`, result.stdout);
             context.log("File created successfully")          
         }
         context.log("Uploading file to SharePoint...")       
@@ -223,7 +241,7 @@ app.http('fileIsModified', {
                 "Content-Type": "text/plain",
                 "Authorization": `Bearer ${accessToken}`
             },
-            body: fs.readFileSync(`D:/local/temp/${outputFilePath}`),
+            body: fs.readFileSync(`./${outputFilePath}`),
             redirect: "follow"
         })
 

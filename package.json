@@ -12,6 +12,7 @@
     "@markell12/textract": "^2.5.1",
     "download-to-file": "^2.1.0",
     "env-var": "^7.5.0",
+    "node-fetch": "^3.3.2",
     "rtf": "^0.0.4",
     "uuid": "^10.0.0"
   },
