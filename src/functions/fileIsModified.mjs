@@ -83,19 +83,37 @@ app.http('fileIsModified', {
         context.log(`File buffer size: ${fileBuffer.length}`);
 
         context.log("Extracting text from file...")
-        //let pptxText = await new Promise((resolve, reject) => {
-            textract.fromBufferWithMime("application/vnd.openxmlformats-officedocument.presentationml.presentation", Buffer.from(fileBuffer), {
-                "preserveLineBreaks":true,
-                "preserveOnlyMultipleLineBreaks":false
-            }, (error, text) => {
-                if (error) {
-                    context.log(`Error in textract: ${error.message}`)
-                    reject(error);
-                } else {
-                    resolve(text);
-                }
+        let pptxText;
+        try {
+            pptxText = await new Promise((resolve, reject) => {
+                process.on('uncaughtException', (err) => {
+                    context.error('Uncaught Exception:', err);
+                    reject(err);
+                });
+
+                textract.fromBufferWithMime("application/vnd.openxmlformats-officedocument.presentationml.presentation", 
+                    Buffer.from(fileBuffer), 
+                    {
+                        "preserveLineBreaks":true,
+                        "preserveOnlyMultipleLineBreaks":false
+                    }, 
+                    (error, text) => {
+                        if (error) {
+                            context.error('Textract error:', error);
+                            context.error('Error stack:', error.stack);
+                            reject(error);
+                        } else {
+                            resolve(text);
+                        }
+                    }
+                );
             });
-        //});
+        } catch (textractError) {
+            context.error('Error in textract block:', textractError);
+            throw textractError;
+        }
+
+        
         if(pptxText != undefined){
             context.log("Text extracted from file successfully.")
         }else{
