@@ -16,28 +16,6 @@ function b64(text){
     return Buffer.from(text).toString('base64');
 }
 
-async function extractTextFromPptx(buffer) {
-    let pptxText;
-    try {
-        pptxText = await new Promise((resolve, reject) => {
-            textract.fromBufferWithMime("application/vnd.openxmlformats-officedocument.presentationml.presentation", buffer, {
-                "preserveLineBreaks":true,
-                "preserveOnlyMultipleLineBreaks":false,
-                "tesseract.lang":"rus"
-            }, (error, text) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve(text);
-                }
-            });
-        });
-    } catch (error) {
-        console.error("Error extracting text:", error);
-    }
-    return pptxText;
-}
-
 async function apiCall(url, requestOptions){
     const response = await fetch(url, requestOptions);
     const data = await response.json();
@@ -102,7 +80,19 @@ app.http('fileIsModified', {
 
         const fileBuffer = await response.arrayBuffer();
 
-        let pptxText = await extractTextFromPptx(Buffer.from(fileBuffer));
+        let pptxText = await new Promise((resolve, reject) => {
+            textract.fromBufferWithMime("application/vnd.openxmlformats-officedocument.presentationml.presentation", Buffer.from(fileBuffer), {
+                "preserveLineBreaks":true,
+                "preserveOnlyMultipleLineBreaks":false,
+                "tesseract.lang":"rus"
+            }, (error, text) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(text);
+                }
+            });
+        });
         if(pptxText != undefined){
             context.log("Text extracted from file successfully.")
         }else{
