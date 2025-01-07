@@ -99,4 +99,7 @@ __queuestorage__
 __azurite_db*__.json
 
 # Misc
-test.js
+test*
+powerpoint*
+presentationData.txt*
+*.pro*
