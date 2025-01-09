@@ -103,3 +103,4 @@ test*
 powerpoint*
 presentationData.txt*
 *.pro*
+*.publishsettings
