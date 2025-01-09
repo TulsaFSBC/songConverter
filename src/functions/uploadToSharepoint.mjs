@@ -1,6 +1,6 @@
 import { apiCall } from "./helperFunctions.mjs";
 import * as fs from 'fs';
-
+//trigger
 export async function uploadToSharepoint(requestData, accessToken, context, jsonFileInfo, outputFilePath){
     context.log("Uploading file to SharePoint...")       
     const destinationFolder = ((jsonFileInfo.data.parentReference.path).split("root:/")[0]) + "root:/proPresenter Files"
