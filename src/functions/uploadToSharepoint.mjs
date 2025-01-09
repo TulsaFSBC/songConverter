@@ -19,7 +19,7 @@ export async function uploadToSharepoint(requestData, accessToken, context, json
             "Content-Type": "text/plain",
             "Authorization": `Bearer ${accessToken}`
         },
-        body: fs.readFileSync(`./${outputFilePath}`),
+        body: fs.readFileSync(`c:/local/temp/${outputFilePath}`),
         redirect: "follow"
     })
     console.log(response)

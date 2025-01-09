@@ -33,7 +33,7 @@ export function convertToPresentation(powerPoint, context){
         })        
 
         const presentationString = presentationTemplates.presentationHeader + pro6SlidesArray.join() + presentationTemplates.presentationFooter;
-        fs.writeFileSync(`./${outputFilePath}`, presentationString, err => {
+        fs.writeFileSync(`c:/local/temp/${outputFilePath}`, presentationString, err => {
             if (err) {
                 console.error(err);
             } else {
@@ -54,7 +54,7 @@ export function convertToPresentation(powerPoint, context){
         var pro7SlidesArray = [],
             slideIdentifierGuids = [],
             slideIdentifiers = [];
-        outputFilePath = "test.pro";//`${(jsonFileInfo.name).replace(".pptx", ".pro")}` needs changed!!!
+        outputFilePath = "C:/local/temp/test.pro";//`${(jsonFileInfo.name).replace(".pptx", ".pro")}` needs changed!!!
         
         (powerPoint.slides).forEach(slide => {
             let slideId = uuidv4();
@@ -89,7 +89,7 @@ export function convertToPresentation(powerPoint, context){
         presentationString = presentationString.replace(/\$UUID/gm, function(){
                     return uuidv4()
                 });
-        fs.writeFileSync("./presentationData.txt", presentationString, err => {
+        fs.writeFileSync("c:/local/temp/presentationData.txt", presentationString, err => {
             console.error(err);
         });
         context.log("Presentation data parsed into format successfully.")
@@ -102,14 +102,14 @@ export function convertToPresentation(powerPoint, context){
         ];
 
         const result = child.spawnSync(command, args, {
-        input: fs.readFileSync('./presentationData.txt'),
+        input: fs.readFileSync('c:/local/temp/presentationData.txt'),
         stdio: ['pipe', 'pipe', 'pipe'],
         });
         if (result.error) {
             context.error('Error executing command:', result.error);
             process.exit(1);
         }
-        fs.writeFileSync(`./${outputFilePath}`, result.stdout);
+        fs.writeFileSync(`c:/local/temp/${outputFilePath}`, result.stdout);
         context.log("File created successfully")     
         return outputFilePath;     
     }else{
