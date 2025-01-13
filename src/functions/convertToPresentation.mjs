@@ -13,7 +13,7 @@ export function convertToPresentation(powerPoint, context){
             presentationFooter: fs.readFileSync('./pro6Templates/presentationFooter.txt').toString(),
             slide: fs.readFileSync('./pro6Templates/presentationSlide.txt').toString()
         }
-        outputFilePath = `${(jsonFileInfo.name).replace(".pptx", ".pro6")}` //cannot resolve this
+        outputFilePath = `${(jsonFileInfo.name).replace(".pptx", ".pro6")}`
         var pro6SlidesArray = []
         (powerPoint.slides).forEach(slide => {
             let rtfSlideLinesArray = [];
