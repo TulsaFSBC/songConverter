@@ -12,14 +12,14 @@ export async function uploadToSharepoint(requestData, accessToken, context, json
             "Authorization": `Bearer ${accessToken}`,
             "Accept": "application/json"
         }
-    })
-    const response = await apiCall(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${folderInfo.data.id}:/${outputFilePath}:/content`, {
+    })                                                                                                              /*CHANGE THIS TO ACTUAL FILE NAME!*/   
+    const response = await apiCall(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${folderInfo.data.id}:/test.pro:/content`, {
         method: "PUT",
         headers: {
             "Content-Type": "text/plain",
             "Authorization": `Bearer ${accessToken}`
         },
-        body: fs.readFileSync(`c:/local/temp/${outputFilePath}`),
+        body: fs.readFileSync(outputFilePath),
         redirect: "follow"
     })
     console.log(response)

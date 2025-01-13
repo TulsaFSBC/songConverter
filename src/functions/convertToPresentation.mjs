@@ -109,7 +109,7 @@ export function convertToPresentation(powerPoint, context){
             context.error('Error executing command:', result.error);
             process.exit(1);
         }
-        fs.writeFileSync(`c:/local/temp/${outputFilePath}`, result.stdout);
+        fs.writeFileSync(outputFilePath, result.stdout);
         context.log("File created successfully")     
         return outputFilePath;     
     }else{
