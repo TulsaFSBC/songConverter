@@ -23,10 +23,10 @@ export async function uploadToSharepoint(requestData, accessToken, context, json
         redirect: "follow"
     })
     console.log(response)
-    if(response.statusCode !== 201){
-        context.error(response.data.error.innerError);
-    }else{
+    if(response.statusCode == 201 || response.statusCode == 200){
         context.log("File uploaded successfully.")
+    }else{
+        context.error(response.data.error.innerError);
     }
     
 }

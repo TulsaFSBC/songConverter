@@ -23,7 +23,7 @@ app.http('fileIsModified', {
       await sleep(2000);
       await uploadToSharepoint(requestData, msAccessToken, context, powerPoint['jsonFileInfo'], outputFilePath);
       await sleep(4000);
-      cleanUp(context);
-      await sleep(1000);
+      //cleanUp(context);
+      //await sleep(1000);
     },
 });
