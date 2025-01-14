@@ -7,6 +7,7 @@ import { v4 as uuidv4} from 'uuid';
 export function convertToPresentation(powerPoint, context){
     var outputFilePath;
     const proPresenterVersion = env.get("PRO_PRESENTER_VERSION").required().asIntPositive();
+    context.log("Retrieved ProPresenter version: " + proPresenterVersion)
     if(proPresenterVersion == 6){ //untested
         const presentationTemplates = {
             presentationHeader: fs.readFileSync('./pro6Templates/presentationHeader.txt').toString(),
@@ -50,7 +51,7 @@ export function convertToPresentation(powerPoint, context){
                 textLine: fs.readFileSync('./pro7Templates/textLine.txt').toString(),
                 slideIdentifier: fs.readFileSync('./pro7Templates/slideIdentifier.txt').toString()
             }
-    
+            context.log("Read template files.")
             var pro7SlidesArray = [],
                 slideIdentifierGuids = [],
                 slideIdentifiers = [];
@@ -76,7 +77,7 @@ export function convertToPresentation(powerPoint, context){
                 pro7SlidesArray.push(pro7SlideString)
                 slideIdentifierGuids.push(slideId);
             })        
-    
+            context.log("Created slides")
             var presentationString = presentationTemplates.presentation.replace("$PRESENTATION_NAME", "testinggg");
     
             pro7SlidesArray.forEach(function (value, i) {
@@ -89,6 +90,8 @@ export function convertToPresentation(powerPoint, context){
             presentationString = presentationString.replace(/\$UUID/gm, function(){
                         return uuidv4()
                     });
+
+            context.log("Created presentation string")
             fs.writeFileSync("c:/local/temp/presentationData.txt", presentationString, err => {
                 console.error(err);
             });
