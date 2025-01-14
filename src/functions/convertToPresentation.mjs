@@ -42,76 +42,80 @@ export function convertToPresentation(powerPoint, context){
         });
         
     } else if (proPresenterVersion == 7){ //untested
-
-        const presentationTemplates = {
-            presentation: fs.readFileSync('./pro7Templates/presentation.txt').toString(),
-            slide: fs.readFileSync('./pro7Templates/slide.txt').toString(),
-            slideText: fs.readFileSync('./pro7Templates/slideText.txt').toString(),
-            textLine: fs.readFileSync('./pro7Templates/textLine.txt').toString(),
-            slideIdentifier: fs.readFileSync('./pro7Templates/slideIdentifier.txt').toString()
-        }
-
-        var pro7SlidesArray = [],
-            slideIdentifierGuids = [],
-            slideIdentifiers = [];
-        outputFilePath = "C:/local/temp/test.pro";//`${(jsonFileInfo.name).replace(".pptx", ".pro")}` needs changed!!!
-        
-        (powerPoint.slides).forEach(slide => {
-            let slideId = uuidv4();
-            let rtfSlideLinesArray = [];
-            slide.forEach(line =>{
-                if (line != ""){
-                    let rtfLine = presentationTemplates.textLine.replace("$TEXT", line)
-                    rtfSlideLinesArray.push(rtfLine)
-                }
-            })
-            let rtfSlideLines = rtfSlideLinesArray.join("");                    
-            let rtfSlide = presentationTemplates.slideText.replace("$TEXT_LINES", rtfSlideLines);
-            let pro7SlideString = presentationTemplates.slide.replace("$RTF_DATA", rtfSlide);
-            pro7SlideString = pro7SlideString.replace("\\\\par\\\\pard}", "}")
-            pro7SlideString = pro7SlideString.replace(/\$UUID/gm, function(){
-                return uuidv4()
-            });
-            pro7SlideString = pro7SlideString.replace("$SLIDE_UUID", slideId)
-            pro7SlidesArray.push(pro7SlideString)
-            slideIdentifierGuids.push(slideId);
-        })        
-
-        var presentationString = presentationTemplates.presentation.replace("$PRESENTATION_NAME", "testinggg");
-
-        pro7SlidesArray.forEach(function (value, i) {
-            let slideIdentifier = presentationTemplates.slideIdentifier.replace("$SLIDE_UUID", slideIdentifierGuids[i])
-            slideIdentifiers.push(slideIdentifier);
-        })
-        let slideIdentifiersString = slideIdentifiers.join("");
-        presentationString = presentationString.replace("$SLIDE_IDENTIFIERS", slideIdentifiersString)
-        presentationString = presentationString.replace("$SLIDES", pro7SlidesArray.join("\n"));
-        presentationString = presentationString.replace(/\$UUID/gm, function(){
+        try{
+            const presentationTemplates = {
+                presentation: fs.readFileSync('./pro7Templates/presentation.txt').toString(),
+                slide: fs.readFileSync('./pro7Templates/slide.txt').toString(),
+                slideText: fs.readFileSync('./pro7Templates/slideText.txt').toString(),
+                textLine: fs.readFileSync('./pro7Templates/textLine.txt').toString(),
+                slideIdentifier: fs.readFileSync('./pro7Templates/slideIdentifier.txt').toString()
+            }
+    
+            var pro7SlidesArray = [],
+                slideIdentifierGuids = [],
+                slideIdentifiers = [];
+            outputFilePath = "C:/local/temp/test.pro";//`${(jsonFileInfo.name).replace(".pptx", ".pro")}` needs changed!!!
+            
+            (powerPoint.slides).forEach(slide => {
+                let slideId = uuidv4();
+                let rtfSlideLinesArray = [];
+                slide.forEach(line =>{
+                    if (line != ""){
+                        let rtfLine = presentationTemplates.textLine.replace("$TEXT", line)
+                        rtfSlideLinesArray.push(rtfLine)
+                    }
+                })
+                let rtfSlideLines = rtfSlideLinesArray.join("");                    
+                let rtfSlide = presentationTemplates.slideText.replace("$TEXT_LINES", rtfSlideLines);
+                let pro7SlideString = presentationTemplates.slide.replace("$RTF_DATA", rtfSlide);
+                pro7SlideString = pro7SlideString.replace("\\\\par\\\\pard}", "}")
+                pro7SlideString = pro7SlideString.replace(/\$UUID/gm, function(){
                     return uuidv4()
                 });
-        fs.writeFileSync("c:/local/temp/presentationData.txt", presentationString, err => {
-            console.error(err);
-        });
-        context.log("Presentation data parsed into format successfully.")
-          
-        const command = path.resolve('./protoc/bin/protoc.exe');
-        const args = [
-        '--encode', 'rv.data.Presentation',
-        './proto/presentation.proto',
-        '--proto_path', './proto/'
-        ];
-
-        const result = child.spawnSync(command, args, {
-        input: fs.readFileSync('c:/local/temp/presentationData.txt'),
-        stdio: ['pipe', 'pipe', 'pipe'],
-        });
-        if (result.error) {
-            context.error('Error executing command:', result.error);
-            process.exit(1);
+                pro7SlideString = pro7SlideString.replace("$SLIDE_UUID", slideId)
+                pro7SlidesArray.push(pro7SlideString)
+                slideIdentifierGuids.push(slideId);
+            })        
+    
+            var presentationString = presentationTemplates.presentation.replace("$PRESENTATION_NAME", "testinggg");
+    
+            pro7SlidesArray.forEach(function (value, i) {
+                let slideIdentifier = presentationTemplates.slideIdentifier.replace("$SLIDE_UUID", slideIdentifierGuids[i])
+                slideIdentifiers.push(slideIdentifier);
+            })
+            let slideIdentifiersString = slideIdentifiers.join("");
+            presentationString = presentationString.replace("$SLIDE_IDENTIFIERS", slideIdentifiersString)
+            presentationString = presentationString.replace("$SLIDES", pro7SlidesArray.join("\n"));
+            presentationString = presentationString.replace(/\$UUID/gm, function(){
+                        return uuidv4()
+                    });
+            fs.writeFileSync("c:/local/temp/presentationData.txt", presentationString, err => {
+                console.error(err);
+            });
+            context.log("Presentation data parsed into format successfully.")
+              
+            const command = path.resolve('./protoc/bin/protoc.exe');
+            const args = [
+            '--encode', 'rv.data.Presentation',
+            './proto/presentation.proto',
+            '--proto_path', './proto/'
+            ];
+    
+            const result = child.spawnSync(command, args, {
+            input: fs.readFileSync('c:/local/temp/presentationData.txt'),
+            stdio: ['pipe', 'pipe', 'pipe'],
+            });
+            if (result.error) {
+                context.error('Error executing command:', result.error);
+                process.exit(1);
+            }
+            fs.writeFileSync(outputFilePath, result.stdout);
+            context.log("File created successfully")     
+            return outputFilePath;
         }
-        fs.writeFileSync(outputFilePath, result.stdout);
-        context.log("File created successfully")     
-        return outputFilePath;     
+        catch(err){
+            context.error(err)
+        } 
     }else{
         context.error("Invalid ProPresenter version")
     }
