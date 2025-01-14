@@ -44,11 +44,11 @@ export function convertToPresentation(powerPoint, context){
     } else if (proPresenterVersion == 7){ //untested
 
         const presentationTemplates = {
-            presentation: fs.readFile('./pro7Templates/presentation.txt').toString(),
-            slide: fs.readFile('./pro7Templates/slide.txt').toString(),
-            slideText: fs.readFile('./pro7Templates/slideText.txt').toString(),
-            textLine: fs.readFile('./pro7Templates/textLine.txt').toString(),
-            slideIdentifier: fs.readFile('./pro7Templates/slideIdentifier.txt').toString()
+            presentation: fs.readFileSync('./pro7Templates/presentation.txt').toString(),
+            slide: fs.readFileSync('./pro7Templates/slide.txt').toString(),
+            slideText: fs.readFileSync('./pro7Templates/slideText.txt').toString(),
+            textLine: fs.readFileSync('./pro7Templates/textLine.txt').toString(),
+            slideIdentifier: fs.readFileSync('./pro7Templates/slideIdentifier.txt').toString()
         }
 
         var pro7SlidesArray = [],
@@ -89,7 +89,7 @@ export function convertToPresentation(powerPoint, context){
         presentationString = presentationString.replace(/\$UUID/gm, function(){
                     return uuidv4()
                 });
-        fs.writeFile("c:/local/temp/presentationData.txt", presentationString, err => {
+        fs.writeFileSync("c:/local/temp/presentationData.txt", presentationString, err => {
             console.error(err);
         });
         context.log("Presentation data parsed into format successfully.")
@@ -101,7 +101,7 @@ export function convertToPresentation(powerPoint, context){
         '--proto_path', './proto/'
         ];
 
-        const result = child.spawn(command, args, {
+        const result = child.spawnSync(command, args, {
         input: fs.readFile('c:/local/temp/presentationData.txt'),
         stdio: ['pipe', 'pipe', 'pipe'],
         });
@@ -109,7 +109,7 @@ export function convertToPresentation(powerPoint, context){
             context.error('Error executing command:', result.error);
             process.exit(1);
         }
-        fs.writeFile(outputFilePath, result.stdout);
+        fs.writeFileSync(outputFilePath, result.stdout);
         context.log("File created successfully")     
         return outputFilePath;     
     }else{
