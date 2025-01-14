@@ -102,7 +102,7 @@ export function convertToPresentation(powerPoint, context){
         ];
 
         const result = child.spawnSync(command, args, {
-        input: fs.readFile('c:/local/temp/presentationData.txt'),
+        input: fs.readFileSync('c:/local/temp/presentationData.txt'),
         stdio: ['pipe', 'pipe', 'pipe'],
         });
         if (result.error) {
