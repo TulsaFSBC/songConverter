@@ -11,18 +11,24 @@ app.http('fileIsModified', {
     methods: ['POST'],
     authLevel: 'anonymous',
     handler: async (request, context) => {
-      const requestData = await receiveRequest(request, context);
-      await sleep(500);
-      const msAccessToken = await getAccessToken(context);
-      await sleep(500);
-      const powerPoint = await downloadPowerpoint(requestData, msAccessToken, context);
-      await sleep(3000);
-      const textData = await extractText(powerPoint['fileBuffer'], context);
-      await sleep(2000);
-      const outputFilePath = convertToPresentation(textData, context);
-      await sleep(2000);
-      await uploadToSharepoint(requestData, msAccessToken, context, powerPoint['jsonFileInfo'], outputFilePath);
-      await sleep(4000);
+      try{
+        const requestData = await receiveRequest(request, context);
+        await sleep(500);
+        const msAccessToken = await getAccessToken(context);
+        await sleep(500);
+        const powerPoint = await downloadPowerpoint(requestData, msAccessToken, context);
+        await sleep(3000);
+        const textData = await extractText(powerPoint['fileBuffer'], context);
+        await sleep(2000);
+        const outputFilePath = convertToPresentation(textData, context);
+        await sleep(2000);
+        await uploadToSharepoint(requestData, msAccessToken, context, powerPoint['jsonFileInfo'], outputFilePath);
+        await sleep(4000);
+      }
+      catch(err){
+        context.error(err)
+      }
+      
       //cleanUp(context);
       //await sleep(1000);
     },
