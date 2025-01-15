@@ -4,7 +4,6 @@ import { downloadPowerpoint } from "./downloadPowerpoint.mjs";
 import { extractText } from "./extractText.mjs";
 import { convertToPresentation } from "./convertToPresentation.mjs";
 import { uploadToSharepoint } from "./uploadToSharepoint.mjs";
-import { cleanUp } from "./cleanUp.mjs";
 import { receiveRequest, sleep } from "./helperFunctions.mjs";
 
 app.http('fileIsModified', {
@@ -22,8 +21,9 @@ app.http('fileIsModified', {
         await sleep(2000);
         const presentationFilePath = await convertToPresentation(textData, context);
         await sleep(2000);
-        await uploadToSharepoint(requestData, msAccessToken, powerPoint.fileInfo, presentationFilePath, context);
+        const response = await uploadToSharepoint(requestData, msAccessToken, powerPoint.fileInfo, presentationFilePath, context);
         await sleep(4000);
+        return response;
       }
       catch(err){
         context.error(err)
