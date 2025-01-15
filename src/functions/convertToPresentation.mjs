@@ -5,7 +5,7 @@ import * as child from 'child_process'
 import { v4 as uuidv4} from 'uuid';
 
 export async function convertToPresentation(powerPoint, context){
-    var outputFilePath;
+    var presentationFilePath;
     const proPresenterVersion = env.get("PRO_PRESENTER_VERSION").required().asIntPositive();
     context.log("Retrieved ProPresenter version: " + proPresenterVersion)
     if(proPresenterVersion == 6){ //untested
@@ -14,8 +14,8 @@ export async function convertToPresentation(powerPoint, context){
             presentationFooter: fs.readFileSync('./pro6Templates/presentationFooter.txt').toString(),
             slide: fs.readFileSync('./pro6Templates/presentationSlide.txt').toString()
         }
-        outputFilePath = `${(jsonFileInfo.name).replace(".pptx", ".pro6")}`
-        var pro6SlidesArray = []
+        presentationFilePath = "C:/local/temp/presentation.pro6"
+        var pro6SlidesArray = [];
         (powerPoint.slides).forEach(slide => {
             let rtfSlideLinesArray = [];
             slide.forEach(line =>{
@@ -34,7 +34,7 @@ export async function convertToPresentation(powerPoint, context){
         })        
 
         const presentationString = presentationTemplates.presentationHeader + pro6SlidesArray.join() + presentationTemplates.presentationFooter;
-        fs.writeFileSync(`c:/local/temp/${outputFilePath}`, presentationString, err => {
+        fs.writeFileSync(presentationFilePath, presentationString, err => {
             if (err) {
                 console.error(err);
             } else {
@@ -42,7 +42,7 @@ export async function convertToPresentation(powerPoint, context){
             }
         });
         
-    } else if (proPresenterVersion == 7){ //untested
+    } else if (proPresenterVersion == 7){
         try{
             const presentationTemplates = {
                 presentation: await fs.readFile('./pro7Templates/presentation.txt').toString(),
@@ -55,7 +55,7 @@ export async function convertToPresentation(powerPoint, context){
             var pro7SlidesArray = [],
                 slideIdentifierGuids = [],
                 slideIdentifiers = [];
-            outputFilePath = "C:/local/temp/test.pro";//`${(jsonFileInfo.name).replace(".pptx", ".pro")}` needs changed!!!
+            presentationFilePath = "C:/local/temp/presentation.pro";
             
             (powerPoint.slides).forEach(slide => {
                 let slideId = uuidv4();
@@ -112,9 +112,9 @@ export async function convertToPresentation(powerPoint, context){
                 context.error('Error executing command:', result.error);
                 process.exit(1);
             }
-            fs.writeFile(outputFilePath, result.stdout);
+            fs.writeFile(presentationFilePath, result.stdout);
             context.log("File created successfully")     
-            return outputFilePath;
+            return presentationFilePath;
         }
         catch(err){
             context.error(err)

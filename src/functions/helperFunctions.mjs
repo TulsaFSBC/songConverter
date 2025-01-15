@@ -14,7 +14,7 @@ export async function receiveRequest(request, context) {
     try {
         const text = await request.text();
         context.log("Request Received: " + text);
-        return await JSON.parse(text); // Return the text for potential future use
+        return await JSON.parse(text);
     } catch (error) {
         context.error("Error receiving request: " + error);
         throw error;
@@ -26,7 +26,3 @@ export function sleep(ms) {
       setTimeout(resolve, ms);
     });
   }
-
-/*const requestBody = await request.text()
-    await context.log("Received request: " + await requestBody)
-    return await JSON.parse(requestBody) */

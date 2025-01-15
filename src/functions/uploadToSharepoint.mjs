@@ -1,9 +1,9 @@
 import { apiCall } from "./helperFunctions.mjs";
 import * as fs from 'fs';
 //trigger
-export async function uploadToSharepoint(requestData, accessToken, context, jsonFileInfo, outputFilePath){
+export async function uploadToSharepoint(requestData, accessToken, fileInfo, presentationFilePath, context){
     context.log("Uploading file to SharePoint...")       
-    const destinationFolder = ((jsonFileInfo.data.parentReference.path).split("root:/")[0]) + "root:/proPresenter Files"
+    const destinationFolder = ((fileInfo.data.parentReference.path).split("root:/")[0]) + "root:/proPresenter Files"
     context.log("Destination path: " + destinationFolder)
 
     const folderInfo = await apiCall(`https://graph.microsoft.com/v1.0/${destinationFolder}`, {
@@ -13,13 +13,13 @@ export async function uploadToSharepoint(requestData, accessToken, context, json
             "Accept": "application/json"
         }
     })                                                                                                              /*CHANGE THIS TO ACTUAL FILE NAME!*/   
-    const response = await apiCall(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${folderInfo.data.id}:/test.pro:/content`, {
+    const response = await apiCall(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${folderInfo.data.id}:/${fileInfo.data.name}:/content`, {
         method: "PUT",
         headers: {
             "Content-Type": "text/plain",
             "Authorization": `Bearer ${accessToken}`
         },
-        body: fs.readFileSync(outputFilePath),
+        body: fs.readFileSync(presentationFilePath),
         redirect: "follow"
     })
     console.log(response)

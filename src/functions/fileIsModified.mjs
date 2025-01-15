@@ -18,18 +18,15 @@ app.http('fileIsModified', {
         await sleep(500);
         const powerPoint = await downloadPowerpoint(requestData, msAccessToken, context);
         await sleep(3000);
-        const textData = await extractText(powerPoint['fileBuffer'], context);
+        const textData = await extractText(powerPoint.fileBuffer, context);
         await sleep(2000);
-        const outputFilePath = await convertToPresentation(textData, context);
+        const presentationFilePath = await convertToPresentation(textData, context);
         await sleep(2000);
-        await uploadToSharepoint(requestData, msAccessToken, context, powerPoint['jsonFileInfo'], outputFilePath);
+        await uploadToSharepoint(requestData, msAccessToken, powerPoint.fileInfo, presentationFilePath, context);
         await sleep(4000);
       }
       catch(err){
         context.error(err)
       }
-      
-      //cleanUp(context);
-      //await sleep(1000);
     },
 });
