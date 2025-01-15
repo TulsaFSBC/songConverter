@@ -97,7 +97,7 @@ export async function convertToPresentation(powerPoint, context){
             });
             context.log("Presentation data parsed into format successfully.")
               
-            const command = path.resolve('./protoc/bin/protoc.exe');
+            const command = path.resolve('./protoc/src/protoc.exe');
             const args = [
             '--encode', 'rv.data.Presentation',
             './proto/presentation.proto',
