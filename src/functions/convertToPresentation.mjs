@@ -104,7 +104,7 @@ export async function convertToPresentation(powerPoint, context){
             '--proto_path', './proto/'
             ];
     
-            const result = child.spawnSync(command, args, {
+            const result = child.spawn(command, args, {
             input: await fs.readFile('c:/local/temp/presentationData.txt'),
             stdio: ['pipe', 'pipe', 'pipe'],
             });
@@ -112,7 +112,7 @@ export async function convertToPresentation(powerPoint, context){
                 context.error('Error executing command:', result.error);
                 process.exit(1);
             }
-            await fs.writeFile(outputFilePath, result.stdout);
+            fs.writeFile(outputFilePath, result.stdout);
             context.log("File created successfully")     
             return outputFilePath;
         }
