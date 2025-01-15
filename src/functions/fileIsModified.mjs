@@ -20,7 +20,7 @@ app.http('fileIsModified', {
         await sleep(3000);
         const textData = await extractText(powerPoint['fileBuffer'], context);
         await sleep(2000);
-        const outputFilePath = convertToPresentation(textData, context);
+        const outputFilePath = await convertToPresentation(textData, context);
         await sleep(2000);
         await uploadToSharepoint(requestData, msAccessToken, context, powerPoint['jsonFileInfo'], outputFilePath);
         await sleep(4000);

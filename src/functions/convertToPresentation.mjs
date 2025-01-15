@@ -1,10 +1,10 @@
 import env from 'env-var';
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
 import path from 'path';
 import * as child from 'child_process'
 import { v4 as uuidv4} from 'uuid';
 
-export function convertToPresentation(powerPoint, context){
+export async function convertToPresentation(powerPoint, context){
     var outputFilePath;
     const proPresenterVersion = env.get("PRO_PRESENTER_VERSION").required().asIntPositive();
     context.log("Retrieved ProPresenter version: " + proPresenterVersion)
@@ -45,11 +45,11 @@ export function convertToPresentation(powerPoint, context){
     } else if (proPresenterVersion == 7){ //untested
         try{
             const presentationTemplates = {
-                presentation: fs.readFileSync('./pro7Templates/presentation.txt').toString(),
-                slide: fs.readFileSync('./pro7Templates/slide.txt').toString(),
-                slideText: fs.readFileSync('./pro7Templates/slideText.txt').toString(),
-                textLine: fs.readFileSync('./pro7Templates/textLine.txt').toString(),
-                slideIdentifier: fs.readFileSync('./pro7Templates/slideIdentifier.txt').toString()
+                presentation: await fs.readFile('./pro7Templates/presentation.txt').toString(),
+                slide: await fs.readFile('./pro7Templates/slide.txt').toString(),
+                slideText: await fs.readFile('./pro7Templates/slideText.txt').toString(),
+                textLine: await fs.readFile('./pro7Templates/textLine.txt').toString(),
+                slideIdentifier: await fs.readFile('./pro7Templates/slideIdentifier.txt').toString()
             }
             context.log("Read template files.")
             var pro7SlidesArray = [],
@@ -92,7 +92,7 @@ export function convertToPresentation(powerPoint, context){
                     });
 
             context.log("Created presentation string")
-            fs.writeFileSync("c:/local/temp/presentationData.txt", presentationString, err => {
+            await fs.writeFile("c:/local/temp/presentationData.txt", presentationString, err => {
                 console.error(err);
             });
             context.log("Presentation data parsed into format successfully.")
@@ -105,14 +105,14 @@ export function convertToPresentation(powerPoint, context){
             ];
     
             const result = child.spawnSync(command, args, {
-            input: fs.readFileSync('c:/local/temp/presentationData.txt'),
+            input: await fs.readFile('c:/local/temp/presentationData.txt'),
             stdio: ['pipe', 'pipe', 'pipe'],
             });
             if (result.error) {
                 context.error('Error executing command:', result.error);
                 process.exit(1);
             }
-            fs.writeFileSync(outputFilePath, result.stdout);
+            await fs.writeFile(outputFilePath, result.stdout);
             context.log("File created successfully")     
             return outputFilePath;
         }
