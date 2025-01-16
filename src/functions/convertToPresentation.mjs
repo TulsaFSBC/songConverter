@@ -3,6 +3,7 @@ import * as fs from 'fs/promises';
 import path from 'path';
 import * as child from 'child_process'
 import { v4 as uuidv4} from 'uuid';
+import sleep from "./helperFunctions.mjs";
 
 export async function convertToPresentation(powerPoint, context){
     var presentationFilePath;
@@ -113,7 +114,8 @@ export async function convertToPresentation(powerPoint, context){
                 process.exit(1);
             }
             fs.writeFile(presentationFilePath, result.stdout);
-            context.log("File created successfully")     
+            context.log("File created successfully")    
+            await sleep(4000) 
             return presentationFilePath;
         }
         catch(err){

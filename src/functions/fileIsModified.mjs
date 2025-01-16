@@ -20,7 +20,7 @@ app.http('fileIsModified', {
         const textData = await extractText(powerPoint.fileBuffer, context);
         await sleep(2000);
         const presentationFilePath = await convertToPresentation(textData, context);
-        await sleep(2000);
+        await sleep(3000);
         const response = await uploadToSharepoint(requestData, msAccessToken, powerPoint.fileInfo, presentationFilePath, context);
         await sleep(4000);
         return response;
