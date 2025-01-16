@@ -3,7 +3,7 @@ import * as fs from 'fs/promises';
 import path from 'path';
 import * as child from 'child_process'
 import { v4 as uuidv4} from 'uuid';
-import sleep from "./helperFunctions.mjs";
+import { sleep } from "./helperFunctions.mjs";
 
 export async function convertToPresentation(powerPoint, context){
     var presentationFilePath;
