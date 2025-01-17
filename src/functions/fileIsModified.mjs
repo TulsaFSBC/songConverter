@@ -13,6 +13,7 @@ app.http('fileIsModified', {
       try{
         const requestData = await receiveRequest(request, context);
         await sleep(500);
+        context.log(typeof requestData);
         const msAccessToken = await getAccessToken(context);
         await sleep(500);
         const powerPoint = await downloadPowerpoint(requestData, msAccessToken, context);
