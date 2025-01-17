@@ -1,5 +1,5 @@
 import env from 'env-var';
-import * as fs from 'fs/promises';
+import { promises as fs } from "fs";
 import path from 'path';
 import * as child from 'child_process'
 import { v4 as uuidv4} from 'uuid';
@@ -11,9 +11,9 @@ export async function convertToPresentation(powerPoint, context){
     context.log("Retrieved ProPresenter version: " + proPresenterVersion)
     if(proPresenterVersion == 6){ //untested
         const presentationTemplates = {
-            presentationHeader: fs.readFileSync('./pro6Templates/presentationHeader.txt').toString(),
-            presentationFooter: fs.readFileSync('./pro6Templates/presentationFooter.txt').toString(),
-            slide: fs.readFileSync('./pro6Templates/presentationSlide.txt').toString()
+            presentationHeader: (await  fs.readFile('./pro6Templates/presentationHeader.txt')).toString(),
+            presentationFooter: (await fs.readFile('./pro6Templates/presentationFooter.txt')).toString(),
+            slide: (await fs.readFile('./pro6Templates/presentationSlide.txt')).toString()
         }
         presentationFilePath = "C:/local/temp/presentation.pro6"
         var pro6SlidesArray = [];
@@ -46,11 +46,14 @@ export async function convertToPresentation(powerPoint, context){
     } else if (proPresenterVersion == 7){
         try{
             const presentationTemplates = {
-                presentation: await fs.readFile('./pro7Templates/presentation.txt').toString(),
-                slide: await fs.readFile('./pro7Templates/slide.txt').toString(),
-                slideText: await fs.readFile('./pro7Templates/slideText.txt').toString(),
-                textLine: await fs.readFile('./pro7Templates/textLine.txt').toString(),
-                slideIdentifier: await fs.readFile('./pro7Templates/slideIdentifier.txt').toString()
+                presentation: (await fs.readFile('./pro7Templates/presentation.txt')).toString(),
+                slide: (await fs.readFile('./pro7Templates/slide.txt')).toString(),
+                slideText: (await fs.readFile('./pro7Templates/slideText.txt')).toString(),
+                textLine: (await fs.readFile('./pro7Templates/textLine.txt')).toString(),
+                slideIdentifier: (await fs.readFile('./pro7Templates/slideIdentifier.txt')).toString()
+            }
+            if(typeof presentationTemplates.presentation != "string"){
+                context.error("Error reading template files. Current type is: " + typeof presentationTemplates.presentation)
             }
             context.log("Read template files.")
             var pro7SlidesArray = [],
@@ -89,13 +92,11 @@ export async function convertToPresentation(powerPoint, context){
             presentationString = presentationString.replace("$SLIDE_IDENTIFIERS", slideIdentifiersString)
             presentationString = presentationString.replace("$SLIDES", pro7SlidesArray.join("\n"));
             presentationString = presentationString.replace(/\$UUID/gm, function(){
-                        return uuidv4()
-                    });
+                    return uuidv4()
+                });
 
             context.log("Created presentation string")
-            await fs.writeFile("c:/local/temp/presentationData.txt", presentationString, err => {
-                console.error(err);
-            });
+            await fs.writeFile("c:/local/temp/presentationData.txt", presentationString);
             context.log("Presentation data parsed into format successfully.")
               
             const command = path.resolve('./protoc/src/protoc.exe');
@@ -105,17 +106,16 @@ export async function convertToPresentation(powerPoint, context){
             '--proto_path', './proto/'
             ];
     
-            const result = child.spawn(command, args, {
-            input: await fs.readFile('c:/local/temp/presentationData.txt'),
-            stdio: ['pipe', 'pipe', 'pipe'],
+            const result = child.spawnSync(command, args, {
+                input: await fs.readFile('c:/local/temp/presentationData.txt'),
+                stdio: ['pipe', 'pipe', 'pipe'],
             });
             if (result.error) {
                 context.error('Error executing command:', result.error);
                 process.exit(1);
             }
-            fs.writeFile(presentationFilePath, result.stdout);
+            await fs.writeFile(presentationFilePath, result.stdout);
             context.log("File created successfully")    
-            await sleep(4000) 
             return presentationFilePath;
         }
         catch(err){

@@ -23,7 +23,7 @@ app.http('fileIsModified', {
         await sleep(3000);
         const response = await uploadToSharepoint(requestData, msAccessToken, powerPoint.fileInfo, presentationFilePath, context);
         await sleep(4000);
-        return response;
+        return {body: await response.data};
       }
       catch(err){
         context.error(err)
