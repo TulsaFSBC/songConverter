@@ -1,7 +1,9 @@
 import { apiCall } from "./helperFunctions.mjs";
-import * as fs from 'fs';
+import * as fs from 'fs/promises';
+import env from 'env-var';
 
 export async function uploadToSharepoint(requestData, accessToken, fileInfo, presentationFilePath, context){
+    const proPresenterVersion = env.get("PRO_PRESENTER_VERSION").required().asIntPositive();
     context.log("Uploading file to SharePoint...")       
     const destinationFolder = ((fileInfo.data.parentReference.path).split("root:/")[0]) + "root:/proPresenter Files"
     context.log("Destination path: " + destinationFolder)
@@ -12,14 +14,22 @@ export async function uploadToSharepoint(requestData, accessToken, fileInfo, pre
             "Authorization": `Bearer ${accessToken}`,
             "Accept": "application/json"
         }
-    })                                                                                                              /*CHANGE THIS TO ACTUAL FILE NAME!*/   
-    const response = await apiCall(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${folderInfo.data.id}:/${fileInfo.data.name}:/content`, {
+    })              
+    let fileName;
+    if (proPresenterVersion == 6)  {
+        fileName = (fileInfo.data.name).replace("pptx", "pro6")
+    } else if(proPresenterVersion == 7){
+        fileName = (fileInfo.data.name).replace("pptx", "pro")
+    } else {
+        context.error("Invalid ProPresenter version.")
+    }                                                                                        
+    const response = await apiCall(`https://graph.microsoft.com/v1.0/drives/${requestData.driveId}/items/${folderInfo.data.id}:/${fileName}:/content`, {
         method: "PUT",
         headers: {
             "Content-Type": "text/plain",
             "Authorization": `Bearer ${accessToken}`
         },
-        body: fs.readFileSync(presentationFilePath),
+        body: await fs.readFile(presentationFilePath),
         redirect: "follow"
     })
     console.log(response)
