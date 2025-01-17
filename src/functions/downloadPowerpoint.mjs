@@ -13,7 +13,8 @@ export async function downloadPowerpoint(requestData, accessToken, context){
     if(downloadUrl == undefined){
         context.error("Could not retrieve file information")
         context.error("donwloadUrl is " + downloadUrl)
-        context.error("fileInfo is " + fileInfo)
+        context.error("fileInfo is ")
+        context.error(fileInfo)
     }else{
         context.log("Retrieved file information successfully.")
     }
