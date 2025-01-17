@@ -10,8 +10,10 @@ export async function downloadPowerpoint(requestData, accessToken, context){
         }
     }) 
     const downloadUrl = fileInfo.data["@microsoft.graph.downloadUrl"];
-    if(await downloadUrl === undefined){
+    if(downloadUrl == undefined){
         context.error("Could not retrieve file information")
+        context.error("donwloadUrl is " + downloadUrl)
+        context.error("fileInfo is " + fileInfo)
     }else{
         context.log("Retrieved file information successfully.")
     }
