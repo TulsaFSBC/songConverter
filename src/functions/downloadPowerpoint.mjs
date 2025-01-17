@@ -17,9 +17,9 @@ export async function downloadPowerpoint(requestData, accessToken, context){
         context.error(fileInfo)
     }else{
         context.log("Retrieved file information successfully.")
+        context.log("Downloading file from " + downloadUrl);
     }
-    context.log("Downloading file...");
-
+    
     const response = await fetch(downloadUrl, {
         method: "GET",
         headers: {

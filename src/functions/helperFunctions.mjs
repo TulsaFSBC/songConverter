@@ -14,7 +14,11 @@ export async function receiveRequest(request, context) {
     try {
         const text = await request.text();
         context.log("Request Received: " + text);
-        return await JSON.parse(text);
+        if(typeof text == "string"){
+            return await JSON.parse(text);
+        } else {
+            return text;
+        }
     } catch (error) {
         context.error("Error receiving request: " + error);
         throw error;
