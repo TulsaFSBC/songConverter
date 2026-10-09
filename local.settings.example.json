@@ -1,0 +1,18 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+
+    "TENANT_ID": "<directory (tenant) id of the app registration>",
+    "CLIENT_ID": "<application (client) id of the app registration>",
+    "CLIENT_SECRET": "<client secret value>",
+
+    "OUTPUT_FOLDER": "proPresenter Files",
+
+    "SYNC_DRIVE_ID": "",
+    "SYNC_SOURCE_FOLDER": "",
+    "SYNC_INCLUDE_SUBFOLDERS": "false",
+    "SYNC_SCHEDULE": "0 */5 * * * *"
+  }
+}

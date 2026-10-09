@@ -1,20 +1,32 @@
 {
   "name": "songconverter",
-  "version": "1.0.0",
-  "description": "",
+  "version": "2.0.0",
+  "description": "Azure Functions app that converts PowerPoint song lyrics (.pptx/.ppt) in SharePoint into ProPresenter 7 (.pro) files",
+  "private": true,
   "type": "module",
+  "main": "dist/src/functions/*.js",
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
-    "start": "func start",
-    "test": "echo \"No tests yet...\""
+    "clean": "node -e \"require('fs').rmSync('dist', { recursive: true, force: true })\"",
+    "build": "npm run clean && tsc",
+    "watch": "tsc --watch",
+    "test": "npm run build && node --test \"dist/test/**/*.test.js\"",
+    "convert": "node dist/scripts/convert-local.js",
+    "prestart": "npm run build",
+    "start": "func start"
   },
   "dependencies": {
-    "@azure/functions": "^4.6.0",
-    "@azure/identity": "^4.5.0",
-    "@azure/keyvault-secrets": "^4.9.0",
-    "env-var": "^7.5.0",
-    "node-fetch": "^3.3.2",
-    "office-text-extractor": "^3.0.3",
-    "uuid": "^10.0.0"
+    "@azure/functions": "^4.16.5",
+    "@azure/identity": "^4.13.3",
+    "cfb": "^1.2.2",
+    "fast-xml-parser": "^5.11.2",
+    "jszip": "^3.10.1",
+    "protobufjs": "^7.6.6"
   },
-  "main": "src/functions/fileIsModified.mjs"
+  "devDependencies": {
+    "@types/node": "^22.20.5",
+    "typescript": "~5.9.3"
+  }
 }

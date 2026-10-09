@@ -1,61 +1,71 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
-# More GitHub Actions for Azure: https://github.com/Azure/actions
+# Builds and tests every push and pull request; deploys to Azure when main changes.
+# Docs: https://github.com/Azure/functions-action
 
-name: Build and deploy Node.js project to Azure Function App - SongConverter
+name: Build and deploy SongConverter
 
 on:
   push:
     branches:
       - main
+      - dev
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
-  NODE_VERSION: '20.x' # set this to the node version to use (supports 8.x, 10.x, 12.x)
+  NODE_VERSION: '22.x'
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
-      - name: 'Checkout GitHub Action'
+      - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Setup Node ${{ env.NODE_VERSION }} Environment
-        uses: actions/setup-node@v3
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
+          cache: npm
 
-      - name: 'Resolve Project Dependencies Using Npm'
-        shell: pwsh
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build and test
+        run: npm test
+
+      - name: Create deployment package
+        # Only what the Function App needs at run time: compiled code, production
+        # dependencies, the ProPresenter .proto files and the host configuration.
         run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          npm install
-          npm run build --if-present
-          npm run test --if-present
-          popd
+          mkdir -p deploy
+          cp -r dist proto host.json package.json package-lock.json deploy/
+          rm -rf deploy/dist/test deploy/dist/scripts
+          cd deploy
+          npm ci --omit=dev --ignore-scripts
 
-      - name: Upload artifact for deployment job
+      - name: Upload deployment package
         uses: actions/upload-artifact@v4
         with:
-          name: node-app
-          path: .
+          name: function-app
+          path: deploy
+          include-hidden-files: true
 
   deploy:
-    runs-on: windows-latest
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: build
-    
-    
+    runs-on: ubuntu-latest
     steps:
-      - name: Download artifact from build job
+      - name: Download deployment package
         uses: actions/download-artifact@v4
         with:
-          name: node-app
-      
-      - name: 'Run Azure Functions Action'
+          name: function-app
+          path: deploy
+
+      - name: Deploy to Azure Functions
         uses: Azure/functions-action@v1
-        id: fa
         with:
           app-name: 'SongConverter'
-          slot-name: 'Production'
-          package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+          package: deploy
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2310C9DD2A414403B441A1B34BEF35E8 }}

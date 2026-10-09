@@ -99,8 +99,10 @@ __queuestorage__
 __azurite_db*__.json
 
 # Misc
-test*
 powerpoint*
-presentationData.txt*
-*.pro*
+*.pptx
+*.ppt
+*.pro
+*.pro6
 *.publishsettings
+*.PublishSettings

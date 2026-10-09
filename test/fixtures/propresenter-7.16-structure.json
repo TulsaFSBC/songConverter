@@ -1,0 +1,272 @@
+{
+  "application_info": {
+    "application": "APPLICATION_PROPRESENTER",
+    "application_version": {
+      "build": "118489864",
+      "major_version": 7,
+      "minor_version": 16,
+      "patch_version": 3
+    },
+    "platform": "PLATFORM_WINDOWS",
+    "platform_version": {
+      "build": "19045",
+      "major_version": 10,
+      "patch_version": 4294967295
+    }
+  },
+  "background": {
+    "color": {
+      "alpha": 1
+    }
+  },
+  "ccli": {},
+  "chord_chart": {},
+  "cue_groups": [
+    {
+      "cue_identifiers": "<cue ids>",
+      "group": {
+        "name": "Group",
+        "uuid": {
+          "string": "<uuid>"
+        }
+      }
+    }
+  ],
+  "cues": [
+    {
+      "actions": [
+        {
+          "isEnabled": true,
+          "slide": {
+            "presentation": {
+              "base_slide": {
+                "background_color": {
+                  "alpha": 1
+                },
+                "elements": [
+                  {
+                    "element": {
+                      "bounds": {
+                        "origin": {},
+                        "size": {
+                          "height": 1080,
+                          "width": 1920
+                        }
+                      },
+                      "feather": {
+                        "radius": 0.05
+                      },
+                      "fill": {
+                        "color": {
+                          "alpha": 1,
+                          "blue": 1,
+                          "green": 0.5647059082984924,
+                          "red": 0.11764705926179886
+                        }
+                      },
+                      "opacity": 1,
+                      "path": {
+                        "closed": true,
+                        "points": [
+                          {
+                            "point": {},
+                            "q0": {},
+                            "q1": {}
+                          },
+                          {
+                            "point": {
+                              "x": 1
+                            },
+                            "q0": {
+                              "x": 1
+                            },
+                            "q1": {
+                              "x": 1
+                            }
+                          },
+                          {
+                            "point": {
+                              "x": 1,
+                              "y": 1
+                            },
+                            "q0": {
+                              "x": 1,
+                              "y": 1
+                            },
+                            "q1": {
+                              "x": 1,
+                              "y": 1
+                            }
+                          },
+                          {
+                            "point": {
+                              "y": 1
+                            },
+                            "q0": {
+                              "y": 1
+                            },
+                            "q1": {
+                              "y": 1
+                            }
+                          }
+                        ],
+                        "shape": {
+                          "type": "TYPE_RECTANGLE"
+                        }
+                      },
+                      "shadow": {
+                        "angle": 315,
+                        "color": {
+                          "alpha": 1
+                        },
+                        "offset": 5,
+                        "opacity": 0.75,
+                        "radius": 5
+                      },
+                      "stroke": {
+                        "color": {
+                          "alpha": 1,
+                          "blue": 1,
+                          "green": 1,
+                          "red": 1
+                        },
+                        "width": 3
+                      },
+                      "text": {
+                        "attributes": {
+                          "custom_attributes": [
+                            {
+                              "original_font_size": 90,
+                              "range": "<range>"
+                            }
+                          ],
+                          "font": {
+                            "face": "Regular",
+                            "family": "TimesNewRomanPSMT",
+                            "name": "TimesNewRomanPSMT",
+                            "size": 90
+                          },
+                          "paragraph_style": {
+                            "alignment": "ALIGNMENT_CENTER",
+                            "line_height_multiple": 1,
+                            "text_list": {}
+                          },
+                          "stroke_color": {
+                            "alpha": 1,
+                            "blue": 1,
+                            "green": 1,
+                            "red": 1
+                          },
+                          "text_solid_fill": {
+                            "alpha": 1,
+                            "blue": 1,
+                            "green": 1,
+                            "red": 1
+                          }
+                        },
+                        "chord_pro": {
+                          "color": {
+                            "alpha": 1
+                          }
+                        },
+                        "is_superscript_standardized": true,
+                        "margins": {},
+                        "rtf_data": "<slide rtf>",
+                        "scale_behavior": "SCALE_BEHAVIOR_SCALE_FONT_DOWN",
+                        "shadow": {
+                          "angle": 315,
+                          "color": {
+                            "alpha": 1
+                          },
+                          "offset": 5,
+                          "opacity": 0.75,
+                          "radius": 5
+                        },
+                        "transformDelimiter": "  •  ",
+                        "vertical_alignment": "VERTICAL_ALIGNMENT_MIDDLE"
+                      },
+                      "text_line_mask": {},
+                      "uuid": {
+                        "string": "<uuid>"
+                      }
+                    },
+                    "info": 3,
+                    "text_scroller": {
+                      "repeat_distance": 0.052083333333333336,
+                      "scroll_rate": 0.5,
+                      "should_repeat": true
+                    }
+                  }
+                ],
+                "size": {
+                  "height": 1080,
+                  "width": 1920
+                },
+                "uuid": {
+                  "string": "<uuid>"
+                }
+              },
+              "chord_chart": {},
+              "notes": {
+                "attributes": {
+                  "font": {
+                    "face": "Regular",
+                    "family": "Arial",
+                    "name": "ArialMT",
+                    "size": 50
+                  },
+                  "paragraph_style": {
+                    "line_height_multiple": 1,
+                    "text_list": {}
+                  },
+                  "stroke_color": {
+                    "alpha": 1,
+                    "blue": 1,
+                    "green": 1,
+                    "red": 1
+                  },
+                  "text_solid_fill": {
+                    "alpha": 1
+                  }
+                },
+                "rtf_data": "e1xydGYwXGFuc2lcYW5zaWNwZzEyNTJ7XGZvbnR0YmxcZjBcZm5pbCBBcmlhbE1UO317XGNvbG9ydGJsO1xyZWQwXGdyZWVuMFxibHVlMDtccmVkMjU1XGdyZWVuMjU1XGJsdWUyNTU7XHJlZDI1NVxncmVlbjI1NVxibHVlMjU1O317XCpcZXhwYW5kZWRjb2xvcnRibDtcY3NnZW5lcmljcmdiXGMwXGMwXGMwXGMxMDAwMDA7XGNzZ2VuZXJpY3JnYlxjMTAwMDAwXGMxMDAwMDBcYzEwMDAwMFxjMTAwMDAwO1xjc2dlbmVyaWNyZ2JcYzEwMDAwMFxjMTAwMDAwXGMxMDAwMDBcYzA7fXtcKlxsaXN0dGFibGV9e1wqXGxpc3RvdmVycmlkZXRhYmxlfVx1YzFccGFwZXJ3MTIyNDBcbWFyZ2wwXG1hcmdyMFxtYXJndDBcbWFyZ2IwXHBhcmRcbGkwXGZpMFxyaTBccWxcc2IwXHNhMFxzbDI0MFxzbG11bHQxXHNsbGVhZGluZzBcZjBcYjBcaTBcdWwwXHN0cmlrZTBcZnMxMDBcZXhwbmQwXGV4cG5kdHcwXGNmMVxzdHJva2V3aWR0aDBcc3Ryb2tlYzJcbm9zdXBlcnN1Ylx1bGMwXGhpZ2hsaWdodDNcY2IzfQ=="
+              }
+            }
+          },
+          "type": "ACTION_TYPE_PRESENTATION_SLIDE",
+          "uuid": {
+            "string": "<uuid>"
+          }
+        }
+      ],
+      "completion_action_type": "COMPLETION_ACTION_TYPE_LAST",
+      "completion_action_uuid": {
+        "string": "<uuid>"
+      },
+      "completion_target_uuid": {
+        "string": "<uuid>"
+      },
+      "isEnabled": true,
+      "trigger_time": {},
+      "uuid": {
+        "string": "<uuid>"
+      }
+    }
+  ],
+  "last_date_used": {
+    "seconds": 0
+  },
+  "last_modified_date": {
+    "seconds": 0
+  },
+  "name": "<presentation name>",
+  "selected_arrangement": {
+    "string": "<uuid>"
+  },
+  "timeline": {
+    "duration": 300
+  },
+  "uuid": {
+    "string": "<uuid>"
+  }
+}
