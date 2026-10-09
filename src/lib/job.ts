@@ -9,6 +9,8 @@ export type JobResult =
           source: string;
           output: { name: string; id: string; webUrl?: string; folder: string };
           slideCount: number;
+          /** Content version (cTag) of the PowerPoint that was converted. */
+          contentTag?: string;
       }
     | { status: 'skipped'; source: string; reason: string };
 
@@ -93,6 +95,7 @@ export async function convertDriveItem(
                 source,
                 output: { name: uploaded.name, id: uploaded.id, webUrl: uploaded.webUrl, folder: output.folder },
                 slideCount: result.slideCount,
+                contentTag,
             };
         }
         logger.log(`"${item.name}" changed during conversion; converting the new version.`);

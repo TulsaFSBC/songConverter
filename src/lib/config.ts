@@ -99,6 +99,8 @@ export interface SyncConfig {
     maxFilesPerRun: number;
     /** Files modified more recently than this are left for a later run (they may still be being edited). */
     minAgeMs: number;
+    /** On the first run, also convert existing files that have no up-to-date .pro (instead of only recording them). */
+    convertExisting: boolean;
 }
 
 /** Library sync is enabled by setting SYNC_DRIVE_ID. */
@@ -117,6 +119,7 @@ export function loadSyncConfig(): SyncConfig {
         includeSubfolders: readBoolean('SYNC_INCLUDE_SUBFOLDERS', false),
         maxFilesPerRun: readNumber('SYNC_MAX_FILES_PER_RUN', 25, 1, 500),
         minAgeMs: readNumber('SYNC_MIN_AGE_SECONDS', 60, 0, 86400) * 1000,
+        convertExisting: readBoolean('SYNC_CONVERT_EXISTING', false),
     };
 }
 

@@ -4,6 +4,8 @@ import type { OutputConfig, SyncConfig } from '../src/lib/config.js';
 import { DEFAULT_CONVERSION_OPTIONS, presentationNameFromFileName } from '../src/lib/convert.js';
 import { UnsupportedFileError } from '../src/lib/extract/index.js';
 import { convertDriveItem, isInFolder, parentFolderPath } from '../src/lib/job.js';
+import { GraphError } from '../src/lib/graph.js';
+import { MemoryStateStore } from '../src/lib/state.js';
 import { syncLibrary } from '../src/lib/sync.js';
 import { FakeDrive, silentLogger } from './helpers/fakeDrive.js';
 import { decodePresentation, rtfToLines, slideRtfs } from './helpers/pro.js';
@@ -104,73 +106,159 @@ describe('convertDriveItem', () => {
 });
 
 describe('syncLibrary', () => {
-    const config: SyncConfig = { driveId: 'drive-1', sourceFolder: 'Songs', includeSubfolders: false, maxFilesPerRun: 10, minAgeMs: 0 };
+    const config: SyncConfig = { driveId: 'drive-1', sourceFolder: 'Songs', includeSubfolders: false, maxFilesPerRun: 10, minAgeMs: 0, convertExisting: false };
+    const later = (drive: FakeDrive) => drive.now() + 60_000;
+    const run = (drive: FakeDrive, store: MemoryStateStore, overrides: Partial<SyncConfig> = {}, now = later(drive)) =>
+        syncLibrary(drive, store, { ...config, ...overrides }, output, options, silentLogger, now);
 
-    it('converts new files, then only files changed since their .pro was written', async () => {
+    it('first run only records existing files; later runs convert files added since the previous run', async () => {
         const drive = new FakeDrive();
-        const a = drive.add('Songs', 'A.pptx', await song(['A1']));
-        drive.add('Songs', 'B.ppt.pptx', await song(['B1']));
+        const store = new MemoryStateStore();
+        drive.add('Songs', 'Old 1.pptx', await song(['Old 1']));
+        drive.add('Songs', 'Old 2.ppt.pptx', await song(['Old 2']));
         drive.add('Songs', 'notes.docx', new Uint8Array([1]));
-        drive.add('Other', 'C.pptx', await song(['C1']));
+        drive.add('Other', 'Elsewhere.pptx', await song(['Elsewhere']));
 
-        let summary = await syncLibrary(drive, config, output, options, silentLogger, drive.now() + 60_000);
-        assert.deepEqual({ ...summary }, { scanned: 2, pending: 2, converted: 2, failed: 0, deferred: 0 });
+        const first = await run(drive, store);
+        assert.deepEqual({ ...first }, { initialized: true, scanned: 2, added: 0, changed: 0, converted: 0, failed: 0, deferred: 0 });
+        assert.equal(drive.uploads.length, 0);
 
-        summary = await syncLibrary(drive, config, output, options, silentLogger, drive.now() + 60_000);
-        assert.equal(summary.pending, 0, 'nothing changed, nothing to do');
+        drive.add('Songs', 'New.pptx', await song(['New song']));
+        const second = await run(drive, store);
+        assert.deepEqual({ ...second }, { initialized: false, scanned: 3, added: 1, changed: 0, converted: 1, failed: 0, deferred: 0 });
+        assert.deepEqual(drive.uploads.map((u) => u.name), ['New.pro']);
+
+        const third = await run(drive, store);
+        assert.equal(third.added + third.changed, 0, 'nothing new, nothing to do');
+        assert.equal(drive.uploads.length, 1);
+    });
+
+    it('converts files whose content changed, but not metadata-only changes', async () => {
+        const drive = new FakeDrive();
+        const store = new MemoryStateStore();
+        const a = drive.add('Songs', 'A.pptx', await song(['A1']));
+        const b = drive.add('Songs', 'B.pptx', await song(['B1']));
+        await run(drive, store);
 
         drive.edit(a.id, await song(['A2']));
-        summary = await syncLibrary(drive, config, output, options, silentLogger, drive.now() + 60_000);
-        assert.equal(summary.converted, 1);
+        drive.touch(b.id);
+        const summary = await run(drive, store);
+        assert.equal(summary.changed, 1);
+        assert.deepEqual(drive.uploads.map((u) => u.name), ['A.pro']);
         assert.deepEqual(proText(drive.contentOf('proPresenter Files', 'A.pro')).slides, [['A2']]);
     });
 
-    it('waits for files that were just modified (may still be open in PowerPoint)', async () => {
+    it('treats a file moved into the folder as added, even though its dates are old', async () => {
         const drive = new FakeDrive();
-        drive.add('Songs', 'A.pptx', await song(['A1']));
-        const summary = await syncLibrary(drive, { ...config, minAgeMs: 120_000 }, output, options, silentLogger, drive.now() + 1000);
-        assert.equal(summary.pending, 0);
-        assert.equal(drive.uploads.length, 0);
+        const store = new MemoryStateStore();
+        const moved = drive.add('Archive', 'Moved.pptx', await song(['Moved']));
+        await run(drive, store);
+        drive.move(moved.id, 'Songs');
+        const summary = await run(drive, store);
+        assert.equal(summary.added, 1);
+        assert.ok(drive.contentOf('proPresenter Files', 'Moved.pro'));
+    });
+
+    it('waits until a new file has not changed for SYNC_MIN_AGE_SECONDS', async () => {
+        const drive = new FakeDrive();
+        const store = new MemoryStateStore();
+        await run(drive, store);
+        drive.add('Songs', 'Editing.pptx', await song(['Draft']));
+        const soon = await run(drive, store, { minAgeMs: 120_000 }, drive.now() + 1000);
+        assert.deepEqual([soon.added, soon.converted, soon.deferred], [1, 0, 1]);
+        const afterwards = await run(drive, store, { minAgeMs: 120_000 }, drive.now() + 300_000);
+        assert.equal(afterwards.converted, 1);
     });
 
     it('limits the number of files per run and continues next run', async () => {
         const drive = new FakeDrive();
+        const store = new MemoryStateStore();
+        await run(drive, store);
         for (let i = 0; i < 5; i++) {
             drive.add('Songs', `Song ${i}.pptx`, await song([`Line ${i}`]));
         }
-        const first = await syncLibrary(drive, { ...config, maxFilesPerRun: 3 }, output, options, silentLogger, drive.now() + 60_000);
-        assert.equal(first.converted, 3);
-        assert.equal(first.deferred, 2);
-        const second = await syncLibrary(drive, { ...config, maxFilesPerRun: 3 }, output, options, silentLogger, drive.now() + 60_000);
-        assert.equal(second.converted, 2);
-    });
-
-    it('includes subfolders when enabled, but never the output folder', async () => {
-        const drive = new FakeDrive();
-        drive.add('', 'Root.pptx', await song(['Root']));
-        drive.add('Sub/Deeper', 'Deep.pptx', await song(['Deep']));
-        drive.add('proPresenter Files', 'Stray.pptx', await song(['Stray']));
-        const summary = await syncLibrary(drive, { ...config, sourceFolder: '', includeSubfolders: true }, output, options, silentLogger, drive.now() + 60_000);
-        assert.equal(summary.scanned, 2);
-        assert.ok(drive.contentOf('proPresenter Files', 'Deep.pro'));
-        assert.equal(drive.contentOf('proPresenter Files', 'Stray.pro'), undefined);
+        const first = await run(drive, store, { maxFilesPerRun: 3 });
+        assert.deepEqual([first.converted, first.deferred], [3, 2]);
+        const second = await run(drive, store, { maxFilesPerRun: 3 });
+        assert.deepEqual([second.added, second.converted], [2, 2]);
+        assert.equal(drive.uploads.length, 5);
     });
 
     it('does not retry a file that cannot be converted until it changes', async () => {
         const drive = new FakeDrive();
+        const store = new MemoryStateStore();
+        await run(drive, store);
         const bad = drive.add('Songs', 'Broken.pptx', new TextEncoder().encode('not a presentation'));
-        let summary = await syncLibrary(drive, config, output, options, silentLogger, drive.now() + 60_000);
-        assert.equal(summary.failed, 1);
-        summary = await syncLibrary(drive, config, output, options, silentLogger, drive.now() + 60_000);
-        assert.equal(summary.pending, 0);
+        assert.equal((await run(drive, store)).failed, 1);
+        assert.equal((await run(drive, store)).failed, 0, 'not retried');
         drive.edit(bad.id, await song(['Fixed']));
-        summary = await syncLibrary(drive, config, output, options, silentLogger, drive.now() + 60_000);
-        assert.equal(summary.converted, 1);
+        assert.equal((await run(drive, store)).converted, 1);
+    });
+
+    it('retries temporary failures on the next run, and gives up after a day of failures', async () => {
+        const drive = new FakeDrive();
+        const store = new MemoryStateStore();
+        await run(drive, store);
+        const flaky = drive.add('Songs', 'Flaky.pptx', await song(['Flaky']));
+        let failing = true;
+        drive.downloadError = () => (failing ? new GraphError('Microsoft Graph returned 503', 503) : undefined);
+
+        const start = later(drive);
+        assert.equal((await run(drive, store, {}, start)).failed, 1);
+        assert.equal((await run(drive, store, {}, start + 5 * 60_000)).failed, 1, 'retried');
+        failing = false;
+        assert.equal((await run(drive, store, {}, start + 10 * 60_000)).converted, 1, 'succeeds once SharePoint recovers');
+
+        drive.edit(flaky.id, await song(['Flaky 2']));
+        failing = true;
+        const t = later(drive);
+        assert.equal((await run(drive, store, {}, t)).failed, 1);
+        assert.equal((await run(drive, store, {}, t + 25 * 60 * 60_000)).failed, 1);
+        assert.equal((await run(drive, store, {}, t + 26 * 60 * 60_000)).failed, 0, 'gave up after 24 hours of failures');
+    });
+
+    it('forgets deleted files and starts a new baseline when the watched folder changes', async () => {
+        const drive = new FakeDrive();
+        const store = new MemoryStateStore();
+        const gone = drive.add('Songs', 'Gone.pptx', await song(['Gone']));
+        drive.add('Other', 'Other.pptx', await song(['Other']));
+        await run(drive, store);
+        drive.delete(gone.id);
+        await run(drive, store);
+        assert.equal(Object.keys(store.state?.files ?? {}).length, 0);
+
+        const switched = await run(drive, store, { sourceFolder: 'Other' });
+        assert.equal(switched.initialized, true);
+        assert.equal(drive.uploads.length, 0);
+    });
+
+    it('with SYNC_CONVERT_EXISTING, the first run converts existing files that have no up-to-date .pro', async () => {
+        const drive = new FakeDrive();
+        const store = new MemoryStateStore();
+        drive.add('Songs', 'Done.pptx', await song(['Done']));
+        drive.add('proPresenter Files', 'Done.pro', new Uint8Array([1]));
+        drive.add('Songs', 'Missing.pptx', await song(['Missing']));
+        const summary = await run(drive, store, { convertExisting: true });
+        assert.deepEqual([summary.initialized, summary.added, summary.converted], [true, 1, 1]);
+        assert.deepEqual(drive.uploads.map((u) => u.name), ['Missing.pro']);
+    });
+
+    it('includes subfolders when enabled, but never the output folder', async () => {
+        const drive = new FakeDrive();
+        const store = new MemoryStateStore();
+        await run(drive, store, { sourceFolder: '', includeSubfolders: true });
+        drive.add('', 'Root.pptx', await song(['Root']));
+        drive.add('Sub/Deeper', 'Deep.pptx', await song(['Deep']));
+        drive.add('proPresenter Files', 'Stray.pptx', await song(['Stray']));
+        const summary = await run(drive, store, { sourceFolder: '', includeSubfolders: true });
+        assert.deepEqual([summary.scanned, summary.converted], [2, 2]);
+        assert.ok(drive.contentOf('proPresenter Files', 'Deep.pro'));
+        assert.equal(drive.contentOf('proPresenter Files', 'Stray.pro'), undefined);
     });
 
     it('refuses a source folder inside the output folder', async () => {
         const drive = new FakeDrive();
-        await assert.rejects(syncLibrary(drive, { ...config, sourceFolder: 'proPresenter Files/x' }, output, options, silentLogger));
+        await assert.rejects(run(drive, new MemoryStateStore(), { sourceFolder: 'proPresenter Files/x' }));
     });
 });
 

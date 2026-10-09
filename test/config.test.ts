@@ -16,6 +16,7 @@ const SETTINGS = [
     'SYNC_INCLUDE_SUBFOLDERS',
     'SYNC_MAX_FILES_PER_RUN',
     'SYNC_MIN_AGE_SECONDS',
+    'SYNC_CONVERT_EXISTING',
     'PRO_FONT_NAME',
     'PRO_FONT_FAMILY',
     'PRO_FONT_SIZE',
@@ -72,6 +73,7 @@ describe('configuration', () => {
             includeSubfolders: true,
             maxFilesPerRun: 25,
             minAgeMs: 60_000,
+            convertExisting: false,
         });
     });
 

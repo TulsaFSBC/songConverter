@@ -1,31 +1,49 @@
 import type { OutputConfig, SyncConfig } from './config.js';
-import type { ConversionOptions } from './convert.js';
+import { presentationNameFromFileName, type ConversionOptions } from './convert.js';
 import { isPowerPointFileName, UnsupportedFileError } from './extract/index.js';
-import { presentationNameFromFileName } from './convert.js';
 import type { DriveApi, DriveItem, Logger } from './graph.js';
 import { convertDriveItem, isInFolder } from './job.js';
+import type { StateStore } from './state.js';
 
 export interface SyncSummary {
+    /** True when this run only recorded the files already in the folder (first run). */
+    initialized: boolean;
     scanned: number;
-    pending: number;
+    /** Files that appeared since the last run. */
+    added: number;
+    /** Files whose content changed since they were last handled. */
+    changed: number;
     converted: number;
     failed: number;
-    /** Files left for the next run because of SYNC_MAX_FILES_PER_RUN. */
+    /** Added/changed files left for a later run (still being edited, or over SYNC_MAX_FILES_PER_RUN). */
     deferred: number;
 }
-
-// Remembers files that cannot be converted (by id + content version) so a broken file is
-// not retried every run until it changes. Lives as long as the Function App instance.
-// Temporary failures (network, throttling) are not remembered and retry on the next run.
-const failedVersions = new Map<string, number>();
-const FAILED_RETRY_MS = 6 * 60 * 60 * 1000;
 
 interface SourceFile {
     item: DriveItem;
     folder: string;
+    /** Content version; changes only when the file's content changes. */
+    tag: string;
 }
 
-/** Recursively lists PowerPoint files under the source folder, skipping the output folder. */
+/** A file that keeps failing for temporary reasons is retried for this long, then skipped until it changes. */
+const RETRY_WINDOW_MS = 24 * 60 * 60 * 1000;
+
+function contentTag(item: DriveItem): string {
+    return item.cTag ?? item.eTag ?? item.lastModifiedDateTime ?? '';
+}
+
+function timestamp(value: string | undefined): number {
+    const time = value ? Date.parse(value) : NaN;
+    return Number.isFinite(time) ? time : 0;
+}
+
+/** Identifies the watched location, so changing the SYNC_* folder settings starts a fresh baseline. */
+function sourceKey(config: SyncConfig): string {
+    return `${config.driveId}|${config.sourceFolder.toLowerCase()}|${config.includeSubfolders ? 'subfolders' : 'folder'}`;
+}
+
+/** Lists PowerPoint files under the source folder (and subfolders if enabled), skipping the output folder. */
 async function listSourceFiles(graph: DriveApi, config: SyncConfig, outputFolder: string, sameDrive: boolean): Promise<SourceFile[]> {
     const files: SourceFile[] = [];
     const folders = [config.sourceFolder];
@@ -43,25 +61,26 @@ async function listSourceFiles(graph: DriveApi, config: SyncConfig, outputFolder
                     folders.push(path);
                 }
             } else if (item.file && isPowerPointFileName(item.name)) {
-                files.push({ item, folder });
+                files.push({ item, folder, tag: contentTag(item) });
             }
         }
     }
     return files;
 }
 
-function timestamp(value: string | undefined): number {
-    const time = value ? Date.parse(value) : NaN;
-    return Number.isFinite(time) ? time : 0;
-}
-
 /**
- * Finds PowerPoint files that have no .pro file yet, or were changed after their .pro file
- * was written, and converts them. Safe to run repeatedly: anything that fails or is
- * deferred is picked up again on the next run.
+ * Converts PowerPoint files that were added to the watched folder, or whose content
+ * changed, since the previous run. The first run only records the files already there
+ * (unless SYNC_CONVERT_EXISTING is on), so existing songs are not converted in bulk.
+ *
+ * Files are tracked by id and content version rather than by date, so a file moved or
+ * copied into the folder (which keeps its old dates) still counts as added. Files that
+ * are still being edited, over the per-run limit, or failed for a temporary reason are
+ * not marked as handled and are picked up by the next run.
  */
 export async function syncLibrary(
     graph: DriveApi,
+    store: StateStore,
     config: SyncConfig,
     output: OutputConfig,
     options: ConversionOptions,
@@ -74,55 +93,112 @@ export async function syncLibrary(
         throw new Error('SYNC_SOURCE_FOLDER must not be the OUTPUT_FOLDER or inside it.');
     }
 
-    for (const [key, failedAt] of failedVersions) {
-        if (now - failedAt >= FAILED_RETRY_MS) {
-            failedVersions.delete(key);
+    const source = sourceKey(config);
+    const previous = await store.load();
+    const sources = await listSourceFiles(graph, config, output.folder, sameDrive);
+    const summary: SyncSummary = { initialized: false, scanned: sources.length, added: 0, changed: 0, converted: 0, failed: 0, deferred: 0 };
+
+    let handled: Record<string, string>;
+    let failing: Record<string, string> = {};
+    if (previous && previous.source === source) {
+        handled = previous.files;
+        failing = previous.failing ?? {};
+    } else {
+        // First run (or the watched folder changed): record what is already there.
+        summary.initialized = true;
+        handled = {};
+        const isUpToDate = config.convertExisting ? await upToDateCheck(graph, outputDriveId, output.folder) : () => true;
+        for (const file of sources) {
+            if (isUpToDate(file)) {
+                handled[file.item.id] = file.tag;
+            }
         }
     }
 
-    const sources = await listSourceFiles(graph, config, output.folder, sameDrive);
+    const pending: SourceFile[] = [];
+    for (const file of sources) {
+        const known = handled[file.item.id];
+        if (known === file.tag) {
+            continue;
+        }
+        if (known === undefined) {
+            summary.added++;
+        } else {
+            summary.changed++;
+        }
+        if (now - timestamp(file.item.lastModifiedDateTime) < config.minAgeMs) {
+            summary.deferred++; // Probably still being edited; check again next run.
+            continue;
+        }
+        pending.push(file);
+    }
+    // Oldest changes first, so a burst of edits cannot starve older files.
+    pending.sort((a, b) => timestamp(a.item.lastModifiedDateTime) - timestamp(b.item.lastModifiedDateTime));
+    const batch = pending.slice(0, config.maxFilesPerRun);
+    summary.deferred += pending.length - batch.length;
+
+    const results = new Map<string, string>();
+    const stillFailing: Record<string, string> = {};
+    for (const file of batch) {
+        const label = file.folder ? `${file.folder}/${file.item.name}` : file.item.name;
+        try {
+            const result = await convertDriveItem(graph, config.driveId, file.item.id, output, options, logger);
+            if (result.status === 'converted') {
+                summary.converted++;
+                results.set(file.item.id, result.contentTag ?? file.tag);
+            } else {
+                logger.log(`Skipped "${label}": ${result.reason}`);
+                results.set(file.item.id, file.tag);
+            }
+        } catch (err) {
+            summary.failed++;
+            const message = err instanceof Error ? err.message : String(err);
+            if (err instanceof UnsupportedFileError) {
+                // Retrying will not help until someone changes the file.
+                logger.error(`Cannot convert "${label}": ${message}`);
+                results.set(file.item.id, file.tag);
+            } else {
+                const firstFailed = failing[file.item.id] ?? new Date(now).toISOString();
+                if (now - timestamp(firstFailed) >= RETRY_WINDOW_MS) {
+                    logger.error(`Failed to convert "${label}" since ${firstFailed}; skipping it until it changes: ${message}`);
+                    results.set(file.item.id, file.tag);
+                } else {
+                    logger.error(`Failed to convert "${label}"; will retry next run: ${message}`);
+                    stillFailing[file.item.id] = firstFailed;
+                }
+            }
+        }
+    }
+
+    // Rebuild the state from the current listing, which also forgets deleted files.
+    const files: Record<string, string> = {};
+    const failingNext: Record<string, string> = {};
+    for (const file of sources) {
+        const id = file.item.id;
+        const tag = results.get(id) ?? handled[id];
+        if (tag !== undefined) {
+            files[id] = tag;
+        }
+        // Keep failure times for files that failed again or were not attempted this run.
+        const failedAt = stillFailing[id] ?? (results.has(id) ? undefined : failing[id]);
+        if (failedAt !== undefined) {
+            failingNext[id] = failedAt;
+        }
+    }
+    await store.save({ version: 1, source, files, failing: failingNext, updated: new Date(now).toISOString() });
+    return summary;
+}
+
+/** For SYNC_CONVERT_EXISTING: "already has a .pro written after the PowerPoint last changed". */
+async function upToDateCheck(graph: DriveApi, driveId: string, folder: string): Promise<(file: SourceFile) => boolean> {
     const outputs = new Map<string, DriveItem>();
-    for (const item of await graph.listChildren(outputDriveId, output.folder)) {
+    for (const item of await graph.listChildren(driveId, folder)) {
         if (item.file) {
             outputs.set(item.name.toLowerCase(), item);
         }
     }
-
-    const pending = sources
-        .filter(({ item }) => {
-            const modified = timestamp(item.lastModifiedDateTime);
-            if (now - modified < config.minAgeMs) {
-                return false; // Probably still being edited; check again next run.
-            }
-            const failedAt = failedVersions.get(`${item.id}:${item.cTag ?? item.eTag}`);
-            if (failedAt !== undefined && now - failedAt < FAILED_RETRY_MS) {
-                return false;
-            }
-            const existing = outputs.get(`${presentationNameFromFileName(item.name)}.pro`.toLowerCase());
-            return !existing || timestamp(existing.lastModifiedDateTime) < modified;
-        })
-        // Oldest changes first, so a burst of edits cannot starve older files.
-        .sort((a, b) => timestamp(a.item.lastModifiedDateTime) - timestamp(b.item.lastModifiedDateTime));
-
-    const batch = pending.slice(0, config.maxFilesPerRun);
-    const summary: SyncSummary = { scanned: sources.length, pending: pending.length, converted: 0, failed: 0, deferred: pending.length - batch.length };
-
-    for (const { item, folder } of batch) {
-        const label = folder ? `${folder}/${item.name}` : item.name;
-        try {
-            const result = await convertDriveItem(graph, config.driveId, item.id, output, options, logger);
-            if (result.status === 'converted') {
-                summary.converted++;
-            } else {
-                logger.log(`Skipped "${label}": ${result.reason}`);
-            }
-        } catch (err) {
-            summary.failed++;
-            if (err instanceof UnsupportedFileError) {
-                failedVersions.set(`${item.id}:${item.cTag ?? item.eTag}`, now);
-            }
-            logger.error(`Failed to convert "${label}": ${err instanceof Error ? err.message : String(err)}`);
-        }
-    }
-    return summary;
+    return (file) => {
+        const existing = outputs.get(`${presentationNameFromFileName(file.item.name)}.pro`.toLowerCase());
+        return existing !== undefined && timestamp(existing.lastModifiedDateTime) >= timestamp(file.item.lastModifiedDateTime);
+    };
 }

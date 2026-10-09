@@ -17,9 +17,26 @@ The app can be triggered two ways — use either or both:
 
 | | **Library sync** (recommended) | **Power Automate flow** |
 |---|---|---|
-| How | A timer in the Function App checks a SharePoint folder every 5 minutes and converts new or changed files | A flow calls the function each time a file changes |
-| Needs | Nothing else | Power Automate with the premium **HTTP** action |
+| How | A timer in the Function App checks a SharePoint folder every 5 minutes and converts files added or changed since the previous check | A flow calls the function each time a file changes |
+| Needs | Nothing else | Power Automate Premium license for the flow owner (the **HTTP** action is premium) |
 | Turn on | Set `SYNC_DRIVE_ID` | Create the flow (below) |
+
+### How library sync decides what to convert
+
+- **First run:** it records the PowerPoint files already in the folder and converts nothing, so turning sync on does
+  not convert your whole existing library. (To convert existing songs once, set `SYNC_CONVERT_EXISTING=true` before
+  the first run; files that already have an up-to-date `.pro` are skipped.)
+- **Every run after that:** it converts files that were **added** since the previous run, and files whose **content
+  changed** (an edited song gets a fresh `.pro`). Renaming a file or editing its SharePoint columns does not count as a change.
+- Files are tracked by their SharePoint id, not by date, so a file **moved or copied into** the folder from elsewhere
+  counts as added even though it keeps its old dates.
+- A file is left alone until it has not changed for a minute (it may still be open in PowerPoint), and at most 25 files
+  are converted per run; anything left over is picked up by the next run.
+- If a conversion fails because SharePoint is temporarily unavailable, the file is retried on following runs (for up
+  to a day). A file that cannot be converted at all (no text, password protected) is logged and skipped until it changes.
+- What the sync has seen is kept in the Function App's own storage account (container `songconverter`, blob
+  `sync-state.json`). Deleting that blob makes the next run start over with a new baseline. Changing
+  `SYNC_DRIVE_ID`, `SYNC_SOURCE_FOLDER` or `SYNC_INCLUDE_SUBFOLDERS` also starts a new baseline.
 
 ## Setting up in Azure
 
@@ -103,6 +120,7 @@ In the Function App: **Settings → Environment variables → App settings**.
 | `SYNC_SCHEDULE` | no | How often to check, as a [CRON expression](https://learn.microsoft.com/azure/azure-functions/functions-bindings-timer#ncrontab-expressions). Default `0 */5 * * * *` (every 5 minutes) |
 | `SYNC_MIN_AGE_SECONDS` | no | Wait until a file has not changed for this long before converting it (it may still be open in PowerPoint). Default `60` |
 | `SYNC_MAX_FILES_PER_RUN` | no | Most files converted per check; the rest wait for the next check. Default `25` |
+| `SYNC_CONVERT_EXISTING` | no | `true` to convert existing files that have no up-to-date `.pro` on the first run, instead of only recording them. Default `false` |
 | `PRO_FONT_NAME` | no | PostScript font name for the lyrics. Default `TimesNewRomanPSMT` (others: `ArialMT`, `Arial-BoldMT`, `Helvetica`) |
 | `PRO_FONT_SIZE` | no | Font size in points. Default `90` |
 | `PRO_GROUP_NAME` | no | Name of the ProPresenter group holding the slides. Default `Group` |
@@ -225,6 +243,7 @@ Copy `local.settings.example.json` to `local.settings.json` for local runs (it i
 | `src/lib/pro/` | Builds the ProPresenter 7 file (RTF text + protobuf) |
 | `src/lib/graph.ts` | Microsoft Graph (SharePoint) client with retries |
 | `src/lib/job.ts`, `src/lib/sync.ts` | Convert one file / sync a folder |
+| `src/lib/state.ts` | Where library sync remembers which files it has handled |
 | `proto/` | ProPresenter 7 file format definitions |
 | `test/fixtures/propresenter-7.16-structure.json` | Layout of a file saved by ProPresenter 7.16 (no lyrics); the tests check generated files match it |
 
@@ -237,5 +256,7 @@ Logs are in the Function App under **Monitor** (Application Insights) or **Log s
 | `Application setting X is required but not set` | Add the setting (step 4) |
 | `Microsoft Graph returned 401/403` / `not allowed to access this file` | Check admin consent and the site permission (step 1), and that the client secret has not expired |
 | `Microsoft Graph returned 404` for sync | `SYNC_DRIVE_ID` or `SYNC_SOURCE_FOLDER` is wrong (step 2) |
+| `Library sync needs the AzureWebJobsStorage setting` | The Function App's storage setting was removed; it is created with the app and must stay |
+| `Sync started: recorded the N PowerPoint files already in the folder` | Normal on the first run: only files added or changed after this are converted |
 | `PowerPoint file does not contain any slide text` | The slides contain only pictures (e.g. lyrics pasted as images) |
 | `PowerPoint file is password protected` | Remove the password in PowerPoint |

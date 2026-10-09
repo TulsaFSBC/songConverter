@@ -15,6 +15,8 @@ export class FakeDrive implements DriveApi {
     onDownload?: (id: string, call: number) => Promise<void> | void;
     /** Delay applied to each download, per call number, to force interleavings. */
     downloadDelay?: (id: string, call: number) => number;
+    /** Return an error to make a download fail (e.g. to simulate SharePoint being unavailable). */
+    downloadError?: (id: string) => Error | undefined;
     private nextId = 1;
     private clock = Date.parse('2026-01-01T00:00:00Z');
     private downloads = 0;
@@ -46,6 +48,29 @@ export class FakeDrive implements DriveApi {
         return item;
     }
 
+    /** Moves a file to another folder; like SharePoint, its id and dates do not change. */
+    move(id: string, folder: string): void {
+        const file = this.files.get(id);
+        if (!file) {
+            throw new Error(`no file ${id}`);
+        }
+        file.folder = folder;
+        file.item.parentReference = { driveId: this.driveId, path: `/drives/${this.driveId}/root:${folder ? '/' + encodeURI(folder) : ''}` };
+    }
+
+    /** Simulates a metadata-only change (e.g. editing a column): modified time changes, content tag does not. */
+    touch(id: string): void {
+        const file = this.files.get(id);
+        if (!file) {
+            throw new Error(`no file ${id}`);
+        }
+        file.item = { ...file.item, lastModifiedDateTime: this.tick() };
+    }
+
+    delete(id: string): void {
+        this.files.delete(id);
+    }
+
     /** Simulates a user saving new content. */
     edit(id: string, content: Uint8Array): void {
         const file = this.files.get(id);
@@ -71,6 +96,10 @@ export class FakeDrive implements DriveApi {
             throw new GraphError('Microsoft Graph returned 404 itemNotFound', 404, 'itemNotFound');
         }
         const call = ++this.downloads;
+        const failure = this.downloadError?.(itemId);
+        if (failure) {
+            throw failure;
+        }
         const content = file.content;
         const wait = this.downloadDelay?.(itemId, call) ?? 0;
         if (wait > 0) {
