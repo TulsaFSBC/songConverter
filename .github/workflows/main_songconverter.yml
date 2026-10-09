@@ -1,5 +1,11 @@
 # Builds and tests every push and pull request; deploys to Azure when main changes.
-# Docs: https://github.com/Azure/functions-action
+#
+# Deployment signs in to Azure one of two ways (see README "Deploy the code"):
+#  - OpenID Connect (recommended, required for Flex Consumption): repository secrets
+#    AZURE_CLIENT_ID, AZURE_TENANT_ID and AZURE_SUBSCRIPTION_ID.
+#  - Publish profile (Windows Consumption only): repository secret AZURE_PUBLISH_PROFILE.
+# The Function App name comes from the repository variable AZURE_FUNCTIONAPP_NAME
+# (default "SongConverter").
 
 name: Build and deploy SongConverter
 
@@ -14,7 +20,10 @@ on:
   workflow_dispatch:
 
 env:
-  NODE_VERSION: '22.x'
+  NODE_VERSION: '24.x'
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -56,6 +65,13 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # for OpenID Connect sign-in
+      contents: read
+    env:
+      APP_NAME: ${{ vars.AZURE_FUNCTIONAPP_NAME || 'SongConverter' }}
+      USE_OIDC: ${{ secrets.AZURE_CLIENT_ID != '' }}
+      PUBLISH_PROFILE: ${{ secrets.AZURE_PUBLISH_PROFILE || secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2310C9DD2A414403B441A1B34BEF35E8 }}
     steps:
       - name: Download deployment package
         uses: actions/download-artifact@v4
@@ -63,9 +79,25 @@ jobs:
           name: function-app
           path: deploy
 
-      - name: Deploy to Azure Functions
+      - name: Sign in to Azure (OpenID Connect)
+        if: env.USE_OIDC == 'true'
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      - name: Deploy to Azure Functions (OpenID Connect)
+        if: env.USE_OIDC == 'true'
         uses: Azure/functions-action@v1
         with:
-          app-name: 'SongConverter'
+          app-name: ${{ env.APP_NAME }}
           package: deploy
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2310C9DD2A414403B441A1B34BEF35E8 }}
+
+      - name: Deploy to Azure Functions (publish profile)
+        if: env.USE_OIDC != 'true'
+        uses: Azure/functions-action@v1
+        with:
+          app-name: ${{ env.APP_NAME }}
+          package: deploy
+          publish-profile: ${{ env.PUBLISH_PROFILE }}

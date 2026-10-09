@@ -1,7 +1,8 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import functions from '@azure/functions';
-import { fileIsModified } from '../src/functions/fileIsModified.js';
+import { fileIsModified, parseRequest } from '../src/functions/fileIsModified.js';
+import { GraphError, sitePathFromUrl } from '../src/lib/graph.js';
 
 // @azure/functions is CommonJS; its classes are only reachable through the default export from ESM.
 const { HttpRequest, InvocationContext } = functions;
@@ -35,5 +36,26 @@ describe('fileIsModified HTTP function', () => {
         } finally {
             delete process.env.OUTPUT_FOLDER;
         }
+    });
+});
+
+describe('request formats', () => {
+    it('accepts drive item ids or SharePoint list item ids', () => {
+        assert.deepEqual(parseRequest({ driveId: ' b!x ', driveItemId: '01ABC' }), { driveId: 'b!x', driveItemId: '01ABC' });
+        assert.deepEqual(parseRequest({ siteUrl: 'https://contoso.sharepoint.com/sites/Worship', listId: '{6f3c}', listItemId: 12 }), {
+            siteUrl: 'https://contoso.sharepoint.com/sites/Worship',
+            listId: '{6f3c}',
+            listItemId: '12',
+        });
+        assert.equal(typeof parseRequest({ siteUrl: 'https://contoso.sharepoint.com', listItemId: 12 }), 'string');
+        assert.equal(typeof parseRequest({ driveId: 'b!x', driveItemId: 5.5 }), 'string');
+    });
+
+    it('turns site URLs into Graph site paths', () => {
+        assert.equal(sitePathFromUrl('https://contoso.sharepoint.com/sites/Worship/'), 'contoso.sharepoint.com:/sites/Worship');
+        assert.equal(sitePathFromUrl('https://contoso.sharepoint.com/sites/Worship%20Team'), 'contoso.sharepoint.com:/sites/Worship%20Team');
+        assert.equal(sitePathFromUrl('https://contoso.sharepoint.com/sites/Worship Team'), 'contoso.sharepoint.com:/sites/Worship%20Team');
+        assert.equal(sitePathFromUrl('https://contoso.sharepoint.com'), 'contoso.sharepoint.com');
+        assert.throws(() => sitePathFromUrl('not a url'), GraphError);
     });
 });

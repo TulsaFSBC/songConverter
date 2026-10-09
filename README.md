@@ -59,7 +59,32 @@ Copy the `id` of the document library that holds the songs (it starts with `b!`)
 
 ### 3. Create the Function App
 
-<!-- AZURE-PLAN -->
+In the [Azure portal](https://portal.azure.com): **Create a resource → Function App**, then choose these options.
+
+| Option | Choose | Why |
+|---|---|---|
+| Hosting plan | **Flex Consumption** | Microsoft's current serverless plan: you pay only while a conversion runs, and the monthly free allowance covers this app. (The older *Consumption* plan is now "legacy"; on Linux it is being retired.) |
+| Runtime stack / version | **Node.js 24** | Supported until April 2028 (Node.js 22 support ends April 2027) |
+| Operating system | Linux | The only option on Flex Consumption |
+| Region | The one closest to you | |
+| Instance size | **2048 MB** (default) | Enough for large presentations |
+| Zone redundancy | Disabled | Not needed; costs more |
+| Storage | Create new (Standard LRS) | Required by Azure Functions; costs cents per month |
+| Always ready instances | **0** (default) | Anything above 0 is billed around the clock |
+| Maximum instance count | **10** (Scale and concurrency settings) | Caps the cost if something goes wrong; plenty for this app |
+| Public access | On | Power Automate and Microsoft Graph must reach the app |
+| Application Insights | **Yes** | This is where the logs are |
+| Continuous deployment (GitHub Actions) | Disable | This repository already has a workflow; step 5 connects it |
+
+Notes:
+
+- "Basic" and "Standard" are App Service plans with a fixed monthly price (and the Free tier cannot run Azure Functions),
+  so Flex Consumption is the cheapest option. Its free monthly allowance applies to pay-as-you-go subscriptions;
+  subscriptions running on credits or a free trial may not get it.
+- Timer schedules on Flex Consumption run in UTC (the 5-minute check is not affected).
+- Already have the old `SongConverter` app on the Windows *Consumption* plan? It still works: change it to
+  Node.js 24 (**Settings → Configuration → General settings**), replace its app settings with the ones in step 4,
+  and keep deploying with its publish profile. Do not create new apps on Linux *Consumption*.
 
 ### 4. Application settings
 
@@ -93,20 +118,57 @@ managed identity can only be granted with PowerShell or the Azure CLI, so the cl
 Pushing to `main` builds, tests and deploys with GitHub Actions
 (`.github/workflows/main_songconverter.yml`). Pushes to `dev` and pull requests are built and tested but not deployed.
 
-<!-- AZURE-DEPLOY -->
+For a **Flex Consumption** app, GitHub signs in to Azure with OpenID Connect (Flex does not accept publish profiles).
+Run this once in [Azure Cloud Shell](https://shell.azure.com) (Bash), with your names filled in:
+
+```bash
+RG=<resource group>; APP=<function app name>; REPO=TulsaFSBC/songConverter
+az identity create -g $RG -n songconverter-deploy
+az identity federated-credential create -g $RG --identity-name songconverter-deploy -n github-main \
+  --issuer https://token.actions.githubusercontent.com \
+  --subject repo:$REPO:ref:refs/heads/main --audiences api://AzureADTokenExchange
+az role assignment create --role "Website Contributor" \
+  --assignee-object-id $(az identity show -g $RG -n songconverter-deploy --query principalId -o tsv) \
+  --assignee-principal-type ServicePrincipal \
+  --scope $(az functionapp show -g $RG -n $APP --query id -o tsv)
+az identity show -g $RG -n songconverter-deploy --query clientId -o tsv   # -> AZURE_CLIENT_ID
+az account show --query "{tenant:tenantId, subscription:id}" -o table      # -> AZURE_TENANT_ID, AZURE_SUBSCRIPTION_ID
+```
+
+Then in GitHub (**Settings → Secrets and variables → Actions**):
+
+- Secrets: `AZURE_CLIENT_ID`, `AZURE_TENANT_ID`, `AZURE_SUBSCRIPTION_ID` (the values printed above).
+- Variables: `AZURE_FUNCTIONAPP_NAME` = your Function App name.
+
+For a Windows *Consumption* app you can instead keep using a publish profile: download it from the Function App
+overview (**Get publish profile**) and save it as the secret `AZURE_PUBLISH_PROFILE` (the existing
+`AZUREAPPSERVICE_PUBLISHPROFILE_…` secret also still works).
+
+After the first deployment the app has two functions: `fileIsModified` (HTTP) and, once `SYNC_DRIVE_ID` is set,
+`syncLibrary` (timer).
+
+Settings from the old version that are no longer used and can be deleted: `PRO_PRESENTER_VERSION`, `KEY_VAULT_URL`
+(and the `accessToken` secret in that Key Vault).
 
 ## Option: Power Automate flow
 
-Use this if you prefer the flow to the built-in library sync (it reacts within a minute or two instead of up to 5 minutes).
+Use this if you prefer a flow to the built-in library sync (it reacts within a few minutes of a change).
+The flow's owner needs a Power Automate Premium license, because the **HTTP** action is a premium connector.
 
 1. Trigger: **SharePoint — When a file is created or modified (properties only)** on the song library.
-   Add a trigger condition so only PowerPoint files start the flow:
-   `@or(endsWith(toLower(triggerOutputs()?['body/{FilenameWithExtension}']), '.pptx'), endsWith(toLower(triggerOutputs()?['body/{FilenameWithExtension}']), '.ppt'))`
-2. Action: **HTTP** — Method `POST`, URI = the function URL including its key
-   (Function App → Functions → `fileIsModified` → **Get function URL** → default key), body:
+   In the trigger's **Settings → Trigger conditions**, add this so only PowerPoint files start the flow:
+   `@or(endsWith(triggerOutputs()?['body/{FilenameWithExtension}'], '.pptx'), endsWith(triggerOutputs()?['body/{FilenameWithExtension}'], '.ppt'))`
+2. Action: **HTTP** — Method `POST`; URI = the function URL with its key (Function App → Functions →
+   `fileIsModified` → **Get function URL** → *default (function key)*); Body:
    ```json
-   { "driveId": "<document library id>", "driveItemId": "<file's drive item id>" }
+   {
+     "siteUrl": "https://<tenant>.sharepoint.com/sites/<site>",
+     "listId": "<library id>",
+     "listItemId": @{triggerOutputs()?['body/ID']}
+   }
    ```
+   The library id is in the address bar of the library's **Library settings** page (`List=%7B…%7D`; paste it as is).
+   An existing flow that sends `{ "driveId": "…", "driveItemId": "…" }` keeps working — just add the function key to its URL.
 
 The function answers with JSON:
 
@@ -144,7 +206,7 @@ library, or point a ProPresenter library at that folder.
 
 ## Working on the code
 
-Requires Node.js 22.
+Requires Node.js 22 or newer (Azure runs Node.js 24).
 
 ```bash
 npm install
