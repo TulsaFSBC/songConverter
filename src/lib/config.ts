@@ -72,22 +72,31 @@ export function loadGraphAuthConfig(): GraphAuthConfig {
 }
 
 export interface OutputConfig {
-    /** Folder (path inside the document library) that receives the .pro files. */
+    /** The one folder (at the top of the document library, no subfolders) that receives every .pro file. */
     folder: string;
-    /** Document library for the .pro files; defaults to the source file's library. */
+    /**
+     * Document library holding that folder. Defaults to SYNC_DRIVE_ID, so all .pro files land in
+     * one place; only when neither is set does it fall back to the source file's library.
+     */
     driveId?: string;
     /** Files larger than this are not converted. */
     maxFileBytes: number;
 }
 
 export function loadOutputConfig(): OutputConfig {
-    const folder = normalizeFolderPath(readString('OUTPUT_FOLDER') ?? 'proPresenter Files');
+    const raw = readString('OUTPUT_FOLDER') ?? 'proPresenter Files';
+    const folder = normalizeFolderPath(raw);
     if (!folder) {
         throw new ConfigError('Application setting OUTPUT_FOLDER must name a folder, not the library root.');
     }
+    if (folder.includes('/')) {
+        throw new ConfigError(
+            `Application setting OUTPUT_FOLDER must be a single folder at the top of the document library (e.g. "proPresenter Files"), not a path ("${raw}").`,
+        );
+    }
     return {
         folder,
-        driveId: readString('OUTPUT_DRIVE_ID'),
+        driveId: readString('OUTPUT_DRIVE_ID') ?? readString('SYNC_DRIVE_ID'),
         maxFileBytes: readNumber('MAX_FILE_SIZE_MB', 250, 1, 2048) * 1024 * 1024,
     };
 }

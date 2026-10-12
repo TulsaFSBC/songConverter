@@ -33,6 +33,11 @@ export function presentationNameFromFileName(fileName: string): string {
     return base.trim() || 'Untitled';
 }
 
+/** "Amazing Grace" -> "Amazing Grace.pro". Slashes are replaced so the name can never point into a subfolder. */
+export function proFileName(presentationName: string): string {
+    return `${presentationName.replace(/[\\/]/g, '-')}.pro`;
+}
+
 /** Converts a PowerPoint file (.pptx/.ppt) into a ProPresenter 7 .pro file. */
 export async function convertPowerPoint(
     data: Uint8Array,
@@ -48,7 +53,7 @@ export async function convertPowerPoint(
 
     const presentationName = presentationNameFromFileName(sourceFileName);
     return {
-        fileName: `${presentationName}.pro`,
+        fileName: proFileName(presentationName),
         presentationName,
         content: buildPresentation(presentationName, slides, options),
         slideCount: slides.length,

@@ -13,6 +13,10 @@ Each PowerPoint slide becomes one ProPresenter slide, with each line of the slid
 (white, centered, 90 pt Times New Roman by default; change it in ProPresenter or with the settings below).
 The presentation is named after the PowerPoint file.
 
+All `.pro` files go into **one folder, `proPresenter Files/`, with no subfolders** — even when the PowerPoints
+come from different folders (or, with `SYNC_INCLUDE_SUBFOLDERS`, from subfolders). Two PowerPoints with the same
+file name therefore share one `.pro` (the most recently converted wins).
+
 The app can be triggered two ways — use either or both:
 
 | | **Library sync** (recommended) | **Power Automate flow** |
@@ -115,8 +119,8 @@ In the Function App: **Settings → Environment variables → App settings**.
 | `TENANT_ID` | yes* | Directory (tenant) ID of the app registration |
 | `CLIENT_ID` | yes* | Application (client) ID of the app registration |
 | `CLIENT_SECRET` | yes* | Client secret value. Better: store it in Azure Key Vault and use `@Microsoft.KeyVault(SecretUri=https://<vault>.vault.azure.net/secrets/<name>/)` as the value |
-| `OUTPUT_FOLDER` | no | Folder in the document library for the `.pro` files. Default `proPresenter Files`. Created automatically |
-| `OUTPUT_DRIVE_ID` | no | Put the `.pro` files in a different document library (its drive ID). Default: same library as the PowerPoint |
+| `OUTPUT_FOLDER` | no | The one folder, at the top of the document library, that holds every `.pro` file. Default `proPresenter Files`. Created automatically. Must be a single folder name — paths like `proPresenter Files/Sunday` are rejected |
+| `OUTPUT_DRIVE_ID` | no | Document library for that folder (its drive ID). Default: `SYNC_DRIVE_ID`; if that is not set either, the PowerPoint's own library |
 | `SYNC_DRIVE_ID` | for sync | Document library to watch. **Setting this turns library sync on** |
 | `SYNC_SOURCE_FOLDER` | no | Folder in that library to watch, e.g. `Songs`. Default: the library root |
 | `SYNC_INCLUDE_SUBFOLDERS` | no | `true` to also convert files in subfolders. Default `false` |

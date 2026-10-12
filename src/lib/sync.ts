@@ -1,5 +1,5 @@
 import type { OutputConfig, SyncConfig } from './config.js';
-import { presentationNameFromFileName, type ConversionOptions } from './convert.js';
+import { presentationNameFromFileName, proFileName, type ConversionOptions } from './convert.js';
 import { isPowerPointFileName, UnsupportedFileError } from './extract/index.js';
 import { ConfigError } from './config.js';
 import { GraphError, type DriveApi, type DriveItem, type Logger } from './graph.js';
@@ -212,7 +212,7 @@ async function upToDateCheck(graph: DriveApi, driveId: string, folder: string): 
         }
     }
     return (file) => {
-        const existing = outputs.get(`${presentationNameFromFileName(file.item.name)}.pro`.toLowerCase());
+        const existing = outputs.get(proFileName(presentationNameFromFileName(file.item.name)).toLowerCase());
         // Empty .pro files (left by the old converter) are never up to date.
         return existing !== undefined && (existing.size ?? 1) > 0 && timestamp(existing.lastModifiedDateTime) >= timestamp(file.item.lastModifiedDateTime);
     };

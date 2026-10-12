@@ -82,6 +82,23 @@ describe('configuration', () => {
         assert.throws(() => loadOutputConfig(), ConfigError);
     });
 
+    it('only allows a single top-level output folder, never a subfolder path', () => {
+        for (const value of ['proPresenter Files/Sunday', 'Songs/proPresenter Files', 'a\\b']) {
+            process.env.OUTPUT_FOLDER = value;
+            assert.throws(() => loadOutputConfig(), /single folder/, value);
+        }
+        process.env.OUTPUT_FOLDER = '/proPresenter Files/';
+        assert.equal(loadOutputConfig().folder, 'proPresenter Files');
+    });
+
+    it('puts every .pro file in one library: OUTPUT_DRIVE_ID, else SYNC_DRIVE_ID', () => {
+        assert.equal(loadOutputConfig().driveId, undefined);
+        process.env.SYNC_DRIVE_ID = 'b!songs';
+        assert.equal(loadOutputConfig().driveId, 'b!songs');
+        process.env.OUTPUT_DRIVE_ID = 'b!output';
+        assert.equal(loadOutputConfig().driveId, 'b!output');
+    });
+
     it('normalizes folder paths', () => {
         assert.equal(normalizeFolderPath(' /Songs\\Sunday AM// '), 'Songs/Sunday AM');
         assert.equal(normalizeFolderPath(''), '');

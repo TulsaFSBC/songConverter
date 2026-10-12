@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 import type { OutputConfig, SyncConfig } from '../src/lib/config.js';
-import { DEFAULT_CONVERSION_OPTIONS, presentationNameFromFileName } from '../src/lib/convert.js';
+import { DEFAULT_CONVERSION_OPTIONS, presentationNameFromFileName, proFileName } from '../src/lib/convert.js';
 import { UnsupportedFileError } from '../src/lib/extract/index.js';
 import { convertDriveItem, isInFolder, parentFolderPath } from '../src/lib/job.js';
 import { GraphError } from '../src/lib/graph.js';
@@ -289,6 +289,11 @@ describe('path helpers', () => {
         assert.equal(isInFolder('ProPresenter files', 'proPresenter Files'), true);
         assert.equal(isInFolder('proPresenter Files/Sub', 'proPresenter Files'), true);
         assert.equal(isInFolder('proPresenter Files 2', 'proPresenter Files'), false);
+    });
+
+    it('never produces a .pro file name that points into a subfolder', () => {
+        assert.equal(proFileName('Song'), 'Song.pro');
+        assert.equal(proFileName('AC/DC \\ Hymn'), 'AC-DC - Hymn.pro');
     });
 
     it('names presentations after the file', () => {
