@@ -1,7 +1,8 @@
 import type { OutputConfig, SyncConfig } from './config.js';
 import { presentationNameFromFileName, type ConversionOptions } from './convert.js';
 import { isPowerPointFileName, UnsupportedFileError } from './extract/index.js';
-import type { DriveApi, DriveItem, Logger } from './graph.js';
+import { ConfigError } from './config.js';
+import { GraphError, type DriveApi, type DriveItem, type Logger } from './graph.js';
 import { convertDriveItem, isInFolder } from './job.js';
 import type { StateStore } from './state.js';
 
@@ -54,7 +55,20 @@ async function listSourceFiles(graph: DriveApi, config: SyncConfig, outputFolder
             continue;
         }
         seen.add(folder.toLowerCase());
-        for (const item of await graph.listChildren(config.driveId, folder)) {
+        let children: DriveItem[];
+        try {
+            // The configured folder must exist; subfolders can disappear between listings.
+            children = await graph.listChildren(config.driveId, folder, { missingOk: folder !== config.sourceFolder });
+        } catch (err) {
+            if (err instanceof GraphError && err.status === 404) {
+                throw new ConfigError(
+                    `SYNC_SOURCE_FOLDER "${config.sourceFolder}" was not found in the document library SYNC_DRIVE_ID. ` +
+                        'Use the folder path inside the library, without the library name (e.g. "Songs", not "Shared Documents/Songs").',
+                );
+            }
+            throw err;
+        }
+        for (const item of children) {
             const path = folder ? `${folder}/${item.name}` : item.name;
             if (item.folder) {
                 if (config.includeSubfolders && !(sameDrive && isInFolder(path, outputFolder))) {
@@ -199,6 +213,7 @@ async function upToDateCheck(graph: DriveApi, driveId: string, folder: string): 
     }
     return (file) => {
         const existing = outputs.get(`${presentationNameFromFileName(file.item.name)}.pro`.toLowerCase());
-        return existing !== undefined && timestamp(existing.lastModifiedDateTime) >= timestamp(file.item.lastModifiedDateTime);
+        // Empty .pro files (left by the old converter) are never up to date.
+        return existing !== undefined && (existing.size ?? 1) > 0 && timestamp(existing.lastModifiedDateTime) >= timestamp(file.item.lastModifiedDateTime);
     };
 }

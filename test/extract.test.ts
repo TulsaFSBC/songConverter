@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 import { extractSlides, isPowerPointFileName, UnsupportedFileError } from '../src/lib/extract/index.js';
 import { normalizeLines } from '../src/lib/extract/slides.js';
 import { buildPpt } from './helpers/ppt.js';
-import { buildPptx } from './helpers/pptx.js';
+import { buildPptx, shapeXml } from './helpers/pptx.js';
 
 describe('pptx extraction', () => {
     it('keeps soft line breaks (<a:br/>) as separate lines and joins runs within a line', async () => {
@@ -83,6 +83,31 @@ describe('pptx extraction', () => {
         assert.deepEqual(slide?.lines, ['First shape', 'Second shape', 'Grouped line', 'Cell A', 'Cell B']);
     });
 
+    it('leaves out text boxes and groups hidden with the Selection Pane', async () => {
+        const hiddenGroup =
+            '<p:grpSp><p:nvGrpSpPr><p:cNvPr id="20" name="Group" hidden="1"/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr/>' +
+            '<p:sp><p:nvSpPr><p:cNvPr id="21" name="In group"/><p:cNvSpPr/><p:nvPr/></p:nvSpPr><p:spPr/>' +
+            '<p:txBody><a:bodyPr/><a:p><a:r><a:t>In hidden group</a:t></a:r></a:p></p:txBody></p:sp></p:grpSp>';
+        const hiddenShape = shapeXml({ paragraphs: [['Hidden translation']] }, 30).replace('name="Shape 30"', 'name="Shape 30" hidden="1"');
+        const pptx = await buildPptx([{ shapes: [{ paragraphs: [['Visible lyric']] }], extraXml: hiddenShape + hiddenGroup }]);
+        const [slide] = await extractSlides(pptx);
+        assert.deepEqual(slide?.lines, ['Visible lyric']);
+    });
+
+    it('splits line breaks typed inside a run, wherever they are in the paragraph', async () => {
+        const pptx = await buildPptx([{ shapes: [{ paragraphs: [['Amazing grace\r\nHow sweet', 'That saved\na wretch']] }] }]);
+        const [slide] = await extractSlides(pptx);
+        assert.deepEqual(slide?.lines, ['Amazing grace', 'How sweet', 'That saved', 'a wretch']);
+    });
+
+    it('reports a damaged slide as an unconvertible file', async () => {
+        const JSZip = (await import('jszip')).default;
+        const zip = await JSZip.loadAsync(await buildPptx([{ shapes: [{ paragraphs: [['x']] }] }]));
+        zip.file('ppt/slides/slide1.xml', '<?xml version="1.0"?><p:sld xmlns:p="p"><p:cSld><p:spTr');
+        const damaged = await zip.generateAsync({ type: 'uint8array' });
+        await assert.rejects(extractSlides(damaged), (err: Error) => err instanceof UnsupportedFileError && /damaged/.test(err.message));
+    });
+
     it('flags hidden slides', async () => {
         const pptx = await buildPptx([{ shapes: [{ paragraphs: [['Shown']] }] }, { shapes: [{ paragraphs: [['Hidden']] }], hidden: true }]);
         const slides = await extractSlides(pptx);
@@ -129,6 +154,17 @@ describe('ppt (PowerPoint 97-2003) extraction', () => {
             slides.map((s) => s.hidden),
             [false, true],
         );
+    });
+
+    it('ignores footer, date and slide-number placeholders', async () => {
+        const ppt = buildPpt([{ placeholderText: 'Lyric line', footerText: 'CCLI 12345' }]);
+        const [slide] = await extractSlides(ppt);
+        assert.deepEqual(slide?.lines, ['Lyric line']);
+    });
+
+    it('reports password-protected files', async () => {
+        const ppt = buildPpt([{ placeholderText: 'Secret' }], undefined, { encrypted: true });
+        await assert.rejects(extractSlides(ppt), /password protected/);
     });
 
     it('follows the newest edit in fast-saved files', async () => {

@@ -21,11 +21,20 @@ export function isPowerPointFileName(fileName: string): boolean {
  * file contents, so a .ppt saved with a .pptx name (or vice versa) still works.
  */
 export async function extractSlides(data: Uint8Array): Promise<SlideText[]> {
-    if (startsWith(data, ZIP_MAGIC)) {
-        return extractPptx(data);
-    }
-    if (startsWith(data, OLE_MAGIC)) {
-        return extractPpt(Buffer.from(data.buffer, data.byteOffset, data.byteLength));
+    try {
+        if (startsWith(data, ZIP_MAGIC)) {
+            return await extractPptx(data);
+        }
+        if (startsWith(data, OLE_MAGIC)) {
+            return extractPpt(Buffer.from(data.buffer, data.byteOffset, data.byteLength));
+        }
+    } catch (err) {
+        // Extraction only reads the bytes in memory, so any other failure means the file
+        // itself is damaged; retrying would fail the same way.
+        if (err instanceof UnsupportedFileError) {
+            throw err;
+        }
+        throw new UnsupportedFileError(`PowerPoint file is damaged and cannot be read: ${(err as Error).message}`);
     }
     throw new UnsupportedFileError('File is not a PowerPoint presentation (.pptx or .ppt).');
 }

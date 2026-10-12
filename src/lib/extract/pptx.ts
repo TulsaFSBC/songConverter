@@ -21,6 +21,9 @@ const xmlParser = new XMLParser({
 // Placeholders that hold slide furniture rather than lyrics.
 const IGNORED_PLACEHOLDERS = new Set(['sldNum', 'dt', 'ftr', 'hdr']);
 
+// Element holding each shape kind's non-visual properties (p:cNvPr, which carries hidden="1").
+const NON_VISUAL: Record<string, string> = { 'p:sp': 'p:nvSpPr', 'p:grpSp': 'p:nvGrpSpPr', 'p:graphicFrame': 'p:nvGraphicFramePr' };
+
 const REL_SLIDE = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide';
 
 /** Extracts the text of every slide, in presentation order, from a .pptx/.pptm/.ppsx file. */
@@ -118,6 +121,9 @@ function parseSlide(xml: string): SlideText {
 function collectShapeTree(nodes: XmlNode[], lines: string[]): void {
     for (const node of nodes) {
         const tag = tagName(node);
+        if (isHiddenShape(node, tag)) {
+            continue; // Hidden with the Selection Pane: not shown in PowerPoint, so not projected either.
+        }
         switch (tag) {
             case 'p:sp':
                 if (!isIgnoredPlaceholder(node)) {
@@ -149,6 +155,13 @@ function collectShapeTree(nodes: XmlNode[], lines: string[]): void {
     }
 }
 
+function isHiddenShape(node: XmlNode, tag: string): boolean {
+    const nonVisual = NON_VISUAL[tag];
+    const cNvPr = nonVisual ? select(children(node, tag), [nonVisual, 'p:cNvPr'])[0] : undefined;
+    const hidden = cNvPr ? attributes(cNvPr).hidden : undefined;
+    return hidden === '1' || hidden === 'true';
+}
+
 function isIgnoredPlaceholder(shape: XmlNode): boolean {
     const ph = select(children(shape, 'p:sp'), ['p:nvSpPr', 'p:nvPr', 'p:ph'])[0];
     return ph !== undefined && IGNORED_PLACEHOLDERS.has(attributes(ph).type ?? '');
@@ -165,7 +178,7 @@ function collectTextBody(nodes: XmlNode[], lines: string[]): void {
                     current += textOf(t);
                 }
             } else if (tag === 'a:br') {
-                lines.push(current);
+                lines.push(...splitLines(current));
                 current = '';
             }
         }

@@ -11,6 +11,8 @@ export interface TestPptSlide {
     textBoxText?: string;
     /** Notes-type text that must be ignored. */
     notesText?: string;
+    /** Text in a footer placeholder shape (slide furniture) that must be ignored. */
+    footerText?: string;
     hidden?: boolean;
 }
 
@@ -45,6 +47,12 @@ function slideContainer(slide: TestPptSlide): Buffer {
     const textBox = slide.textBoxText
         ? [container(0xf004, [container(0xf00d, textRecords(slide.textBoxText, 4))])]
         : [];
+    if (slide.footerText) {
+        // OfficeArtClientData with a PlaceholderAtom whose placementId (byte 4) is 0x09 = footer.
+        const placeholder = Buffer.alloc(8);
+        placeholder.writeUInt8(0x09, 4);
+        textBox.push(container(0xf004, [container(0xf011, [record(0x0bc3, placeholder)]), container(0xf00d, textRecords(slide.footerText, 4))]));
+    }
     const drawing = container(0x040c, [container(0xf002, [container(0xf003, textBox)])]);
     return container(0x03ee, [record(0x03ef, Buffer.alloc(24), 0, 2), record(0x03f9, info), drawing]);
 }
@@ -97,7 +105,7 @@ function currentUser(offsetToCurrentEdit: number): Buffer {
  * Builds a .ppt file. With `editedSlides`, a second "fast save" edit is appended that
  * replaces the document (and slides), so readers must follow the newest edit.
  */
-export function buildPpt(slides: TestPptSlide[], editedSlides?: TestPptSlide[]): Uint8Array {
+export function buildPpt(slides: TestPptSlide[], editedSlides?: TestPptSlide[], { encrypted = false } = {}): Uint8Array {
     const parts: Buffer[] = [];
     let offset = 0;
     const append = (buf: Buffer): number => {
@@ -124,6 +132,10 @@ export function buildPpt(slides: TestPptSlide[], editedSlides?: TestPptSlide[]):
 
     const cfb = CFB.utils.cfb_new();
     CFB.utils.cfb_add(cfb, '/PowerPoint Document', Buffer.concat(parts));
-    CFB.utils.cfb_add(cfb, '/Current User', currentUser(currentEdit));
+    const user = currentUser(currentEdit);
+    if (encrypted) {
+        user.writeUInt32LE(0xf3d1c4df, 12); // headerToken of an encrypted document
+    }
+    CFB.utils.cfb_add(cfb, '/Current User', user);
     return new Uint8Array(CFB.write(cfb, { type: 'buffer' }) as Buffer);
 }

@@ -10,6 +10,8 @@ interface StoredFile {
 /** In-memory stand-in for a SharePoint document library, with hooks for simulating timing. */
 export class FakeDrive implements DriveApi {
     readonly files = new Map<string, StoredFile>();
+    /** Folders that exist even when empty. */
+    readonly folders = new Set<string>();
     readonly uploads: { folder: string; name: string; content: Uint8Array }[] = [];
     /** Called after a download completes, before the caller continues (e.g. to simulate an edit). */
     onDownload?: (id: string, call: number) => Promise<void> | void;
@@ -46,6 +48,11 @@ export class FakeDrive implements DriveApi {
         };
         this.files.set(id, { item, folder, content });
         return item;
+    }
+
+    addFolder(path: string): this {
+        this.folders.add(path.toLowerCase());
+        return this;
     }
 
     /** Moves a file to another folder; like SharePoint, its id and dates do not change. */
@@ -123,11 +130,16 @@ export class FakeDrive implements DriveApi {
         return structuredClone(this.add(folder, fileName, content));
     }
 
-    async listChildren(driveId: string, folder: string): Promise<DriveItem[]> {
+    async listChildren(driveId: string, folder: string, { missingOk = true }: { missingOk?: boolean } = {}): Promise<DriveItem[]> {
         if (driveId !== this.driveId) {
             throw new GraphError('wrong drive', 404);
         }
         const lower = folder.toLowerCase();
+        const paths = [...[...this.files.values()].map((f) => f.folder.toLowerCase()), ...this.folders];
+        const exists = lower === '' || paths.some((p) => p === lower || p.startsWith(lower + '/'));
+        if (!exists && !missingOk) {
+            throw new GraphError('Microsoft Graph returned 404 itemNotFound', 404, 'itemNotFound');
+        }
         const items: DriveItem[] = [];
         const subfolders = new Set<string>();
         for (const file of this.files.values()) {

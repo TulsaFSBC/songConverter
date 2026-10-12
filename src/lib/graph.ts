@@ -73,7 +73,8 @@ export interface DriveApi {
     getItem(driveId: string, itemId: string): Promise<DriveItem>;
     download(driveId: string, itemId: string): Promise<Uint8Array>;
     upload(driveId: string, folder: string, fileName: string, content: Uint8Array): Promise<DriveItem>;
-    listChildren(driveId: string, folder: string): Promise<DriveItem[]>;
+    /** Lists a folder's children. A missing folder gives [] unless `missingOk` is false (then a 404 GraphError). */
+    listChildren(driveId: string, folder: string, options?: { missingOk?: boolean }): Promise<DriveItem[]>;
 }
 
 /** Minimal Microsoft Graph client for OneDrive/SharePoint files, with retries for throttling and transient errors. */
@@ -159,8 +160,8 @@ export class GraphClient implements DriveApi {
         }
     }
 
-    /** Lists the children of a folder (path within the drive; "" for the root). Returns [] if the folder does not exist. */
-    async listChildren(driveId: string, folder: string): Promise<DriveItem[]> {
+    /** Lists the children of a folder (path within the drive; "" for the root). A missing folder gives [] unless missingOk is false. */
+    async listChildren(driveId: string, folder: string, { missingOk = true }: { missingOk?: boolean } = {}): Promise<DriveItem[]> {
         const base = `/drives/${encodeURIComponent(driveId)}`;
         const location = folder ? `${base}/root:/${encodeDrivePath(folder)}:/children` : `${base}/root/children`;
         let url: string | undefined = `${location}?$select=${ITEM_SELECT}&$top=200`;
@@ -172,7 +173,7 @@ export class GraphClient implements DriveApi {
                 url = page['@odata.nextLink'];
             }
         } catch (err) {
-            if (err instanceof GraphError && err.status === 404) {
+            if (missingOk && err instanceof GraphError && err.status === 404) {
                 return [];
             }
             throw err;

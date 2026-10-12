@@ -17,6 +17,10 @@ const RT = {
     TextHeaderAtom: 0x0f9f,
     TextCharsAtom: 0x0fa0,
     TextBytesAtom: 0x0fa8,
+    OfficeArtSpContainer: 0xf004,
+    OfficeArtClientData: 0xf011,
+    PlaceholderAtom: 0x0bc3,
+    RoundTripHFPlaceholder12Atom: 0x0420,
 } as const;
 
 // TextHeaderAtom.textType values that are not shown on the slide itself.
@@ -24,6 +28,10 @@ const TEXT_TYPE_NOTES = 2;
 const TEXT_TYPE_NOT_USED = 3;
 const SLIDE_LIST_INSTANCE_SLIDES = 0;
 const HIDDEN_SLIDE_FLAG = 0x0004;
+// PlaceholderEnum values for slide furniture: date, slide number, footer, header.
+const FURNITURE_PLACEHOLDERS = new Set([0x07, 0x08, 0x09, 0x0a]);
+// CurrentUserAtom.headerToken of a password-protected (encrypted) .ppt file.
+const ENCRYPTED_HEADER_TOKEN = 0xf3d1c4df;
 const MAX_DEPTH = 32;
 
 interface RecordHeader {
@@ -46,7 +54,10 @@ export function extractPpt(data: Uint8Array): SlideText[] {
         throw new UnsupportedFileError(`File is not a valid PowerPoint 97-2003 (.ppt) file: ${(err as Error).message}`);
     }
 
-    if (CFB.find(container, 'EncryptedPackage')) {
+    const currentUserEntry = CFB.find(container, 'Current User')?.content;
+    const currentUser = currentUserEntry ? Buffer.from(currentUserEntry as Uint8Array) : undefined;
+    const encryptedPpt = currentUser !== undefined && currentUser.length >= 16 && currentUser.readUInt32LE(12) === ENCRYPTED_HEADER_TOKEN;
+    if (encryptedPpt || CFB.find(container, 'EncryptedPackage') || CFB.find(container, 'EncryptedSummary')) {
         throw new UnsupportedFileError('PowerPoint file is password protected.');
     }
     const docEntry = CFB.find(container, 'PowerPoint Document');
@@ -54,9 +65,7 @@ export function extractPpt(data: Uint8Array): SlideText[] {
         throw new UnsupportedFileError('File is an Office document but not a PowerPoint presentation.');
     }
     const doc = Buffer.from(docEntry.content as Uint8Array);
-    const currentUser = CFB.find(container, 'Current User')?.content;
-
-    const persist = currentUser ? readPersistDirectory(doc, Buffer.from(currentUser as Uint8Array)) : undefined;
+    const persist = currentUser ? readPersistDirectory(doc, currentUser) : undefined;
     const documentOffset = persist?.documentOffset ?? findLastTopLevel(doc, RT.Document);
     if (documentOffset === undefined) {
         throw new UnsupportedFileError('PowerPoint file has no document record.');
@@ -140,9 +149,29 @@ function collectShapeText(doc: Buffer, parent: RecordHeader, lines: string[], de
                 lines.push(...splitLines(readText(doc, record)));
             }
         } else if (record.version === 0xf) {
+            if (record.type === RT.OfficeArtSpContainer && isFurniturePlaceholder(doc, record)) {
+                continue; // Date, slide number or footer, not lyrics.
+            }
             collectShapeText(doc, record, lines, depth + 1);
         }
     }
+}
+
+/** True for a shape whose client data marks it as the slide's date, number, footer or header placeholder. */
+function isFurniturePlaceholder(doc: Buffer, shape: RecordHeader): boolean {
+    const clientData = childRecords(doc, shape).find((r) => r.type === RT.OfficeArtClientData);
+    if (!clientData) {
+        return false;
+    }
+    for (const record of childRecords(doc, clientData)) {
+        if (record.type === RT.PlaceholderAtom && record.length >= 8 && FURNITURE_PLACEHOLDERS.has(doc.readUInt8(record.bodyOffset + 4))) {
+            return true;
+        }
+        if (record.type === RT.RoundTripHFPlaceholder12Atom && record.length >= 1 && FURNITURE_PLACEHOLDERS.has(doc.readUInt8(record.bodyOffset))) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function readText(doc: Buffer, record: RecordHeader): string {

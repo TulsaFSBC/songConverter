@@ -25,7 +25,10 @@ The app can be triggered two ways — use either or both:
 
 - **First run:** it records the PowerPoint files already in the folder and converts nothing, so turning sync on does
   not convert your whole existing library. (To convert existing songs once, set `SYNC_CONVERT_EXISTING=true` before
-  the first run; files that already have an up-to-date `.pro` are skipped.)
+  the first run; files that already have an up-to-date, non-empty `.pro` are skipped.)
+- **Replacing files made by the old version:** `.pro` files from the old converter may be misformatted. To rebuild them
+  all, rename the old `proPresenter Files` folder (e.g. to `proPresenter Files (old)`), set `SYNC_CONVERT_EXISTING=true`,
+  and turn sync on; every song is converted again, 25 per run.
 - **Every run after that:** it converts files that were **added** since the previous run, and files whose **content
   changed** (an edited song gets a fresh `.pro`). Renaming a file or editing its SharePoint columns does not count as a change.
 - Files are tracked by their SharePoint id, not by date, so a file **moved or copied into** the folder from elsewhere
@@ -215,7 +218,8 @@ library, or point a ProPresenter library at that folder.
   repeated blank lines are reduced to one.
 - **Any language and punctuation**: curly quotes, dashes, accented and Cyrillic letters, emoji, `"`, `\`, `{`, `}`
   are all written as escaped Unicode, so nothing is garbled.
-- **Hidden slides** are left out (unless `INCLUDE_HIDDEN_SLIDES=true`); slide numbers, dates and footers are ignored.
+- **Hidden slides** are left out (unless `INCLUDE_HIDDEN_SLIDES=true`), and so are text boxes hidden with PowerPoint's
+  Selection Pane; slide numbers, dates and footers are ignored.
 - **Simultaneous conversions** never share files, so they cannot mix up names or content.
 - **Edits during conversion**: if the PowerPoint changes while it is being converted, it is converted again so the
   `.pro` always matches the latest version.
@@ -255,8 +259,10 @@ Logs are in the Function App under **Monitor** (Application Insights) or **Log s
 |---|---|
 | `Application setting X is required but not set` | Add the setting (step 4) |
 | `Microsoft Graph returned 401/403` / `not allowed to access this file` | Check admin consent and the site permission (step 1), and that the client secret has not expired |
-| `Microsoft Graph returned 404` for sync | `SYNC_DRIVE_ID` or `SYNC_SOURCE_FOLDER` is wrong (step 2) |
+| `SYNC_SOURCE_FOLDER "…" was not found` | Use the folder path inside the library without the library name: `Songs`, not `Shared Documents/Songs` |
+| `Microsoft Graph returned 404` for sync | `SYNC_DRIVE_ID` is wrong (step 2) |
 | `Library sync needs the AzureWebJobsStorage setting` | The Function App's storage setting was removed; it is created with the app and must stay |
 | `Sync started: recorded the N PowerPoint files already in the folder` | Normal on the first run: only files added or changed after this are converted |
 | `PowerPoint file does not contain any slide text` | The slides contain only pictures (e.g. lyrics pasted as images) |
 | `PowerPoint file is password protected` | Remove the password in PowerPoint |
+| `PowerPoint file is damaged and cannot be read` | Open the file in PowerPoint and save it again |
