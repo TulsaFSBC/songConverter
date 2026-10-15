@@ -23,7 +23,8 @@ The app can be triggered two ways — use either or both:
 |---|---|---|
 | How | A timer in the Function App checks a SharePoint folder every 5 minutes and converts files added or changed since the previous check | A flow calls the function each time a file changes |
 | Needs | Nothing else | Power Automate Premium license for the flow owner (the **HTTP** action is premium) |
-| Turn on | Set `SYNC_DRIVE_ID` | Create the flow (below) |
+| Turn on | Set `SYNC_DRIVE_ID` (the `syncLibrary` function does nothing until then) | Create the flow (below) |
+| Turn off | Disable the `syncLibrary` function in the portal | Turn off the flow |
 
 ### How library sync decides what to convert
 
@@ -171,8 +172,9 @@ For a Windows *Consumption* app you can instead keep using a publish profile: do
 overview (**Get publish profile**) and save it as the secret `AZURE_PUBLISH_PROFILE` (the existing
 `AZUREAPPSERVICE_PUBLISHPROFILE_…` secret also still works).
 
-After the first deployment the app has two functions: `fileIsModified` (HTTP) and, once `SYNC_DRIVE_ID` is set,
-`syncLibrary` (timer).
+After the first deployment the app has two functions: `fileIsModified` (HTTP, for Power Automate) and
+`syncLibrary` (timer, every 5 minutes). `syncLibrary` only logs "Library sync is off" until `SYNC_DRIVE_ID` is set;
+if you use only Power Automate, disable it (Functions → `syncLibrary` → **Disable**).
 
 Settings from the old version that are no longer used and can be deleted: `PRO_PRESENTER_VERSION`, `KEY_VAULT_URL`
 (and the `accessToken` secret in that Key Vault).
