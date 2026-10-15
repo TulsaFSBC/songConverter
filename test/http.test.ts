@@ -56,6 +56,13 @@ describe('request formats', () => {
         assert.equal(sitePathFromUrl('https://contoso.sharepoint.com/sites/Worship%20Team'), 'contoso.sharepoint.com:/sites/Worship%20Team');
         assert.equal(sitePathFromUrl('https://contoso.sharepoint.com/sites/Worship Team'), 'contoso.sharepoint.com:/sites/Worship%20Team');
         assert.equal(sitePathFromUrl('https://contoso.sharepoint.com'), 'contoso.sharepoint.com');
+        assert.equal(sitePathFromUrl('https://contoso.sharepoint.com/sites/Worship/SitePages/Home.aspx'), 'contoso.sharepoint.com:/sites/Worship');
+        assert.equal(
+            sitePathFromUrl('https://contoso.sharepoint.com/sites/Worship/Shared%20Documents/Forms/AllItems.aspx?id=%2Fsites%2FWorship'),
+            'contoso.sharepoint.com:/sites/Worship',
+        );
+        assert.equal(sitePathFromUrl(' https://contoso.sharepoint.com/teams/Music/_layouts/15/viewlsts.aspx '), 'contoso.sharepoint.com:/teams/Music');
+        assert.equal(sitePathFromUrl('https://contoso.sharepoint.com/SitePages/Home.aspx'), 'contoso.sharepoint.com');
         assert.throws(() => sitePathFromUrl('not a url'), GraphError);
     });
 });

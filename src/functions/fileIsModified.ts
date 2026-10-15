@@ -58,7 +58,7 @@ export async function fileIsModified(request: HttpRequest, context: InvocationCo
     context.log(`Conversion requested: ${JSON.stringify(parsed)}`);
 
     try {
-        const { output, options } = getJobSettings();
+        const { output, options } = await getJobSettings();
         const graph = getGraphClient();
         const { driveId, itemId } =
             'driveId' in parsed ? { driveId: parsed.driveId, itemId: parsed.driveItemId } : await graph.getItemForListItem(parsed.siteUrl, parsed.listId, parsed.listItemId);

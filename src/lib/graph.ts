@@ -1,5 +1,5 @@
 import { ClientSecretCredential, ManagedIdentityCredential, type TokenCredential } from '@azure/identity';
-import type { GraphAuthConfig } from './config.js';
+import { asGuid, ConfigError, type GraphAuthConfig } from './config.js';
 
 const GRAPH_BASE = 'https://graph.microsoft.com/v1.0';
 const GRAPH_SCOPE = 'https://graph.microsoft.com/.default';
@@ -53,22 +53,40 @@ export function encodeDrivePath(path: string): string {
         .join('/');
 }
 
-/** The file operations the conversion jobs need (implemented by GraphClient; faked in tests). */
+// Path segments that belong to a page or library inside a site rather than to the site itself,
+// so pasting ".../sites/Worship/SitePages/Home.aspx" still finds the "Worship" site.
+const NON_SITE_SEGMENTS = new Set(['sitepages', 'shared documents', 'forms', '_layouts', 'lists', 'pages', 'siteassets']);
+
 /**
  * Graph path for a SharePoint site URL: "https://contoso.sharepoint.com/sites/Worship"
  * -> "contoso.sharepoint.com:/sites/Worship" (the root site -> "contoso.sharepoint.com").
+ * Page and library parts of a pasted address (SitePages/Home.aspx, Shared Documents/Forms/...)
+ * and any query string are ignored.
  */
 export function sitePathFromUrl(siteUrl: string): string {
     let url: URL;
     try {
-        url = new URL(siteUrl);
+        url = new URL(siteUrl.trim());
     } catch {
         throw new GraphError(`"${siteUrl}" is not a valid SharePoint site URL.`, 400);
     }
-    const path = url.pathname.replace(/\/+$/, '');
-    return path ? `${url.hostname}:${encodeURI(decodeURI(path))}` : url.hostname;
+    const segments: string[] = [];
+    for (const raw of url.pathname.split('/').filter(Boolean)) {
+        let segment = raw;
+        try {
+            segment = decodeURIComponent(raw);
+        } catch {
+            // Keep the segment as typed.
+        }
+        if (NON_SITE_SEGMENTS.has(segment.toLowerCase()) || segment.toLowerCase().endsWith('.aspx')) {
+            break;
+        }
+        segments.push(segment);
+    }
+    return segments.length > 0 ? `${url.hostname}:/${segments.map((part) => encodeURIComponent(part)).join('/')}` : url.hostname;
 }
 
+/** The file operations the conversion jobs need (implemented by GraphClient; faked in tests). */
 export interface DriveApi {
     getItem(driveId: string, itemId: string): Promise<DriveItem>;
     download(driveId: string, itemId: string): Promise<Uint8Array>;
@@ -82,8 +100,11 @@ export class GraphClient implements DriveApi {
     private readonly credential: TokenCredential;
     private readonly siteIds = new Map<string, string>();
 
-    constructor(auth: GraphAuthConfig) {
-        if (auth.clientSecret && auth.tenantId && auth.clientId) {
+    /** @param credential Overrides the credential built from `auth` (used by tests). */
+    constructor(auth: GraphAuthConfig, credential?: TokenCredential) {
+        if (credential) {
+            this.credential = credential;
+        } else if (auth.clientSecret && auth.tenantId && auth.clientId) {
             this.credential = new ClientSecretCredential(auth.tenantId, auth.clientId, auth.clientSecret);
         } else if (auth.clientId) {
             this.credential = new ManagedIdentityCredential({ clientId: auth.clientId });
@@ -92,13 +113,63 @@ export class GraphClient implements DriveApi {
         }
     }
 
-    /** Finds the drive item (file) behind a SharePoint list item, e.g. the ID from a Power Automate SharePoint trigger. */
-    async getItemForListItem(siteUrl: string, listId: string, listItemId: string): Promise<{ driveId: string; itemId: string }> {
+    /** Graph id of the SharePoint site at a URL such as https://contoso.sharepoint.com/sites/Worship. */
+    private async siteId(siteUrl: string): Promise<string> {
         let siteId = this.siteIds.get(siteUrl);
         if (!siteId) {
-            siteId = (await this.json<{ id: string }>(`/sites/${sitePathFromUrl(siteUrl)}?$select=id`)).id;
+            try {
+                siteId = (await this.json<{ id: string }>(`/sites/${sitePathFromUrl(siteUrl)}?$select=id`)).id;
+            } catch (err) {
+                if (err instanceof GraphError && (err.status === 400 || err.status === 404)) {
+                    throw new ConfigError(`SharePoint site "${siteUrl}" was not found. Use the site address from the browser, e.g. https://contoso.sharepoint.com/sites/Worship.`);
+                }
+                throw err;
+            }
             this.siteIds.set(siteUrl, siteId);
         }
+        return siteId;
+    }
+
+    /**
+     * Graph drive id of a document library, given the site URL and the library's name
+     * ("Documents", or "Shared Documents" as it appears in URLs) or its id from the
+     * library settings page.
+     */
+    async findLibraryDrive(siteUrl: string, library: string): Promise<string> {
+        const siteId = await this.siteId(siteUrl);
+        const guid = asGuid(library);
+        if (guid) {
+            try {
+                return (await this.json<{ id: string }>(`/sites/${encodeURIComponent(siteId)}/lists/${guid}/drive?$select=id`)).id;
+            } catch (err) {
+                if (err instanceof GraphError && (err.status === 400 || err.status === 404)) {
+                    throw new ConfigError(`No document library with id ${guid} was found in ${siteUrl}.`);
+                }
+                throw err;
+            }
+        }
+        const drives = (await this.json<{ value: { id: string; name?: string; webUrl?: string }[] }>(
+            `/sites/${encodeURIComponent(siteId)}/drives?$select=id,name,webUrl`,
+        )).value;
+        const wanted = library.trim().toLowerCase();
+        const urlName = (webUrl?: string) => {
+            try {
+                return decodeURIComponent(webUrl?.split('/').pop() ?? '').toLowerCase();
+            } catch {
+                return '';
+            }
+        };
+        const drive = drives.find((d) => d.name?.toLowerCase() === wanted) ?? drives.find((d) => urlName(d.webUrl) === wanted);
+        if (!drive) {
+            const names = drives.map((d) => `"${d.name}"`).join(', ');
+            throw new ConfigError(`No document library named "${library}" in ${siteUrl}. Libraries found: ${names || 'none'}.`);
+        }
+        return drive.id;
+    }
+
+    /** Finds the drive item (file) behind a SharePoint list item, e.g. the ID from a Power Automate SharePoint trigger. */
+    async getItemForListItem(siteUrl: string, listId: string, listItemId: string): Promise<{ driveId: string; itemId: string }> {
+        const siteId = await this.siteId(siteUrl);
         // Accept the id as copied from a library settings URL: "%7B...%7D" or "{...}".
         const list = decodeURIComponent(listId).replace(/[{}]/g, '');
         const item = await this.json<DriveItem>(

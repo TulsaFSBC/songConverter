@@ -1,6 +1,16 @@
 import assert from 'node:assert/strict';
 import { afterEach, describe, it } from 'node:test';
-import { ConfigError, loadConversionOptions, loadGraphAuthConfig, loadOutputConfig, loadSyncConfig, normalizeFolderPath } from '../src/lib/config.js';
+import {
+    asGuid,
+    ConfigError,
+    isSyncEnabled,
+    loadConversionOptions,
+    loadGraphAuthConfig,
+    loadOutputConfig,
+    loadSyncConfig,
+    loadSyncLibrary,
+    normalizeFolderPath,
+} from '../src/lib/config.js';
 import { encodeDrivePath } from '../src/lib/graph.js';
 
 const SETTINGS = [
@@ -12,6 +22,8 @@ const SETTINGS = [
     'OUTPUT_DRIVE_ID',
     'MAX_FILE_SIZE_MB',
     'SYNC_DRIVE_ID',
+    'SYNC_SITE_URL',
+    'SYNC_LIBRARY',
     'SYNC_SOURCE_FOLDER',
     'SYNC_INCLUDE_SUBFOLDERS',
     'SYNC_MAX_FILES_PER_RUN',
@@ -63,11 +75,9 @@ describe('configuration', () => {
     });
 
     it('reads sync settings', () => {
-        assert.throws(() => loadSyncConfig(), /SYNC_DRIVE_ID/);
-        process.env.SYNC_DRIVE_ID = 'b!abc';
         process.env.SYNC_SOURCE_FOLDER = '/Songs/PowerPoint/';
         process.env.SYNC_INCLUDE_SUBFOLDERS = 'yes';
-        assert.deepEqual(loadSyncConfig(), {
+        assert.deepEqual(loadSyncConfig('b!abc'), {
             driveId: 'b!abc',
             sourceFolder: 'Songs/PowerPoint',
             includeSubfolders: true,
@@ -75,6 +85,34 @@ describe('configuration', () => {
             minAgeMs: 60_000,
             convertExisting: false,
         });
+    });
+
+    it('identifies the synced library by drive id, or by site URL plus library name or id', () => {
+        assert.equal(isSyncEnabled(), false);
+        assert.throws(() => loadSyncLibrary(), /SYNC_SITE_URL/);
+
+        process.env.SYNC_DRIVE_ID = 'b!abc';
+        assert.equal(isSyncEnabled(), true);
+        assert.deepEqual(loadSyncLibrary(), { driveId: 'b!abc' });
+
+        // The library id from SharePoint's library settings page is not a drive id.
+        process.env.SYNC_DRIVE_ID = '243caec2-9363-411a-869a-ae66e37ba368';
+        assert.throws(() => loadSyncLibrary(), /library id, not a Microsoft Graph drive id.*SYNC_SITE_URL/s);
+        process.env.SYNC_SITE_URL = 'https://contoso.sharepoint.com/sites/Worship';
+        assert.deepEqual(loadSyncLibrary(), { siteUrl: 'https://contoso.sharepoint.com/sites/Worship', library: '243caec2-9363-411a-869a-ae66e37ba368' });
+
+        delete process.env.SYNC_DRIVE_ID;
+        assert.deepEqual(loadSyncLibrary(), { siteUrl: 'https://contoso.sharepoint.com/sites/Worship', library: 'Documents' });
+        process.env.SYNC_LIBRARY = 'Song Library';
+        assert.deepEqual(loadSyncLibrary(), { siteUrl: 'https://contoso.sharepoint.com/sites/Worship', library: 'Song Library' });
+    });
+
+    it('recognizes library ids in the forms SharePoint shows them', () => {
+        for (const value of ['243caec2-9363-411a-869a-ae66e37ba368', '{243CAEC2-9363-411A-869A-AE66E37BA368}', '%7B243CAEC2-9363-411A-869A-AE66E37BA368%7D']) {
+            assert.equal(asGuid(value), '243caec2-9363-411a-869a-ae66e37ba368', value);
+        }
+        assert.equal(asGuid('b!AbC123'), undefined);
+        assert.equal(asGuid('Documents'), undefined);
     });
 
     it('rejects the library root as the output folder', () => {
@@ -91,12 +129,13 @@ describe('configuration', () => {
         assert.equal(loadOutputConfig().folder, 'proPresenter Files');
     });
 
-    it('puts every .pro file in one library: OUTPUT_DRIVE_ID, else SYNC_DRIVE_ID', () => {
+    it('puts every .pro file in one library: OUTPUT_DRIVE_ID, else the synced library', () => {
         assert.equal(loadOutputConfig().driveId, undefined);
-        process.env.SYNC_DRIVE_ID = 'b!songs';
-        assert.equal(loadOutputConfig().driveId, 'b!songs');
+        assert.equal(loadOutputConfig('b!songs').driveId, 'b!songs');
         process.env.OUTPUT_DRIVE_ID = 'b!output';
-        assert.equal(loadOutputConfig().driveId, 'b!output');
+        assert.equal(loadOutputConfig('b!songs').driveId, 'b!output');
+        process.env.OUTPUT_DRIVE_ID = '243caec2-9363-411a-869a-ae66e37ba368';
+        assert.throws(() => loadOutputConfig('b!songs'), /OUTPUT_DRIVE_ID/);
     });
 
     it('normalizes folder paths', () => {

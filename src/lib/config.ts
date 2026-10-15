@@ -75,15 +75,17 @@ export interface OutputConfig {
     /** The one folder (at the top of the document library, no subfolders) that receives every .pro file. */
     folder: string;
     /**
-     * Document library holding that folder. Defaults to SYNC_DRIVE_ID, so all .pro files land in
-     * one place; only when neither is set does it fall back to the source file's library.
+     * Document library (Graph drive id) holding that folder: OUTPUT_DRIVE_ID, else the synced
+     * library, so all .pro files land in one place. Only when neither is configured does it
+     * fall back to the source file's library.
      */
     driveId?: string;
     /** Files larger than this are not converted. */
     maxFileBytes: number;
 }
 
-export function loadOutputConfig(): OutputConfig {
+/** @param syncDriveId Graph drive id of the synced library, if library sync is configured. */
+export function loadOutputConfig(syncDriveId?: string): OutputConfig {
     const raw = readString('OUTPUT_FOLDER') ?? 'proPresenter Files';
     const folder = normalizeFolderPath(raw);
     if (!folder) {
@@ -94,11 +96,61 @@ export function loadOutputConfig(): OutputConfig {
             `Application setting OUTPUT_FOLDER must be a single folder at the top of the document library (e.g. "proPresenter Files"), not a path ("${raw}").`,
         );
     }
+    const outputDriveId = readString('OUTPUT_DRIVE_ID');
+    if (outputDriveId && asGuid(outputDriveId)) {
+        throw new ConfigError(
+            `Application setting OUTPUT_DRIVE_ID "${outputDriveId}" is a SharePoint library id, not a Microsoft Graph drive id (which starts with "b!"). ` +
+                'Leave OUTPUT_DRIVE_ID empty to use the synced library.',
+        );
+    }
     return {
         folder,
-        driveId: readString('OUTPUT_DRIVE_ID') ?? readString('SYNC_DRIVE_ID'),
+        driveId: outputDriveId ?? syncDriveId,
         maxFileBytes: readNumber('MAX_FILE_SIZE_MB', 250, 1, 2048) * 1024 * 1024,
     };
+}
+
+/** Returns the GUID in "243caec2-…", "{243CAEC2-…}" or "%7B243CAEC2-…%7D" form, lower-cased, or undefined. */
+export function asGuid(value: string): string | undefined {
+    let text = value.trim();
+    try {
+        text = decodeURIComponent(text);
+    } catch {
+        // Not URL-encoded.
+    }
+    const match = /^\{?([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})\}?$/i.exec(text);
+    return match?.[1]?.toLowerCase();
+}
+
+/**
+ * The document library to sync. Either a Microsoft Graph drive id ("b!…"), or a site URL plus
+ * the library's name or id as SharePoint shows them, which is looked up with Graph.
+ */
+export type LibraryRef = { driveId: string } | { siteUrl: string; library: string };
+
+/** Library sync is enabled by setting SYNC_SITE_URL (with SYNC_LIBRARY) or SYNC_DRIVE_ID. */
+export function isSyncEnabled(): boolean {
+    return readString('SYNC_DRIVE_ID') !== undefined || readString('SYNC_SITE_URL') !== undefined;
+}
+
+export function loadSyncLibrary(): LibraryRef {
+    const driveId = readString('SYNC_DRIVE_ID');
+    const siteUrl = readString('SYNC_SITE_URL');
+    const library = readString('SYNC_LIBRARY');
+    if (driveId && !asGuid(driveId)) {
+        return { driveId };
+    }
+    // A GUID in SYNC_DRIVE_ID is the library id from SharePoint's library settings page, not a Graph drive id.
+    const libraryRef = library ?? driveId ?? 'Documents';
+    if (!siteUrl) {
+        throw new ConfigError(
+            driveId
+                ? `SYNC_DRIVE_ID "${driveId}" is a SharePoint library id, not a Microsoft Graph drive id (which starts with "b!"). ` +
+                      'Also set SYNC_SITE_URL to the site address (e.g. https://contoso.sharepoint.com/sites/Worship) and the library will be looked up.'
+                : 'Library sync needs SYNC_SITE_URL (the SharePoint site address) or SYNC_DRIVE_ID.',
+        );
+    }
+    return { siteUrl, library: libraryRef };
 }
 
 export interface SyncConfig {
@@ -112,18 +164,14 @@ export interface SyncConfig {
     convertExisting: boolean;
 }
 
-/** Library sync is enabled by setting SYNC_DRIVE_ID. */
-export function isSyncEnabled(): boolean {
-    return readString('SYNC_DRIVE_ID') !== undefined;
-}
-
 export function syncSchedule(): string {
     return readString('SYNC_SCHEDULE') ?? '0 */5 * * * *';
 }
 
-export function loadSyncConfig(): SyncConfig {
+/** @param driveId Graph drive id of the synced library (resolved from loadSyncLibrary()). */
+export function loadSyncConfig(driveId: string): SyncConfig {
     return {
-        driveId: readRequired('SYNC_DRIVE_ID'),
+        driveId,
         sourceFolder: normalizeFolderPath(readString('SYNC_SOURCE_FOLDER') ?? ''),
         includeSubfolders: readBoolean('SYNC_INCLUDE_SUBFOLDERS', false),
         maxFilesPerRun: readNumber('SYNC_MAX_FILES_PER_RUN', 25, 1, 500),

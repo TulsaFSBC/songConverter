@@ -23,7 +23,7 @@ The app can be triggered two ways — use either or both:
 |---|---|---|
 | How | A timer in the Function App checks a SharePoint folder every 5 minutes and converts files added or changed since the previous check | A flow calls the function each time a file changes |
 | Needs | Nothing else | Power Automate Premium license for the flow owner (the **HTTP** action is premium) |
-| Turn on | Set `SYNC_DRIVE_ID` (the `syncLibrary` function does nothing until then) | Create the flow (below) |
+| Turn on | Set `SYNC_SITE_URL` (and `SYNC_LIBRARY`); the `syncLibrary` function does nothing until then | Create the flow (below) |
 | Turn off | Disable the `syncLibrary` function in the portal | Turn off the flow |
 
 ### How library sync decides what to convert
@@ -46,7 +46,7 @@ The app can be triggered two ways — use either or both:
   to a day). A file that cannot be converted at all (no text, password protected) is logged and skipped until it changes.
 - What the sync has seen is kept in the Function App's own storage account (container `songconverter`, blob
   `sync-state.json`). Deleting that blob makes the next run start over with a new baseline. Changing
-  `SYNC_DRIVE_ID`, `SYNC_SOURCE_FOLDER` or `SYNC_INCLUDE_SUBFOLDERS` also starts a new baseline.
+  the watched library, `SYNC_SOURCE_FOLDER` or `SYNC_INCLUDE_SUBFOLDERS` also starts a new baseline.
 
 ## Setting up in Azure
 
@@ -74,15 +74,17 @@ The app can be triggered two ways — use either or both:
      ```
      (Graph Explorer needs the `Sites.FullControl.All` permission consented for this one request.)
 
-### 2. Find the document library ID (needed for library sync)
+### 2. Note the site address and library name (needed for library sync)
 
-In Graph Explorer:
+- **Site address:** open the SharePoint site in a browser and copy the address up to the site name, e.g.
+  `https://contoso.sharepoint.com/sites/Worship`. This is `SYNC_SITE_URL`.
+- **Library:** the name of the document library as SharePoint shows it (the default library is called `Documents`;
+  `Shared Documents`, the name in its web address, also works). This is `SYNC_LIBRARY`. Instead of the name you can use
+  the library's id from **Library settings** (the `List=` part of that page's address, with or without the `%7B…%7D`).
 
-```
-GET https://graph.microsoft.com/v1.0/sites/{site-id}/drives
-```
-
-Copy the `id` of the document library that holds the songs (it starts with `b!`). This is `SYNC_DRIVE_ID`.
+The app looks up the library from these. (Advanced: you can instead set `SYNC_DRIVE_ID` to the library's Microsoft
+Graph drive id, which starts with `b!`, from `GET https://graph.microsoft.com/v1.0/sites/{site-id}/drives` in
+[Graph Explorer](https://developer.microsoft.com/graph/graph-explorer).)
 
 ### 3. Create the Function App
 
@@ -123,8 +125,10 @@ In the Function App: **Settings → Environment variables → App settings**.
 | `CLIENT_ID` | yes* | Application (client) ID of the app registration |
 | `CLIENT_SECRET` | yes* | Client secret value. Better: store it in Azure Key Vault and use `@Microsoft.KeyVault(SecretUri=https://<vault>.vault.azure.net/secrets/<name>/)` as the value |
 | `OUTPUT_FOLDER` | no | The one folder, at the top of the document library, that holds every `.pro` file. Default `proPresenter Files`. Created automatically. Must be a single folder name — paths like `proPresenter Files/Sunday` are rejected |
-| `OUTPUT_DRIVE_ID` | no | Document library for that folder (its drive ID). Default: `SYNC_DRIVE_ID`; if that is not set either, the PowerPoint's own library |
-| `SYNC_DRIVE_ID` | for sync | Document library to watch. **Setting this turns library sync on** |
+| `OUTPUT_DRIVE_ID` | no | Graph drive id (`b!…`) of a different library for that folder. Default: the synced library; if sync is not set up, the PowerPoint's own library |
+| `SYNC_SITE_URL` | for sync | SharePoint site to watch, e.g. `https://contoso.sharepoint.com/sites/Worship`. **Setting this turns library sync on** |
+| `SYNC_LIBRARY` | no | Document library in that site: its name (default `Documents`) or its id from Library settings |
+| `SYNC_DRIVE_ID` | no | Advanced alternative to the two settings above: the library's Graph drive id (`b!…`) |
 | `SYNC_SOURCE_FOLDER` | no | Folder in that library to watch, e.g. `Songs`. Default: the library root |
 | `SYNC_INCLUDE_SUBFOLDERS` | no | `true` to also convert files in subfolders. Default `false` |
 | `SYNC_SCHEDULE` | no | How often to check, as a [CRON expression](https://learn.microsoft.com/azure/azure-functions/functions-bindings-timer#ncrontab-expressions). Default `0 */5 * * * *` (every 5 minutes) |
@@ -173,7 +177,7 @@ overview (**Get publish profile**) and save it as the secret `AZURE_PUBLISH_PROF
 `AZUREAPPSERVICE_PUBLISHPROFILE_…` secret also still works).
 
 After the first deployment the app has two functions: `fileIsModified` (HTTP, for Power Automate) and
-`syncLibrary` (timer, every 5 minutes). `syncLibrary` only logs "Library sync is off" until `SYNC_DRIVE_ID` is set;
+`syncLibrary` (timer, every 5 minutes). `syncLibrary` only logs "Library sync is off" until `SYNC_SITE_URL` is set;
 if you use only Power Automate, disable it (Functions → `syncLibrary` → **Disable**).
 
 Settings from the old version that are no longer used and can be deleted: `PRO_PRESENTER_VERSION`, `KEY_VAULT_URL`
@@ -268,7 +272,8 @@ Logs are in the Function App under **Monitor** (Application Insights) or **Log s
 | `Application setting X is required but not set` | Add the setting (step 4) |
 | `Microsoft Graph returned 401/403` / `not allowed to access this file` | Check admin consent and the site permission (step 1), and that the client secret has not expired |
 | `SYNC_SOURCE_FOLDER "…" was not found` | Use the folder path inside the library without the library name: `Songs`, not `Shared Documents/Songs` |
-| `Microsoft Graph returned 404` for sync | `SYNC_DRIVE_ID` is wrong (step 2) |
+| `SharePoint site "…" was not found` / `No document library named "…"` | Check `SYNC_SITE_URL` and `SYNC_LIBRARY` (step 2); the message lists the libraries it found |
+| `SYNC_DRIVE_ID "…" is a SharePoint library id, not a Microsoft Graph drive id` | Also set `SYNC_SITE_URL`, or move the id to `SYNC_LIBRARY` |
 | `Library sync needs the AzureWebJobsStorage setting` | The Function App's storage setting was removed; it is created with the app and must stay |
 | `Sync started: recorded the N PowerPoint files already in the folder` | Normal on the first run: only files added or changed after this are converted |
 | `PowerPoint file does not contain any slide text` | The slides contain only pictures (e.g. lyrics pasted as images) |

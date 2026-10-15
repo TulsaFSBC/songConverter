@@ -10,7 +10,8 @@
 
     "OUTPUT_FOLDER": "proPresenter Files",
 
-    "SYNC_DRIVE_ID": "",
+    "SYNC_SITE_URL": "",
+    "SYNC_LIBRARY": "Documents",
     "SYNC_SOURCE_FOLDER": "",
     "SYNC_INCLUDE_SUBFOLDERS": "false",
     "SYNC_SCHEDULE": "0 */5 * * * *"

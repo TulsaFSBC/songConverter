@@ -60,9 +60,15 @@ async function listSourceFiles(graph: DriveApi, config: SyncConfig, outputFolder
             // The configured folder must exist; subfolders can disappear between listings.
             children = await graph.listChildren(config.driveId, folder, { missingOk: folder !== config.sourceFolder });
         } catch (err) {
+            if (err instanceof GraphError && err.status === 400) {
+                throw new ConfigError(
+                    `The synced library's drive id "${config.driveId}" was rejected by SharePoint (${err.message}). ` +
+                        'Set SYNC_SITE_URL and SYNC_LIBRARY instead of SYNC_DRIVE_ID.',
+                );
+            }
             if (err instanceof GraphError && err.status === 404) {
                 throw new ConfigError(
-                    `SYNC_SOURCE_FOLDER "${config.sourceFolder}" was not found in the document library SYNC_DRIVE_ID. ` +
+                    `SYNC_SOURCE_FOLDER "${config.sourceFolder}" was not found in the synced document library. ` +
                         'Use the folder path inside the library, without the library name (e.g. "Songs", not "Shared Documents/Songs").',
                 );
             }

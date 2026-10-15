@@ -1,23 +1,28 @@
 import { app, type InvocationContext, type Timer } from '@azure/functions';
 import { isSyncEnabled, loadSyncConfig, syncSchedule } from '../lib/config.js';
-import { getGraphClient, getJobSettings, getStateStore } from '../lib/runtime.js';
+import { getGraphClient, getJobSettings, getStateStore, getSyncDriveId } from '../lib/runtime.js';
 import { syncLibrary } from '../lib/sync.js';
 
 // Scheduled sync: every few minutes, converts PowerPoint files added to (or changed in)
 // a SharePoint folder since the previous run, replacing the need for a Power Automate flow.
 // The function is always registered so it shows up in the Azure portal; it does nothing
-// until SYNC_DRIVE_ID is set. To stop it completely, disable the function in the portal.
+// until SYNC_SITE_URL (or SYNC_DRIVE_ID) is set. To stop it completely, disable the function
+// in the portal.
 
 export async function syncLibraryTimer(_timer: Timer, context: InvocationContext): Promise<void> {
     if (!isSyncEnabled()) {
         context.log(
-            'Library sync is off: set the SYNC_DRIVE_ID application setting to turn it on, ' +
+            'Library sync is off: set the SYNC_SITE_URL (and SYNC_LIBRARY) application settings to turn it on, ' +
                 'or disable the syncLibrary function if you only use Power Automate.',
         );
         return;
     }
-    const { output, options } = getJobSettings();
-    const config = loadSyncConfig();
+    const driveId = await getSyncDriveId();
+    if (!driveId) {
+        return;
+    }
+    const { output, options } = await getJobSettings();
+    const config = loadSyncConfig(driveId);
     const summary = await syncLibrary(getGraphClient(), getStateStore(), config, output, options, context);
     const message = summary.initialized && !config.convertExisting
         ? `Sync started: recorded the ${summary.scanned} PowerPoint files already in the folder. ` +
