@@ -130,7 +130,8 @@ export type LibraryRef = { driveId: string } | { siteUrl: string; library: strin
 
 /** Library sync is enabled by setting SYNC_SITE_URL (with SYNC_LIBRARY) or SYNC_DRIVE_ID. */
 export function isSyncEnabled(): boolean {
-    return readString('SYNC_DRIVE_ID') !== undefined || readString('SYNC_SITE_URL') !== undefined;
+    // SYNC_LIBRARY alone also counts, so a missing SYNC_SITE_URL is reported instead of sync silently staying off.
+    return ['SYNC_DRIVE_ID', 'SYNC_SITE_URL', 'SYNC_LIBRARY'].some((name) => readString(name) !== undefined);
 }
 
 export function loadSyncLibrary(): LibraryRef {
@@ -147,7 +148,7 @@ export function loadSyncLibrary(): LibraryRef {
             driveId
                 ? `SYNC_DRIVE_ID "${driveId}" is a SharePoint library id, not a Microsoft Graph drive id (which starts with "b!"). ` +
                       'Also set SYNC_SITE_URL to the site address (e.g. https://contoso.sharepoint.com/sites/Worship) and the library will be looked up.'
-                : 'Library sync needs SYNC_SITE_URL (the SharePoint site address) or SYNC_DRIVE_ID.',
+                : 'Library sync needs SYNC_SITE_URL, the SharePoint site address (e.g. https://contoso.sharepoint.com/sites/Worship).',
         );
     }
     return { siteUrl, library: libraryRef };

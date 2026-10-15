@@ -78,7 +78,12 @@ export function sitePathFromUrl(siteUrl: string): string {
         } catch {
             // Keep the segment as typed.
         }
-        if (NON_SITE_SEGMENTS.has(segment.toLowerCase()) || segment.toLowerCase().endsWith('.aspx')) {
+        const lower = segment.toLowerCase();
+        if (lower === 'forms') {
+            segments.pop(); // ".../SongLibrary/Forms/AllItems.aspx": drop the library folder too.
+            break;
+        }
+        if (NON_SITE_SEGMENTS.has(lower) || lower.endsWith('.aspx')) {
             break;
         }
         segments.push(segment);

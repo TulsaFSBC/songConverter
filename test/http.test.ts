@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 import functions from '@azure/functions';
 import { fileIsModified, parseRequest } from '../src/functions/fileIsModified.js';
 import { GraphError, sitePathFromUrl } from '../src/lib/graph.js';
+import { getJobSettings } from '../src/lib/runtime.js';
 
 // @azure/functions is CommonJS; its classes are only reachable through the default export from ESM.
 const { HttpRequest, InvocationContext } = functions;
@@ -23,6 +24,20 @@ describe('fileIsModified HTTP function', () => {
         for (const body of ['{}', '{"driveId":"d"}', '{"driveItemId":"i"}', '[]', '"text"', '{"driveId":"","driveItemId":"i"}']) {
             const response = await fileIsModified(post(body), context());
             assert.equal(response.status, 400, body);
+        }
+    });
+
+    it('does not need the sync settings when OUTPUT_DRIVE_ID chooses the output library', async () => {
+        process.env.OUTPUT_DRIVE_ID = 'b!output';
+        process.env.SYNC_DRIVE_ID = '243caec2-9363-411a-869a-ae66e37ba368'; // incomplete sync setup (no SYNC_SITE_URL)
+        try {
+            const { output } = await getJobSettings();
+            assert.equal(output.driveId, 'b!output');
+            delete process.env.OUTPUT_DRIVE_ID;
+            await assert.rejects(getJobSettings(), /SYNC_SITE_URL/);
+        } finally {
+            delete process.env.OUTPUT_DRIVE_ID;
+            delete process.env.SYNC_DRIVE_ID;
         }
     });
 
@@ -63,6 +78,7 @@ describe('request formats', () => {
         );
         assert.equal(sitePathFromUrl(' https://contoso.sharepoint.com/teams/Music/_layouts/15/viewlsts.aspx '), 'contoso.sharepoint.com:/teams/Music');
         assert.equal(sitePathFromUrl('https://contoso.sharepoint.com/SitePages/Home.aspx'), 'contoso.sharepoint.com');
+        assert.equal(sitePathFromUrl('https://contoso.sharepoint.com/sites/Worship/SongLibrary/Forms/AllItems.aspx'), 'contoso.sharepoint.com:/sites/Worship');
         assert.throws(() => sitePathFromUrl('not a url'), GraphError);
     });
 });

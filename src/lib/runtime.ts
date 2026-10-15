@@ -40,5 +40,7 @@ export async function getSyncDriveId(): Promise<string | undefined> {
 }
 
 export async function getJobSettings(): Promise<{ output: OutputConfig; options: ConversionOptions }> {
-    return { output: loadOutputConfig(await getSyncDriveId()), options: loadConversionOptions() };
+    // The synced library is only needed as the default output library.
+    const outputDriveSet = Boolean(process.env.OUTPUT_DRIVE_ID?.trim());
+    return { output: loadOutputConfig(outputDriveSet ? undefined : await getSyncDriveId()), options: loadConversionOptions() };
 }

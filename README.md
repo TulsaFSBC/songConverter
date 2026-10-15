@@ -273,7 +273,8 @@ Logs are in the Function App under **Monitor** (Application Insights) or **Log s
 | `Microsoft Graph returned 401/403` / `not allowed to access this file` | Check admin consent and the site permission (step 1), and that the client secret has not expired |
 | `SYNC_SOURCE_FOLDER "…" was not found` | Use the folder path inside the library without the library name: `Songs`, not `Shared Documents/Songs` |
 | `SharePoint site "…" was not found` / `No document library named "…"` | Check `SYNC_SITE_URL` and `SYNC_LIBRARY` (step 2); the message lists the libraries it found |
-| `SYNC_DRIVE_ID "…" is a SharePoint library id, not a Microsoft Graph drive id` | Also set `SYNC_SITE_URL`, or move the id to `SYNC_LIBRARY` |
+| `SYNC_DRIVE_ID "…" is a SharePoint library id, not a Microsoft Graph drive id` | Set `SYNC_SITE_URL` to the site address (the id can stay in `SYNC_DRIVE_ID` or move to `SYNC_LIBRARY`) |
+| `Library sync needs SYNC_SITE_URL` | `SYNC_LIBRARY` is set but the site address is missing; add `SYNC_SITE_URL` |
 | `Library sync needs the AzureWebJobsStorage setting` | The Function App's storage setting was removed; it is created with the app and must stay |
 | `Sync started: recorded the N PowerPoint files already in the folder` | Normal on the first run: only files added or changed after this are converted |
 | `PowerPoint file does not contain any slide text` | The slides contain only pictures (e.g. lyrics pasted as images) |

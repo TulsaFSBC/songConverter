@@ -103,6 +103,14 @@ describe('configuration', () => {
 
         delete process.env.SYNC_DRIVE_ID;
         assert.deepEqual(loadSyncLibrary(), { siteUrl: 'https://contoso.sharepoint.com/sites/Worship', library: 'Documents' });
+
+        // SYNC_LIBRARY without a site address is reported rather than silently leaving sync off.
+        delete process.env.SYNC_SITE_URL;
+        process.env.SYNC_LIBRARY = '243caec2-9363-411a-869a-ae66e37ba368';
+        assert.equal(isSyncEnabled(), true);
+        assert.throws(() => loadSyncLibrary(), /Library sync needs SYNC_SITE_URL/);
+        process.env.SYNC_SITE_URL = 'https://contoso.sharepoint.com/sites/Worship';
+        delete process.env.SYNC_LIBRARY;
         process.env.SYNC_LIBRARY = 'Song Library';
         assert.deepEqual(loadSyncLibrary(), { siteUrl: 'https://contoso.sharepoint.com/sites/Worship', library: 'Song Library' });
     });
