@@ -12,6 +12,8 @@ export class FakeDrive implements DriveApi {
     readonly files = new Map<string, StoredFile>();
     /** Folders that exist even when empty. */
     readonly folders = new Set<string>();
+    /** Every folder passed to listChildren, in order. */
+    readonly listed: string[] = [];
     readonly uploads: { folder: string; name: string; content: Uint8Array }[] = [];
     /** Called after a download completes, before the caller continues (e.g. to simulate an edit). */
     onDownload?: (id: string, call: number) => Promise<void> | void;
@@ -134,6 +136,7 @@ export class FakeDrive implements DriveApi {
         if (driveId !== this.driveId) {
             throw new GraphError('wrong drive', 404);
         }
+        this.listed.push(folder);
         const lower = folder.toLowerCase();
         const paths = [...[...this.files.values()].map((f) => f.folder.toLowerCase()), ...this.folders];
         const exists = lower === '' || paths.some((p) => p === lower || p.startsWith(lower + '/'));

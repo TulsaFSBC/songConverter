@@ -35,6 +35,8 @@ The app can be triggered two ways — use either or both:
   and turn sync on; every song is converted again, 25 per run.
 - **Every run after that:** it converts files that were **added** since the previous run, and files whose **content
   changed** (an edited song gets a fresh `.pro`). Renaming a file or editing its SharePoint columns does not count as a change.
+- The `proPresenter Files` folder is never opened while polling, even when it is inside the watched folder or
+  library (it holds only `.pro` files). PowerPoints put in it by mistake are ignored.
 - Files are tracked by their SharePoint id, not by date, so a file **moved or copied into** the folder from elsewhere
   counts as added even though it keeps its old dates.
 - A file is left alone until it has not changed for a minute (it may still be open in PowerPoint), and at most 25 files

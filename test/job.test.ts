@@ -257,6 +257,24 @@ describe('syncLibrary', () => {
         assert.equal(drive.contentOf('proPresenter Files', 'Stray.pro'), undefined);
     });
 
+    it('never opens the proPresenter Files folder when it sits inside the watched library', async () => {
+        for (const includeSubfolders of [false, true]) {
+            const drive = new FakeDrive();
+            const store = new MemoryStateStore();
+            drive.add('', 'Song.pptx', await song(['Song']));
+            drive.add('Sunday', 'Other.pptx', await song(['Other']));
+            drive.add('ProPresenter Files', 'Old.pro', new Uint8Array([1])); // different case, same folder
+            drive.add('ProPresenter Files', 'Stray.pptx', await song(['Stray']));
+            await run(drive, store, { sourceFolder: '', includeSubfolders });
+            drive.add('', 'New.pptx', await song(['New']));
+            await run(drive, store, { sourceFolder: '', includeSubfolders });
+
+            assert.ok(drive.listed.length > 0);
+            assert.ok(!drive.listed.some((folder) => folder.toLowerCase().startsWith('propresenter files')), `listed: ${drive.listed.join(', ')}`);
+            assert.deepEqual(drive.uploads.map((u) => u.name), ['New.pro'], `includeSubfolders=${includeSubfolders}`);
+        }
+    });
+
     it('reports a source folder that does not exist instead of silently finding nothing', async () => {
         const drive = newDrive();
         await assert.rejects(run(drive, new MemoryStateStore(), { sourceFolder: 'Shared Documents/Songs' }), /SYNC_SOURCE_FOLDER "Shared Documents\/Songs" was not found/);
